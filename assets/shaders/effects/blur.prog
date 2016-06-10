@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<program name="blur">
+    <shaders>
+        <vertex><![CDATA[
+            attribute vec2 a_vertex_xy;
+            attribute vec2 a_vertex_uv;
+
+            varying vec2 v_uv;
+            varying vec2 v_blur_uv[8];
+
+            uniform vec2 u_offset;
+
+            void main()
+            {
+                gl_Position = vec4(a_vertex_xy, 0.0, 1.0);
+                v_uv = a_vertex_uv;
+
+                v_blur_uv[0] = v_uv + u_offset * -4.0;
+                v_blur_uv[1] = v_uv + u_offset * -3.0;
+                v_blur_uv[2] = v_uv + u_offset * -2.0;
+                v_blur_uv[3] = v_uv + u_offset * -1.0;
+                v_blur_uv[4] = v_uv + u_offset *  1.0;
+                v_blur_uv[5] = v_uv + u_offset *  2.0;
+                v_blur_uv[6] = v_uv + u_offset *  3.0;
+                v_blur_uv[7] = v_uv + u_offset *  4.0;
+            }
+        ]]></vertex>
+
+        <fragment><![CDATA[
+            precision lowp float;
+
+            varying vec2 v_uv;
+            varying vec2 v_blur_uv[8];
+
+            uniform sampler2D u_source;
+
+            void main()
+            {
+                vec4 color = vec4(0.0);
+                color += texture2D(u_source, v_blur_uv[0]) * 0.0443683338718;
+                color += texture2D(u_source, v_blur_uv[1]) * 0.0776744219933;
+                color += texture2D(u_source, v_blur_uv[2]) * 0.115876621105;
+                color += texture2D(u_source, v_blur_uv[3]) * 0.147308056121;
+                color += texture2D(u_source, v_uv)         * 0.159576912161;
+                color += texture2D(u_source, v_blur_uv[4]) * 0.147308056121;
+                color += texture2D(u_source, v_blur_uv[5]) * 0.115876621105;
+                color += texture2D(u_source, v_blur_uv[6]) * 0.0776744219933;
+                color += texture2D(u_source, v_blur_uv[7]) * 0.0443683338718;
+
+                gl_FragColor = color;
+            }
+        ]]></fragment>
+    </shaders>
+
+    <a_locations>
+        <location name="a_vertex_xy" index="0"/>
+        <location name="a_vertex_uv" index="1"/>
+    </a_locations>
+
+    <u_locations>
+        <location name="u_source" index="0"/>
+        <location name="u_offset" index="1"/>
+    </u_locations>
+
+</program>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<program name="velocities_process">
+    <shaders>
+        <vertex><![CDATA[
+            attribute vec2 a_field_uv;
+            attribute vec2 a_field_data;
+
+            varying vec2 v_data;
+            varying vec2 v_uv;
+
+            void main()
+            {
+                gl_Position = vec4(a_field_uv * 2.0 - 1.0, 0.0, 1.0);
+                v_data = a_field_data;
+                v_uv = a_field_uv;
+            }
+        ]]></vertex>
+
+        <fragment><![CDATA[
+            precision highp float;
+
+            uniform sampler2D u_product;
+            uniform float u_dt;
+
+            varying vec2 v_data;
+            varying vec2 v_uv;
+
+            const float mass = 0.1;
+
+            vec4 pack(vec2 value)
+            {
+                vec2 shift = vec2(255.0, 1.0);
+                vec2 mask = vec2(0.0, 1.0 / 255.0);
+
+                vec4 result = fract(value.xxyy * shift.xyxy);
+                result -= result.xxzz * mask.xyxy;
+
+                if(value.x == 1.0)
+                    result.xy = vec2(0.0, 1.0);
+                if(value.y == 1.0)
+                    result.zw = vec2(0.0, 1.0);
+
+                return result;
+            }
+
+            vec2 unpack(vec4 value)
+            {
+                vec2 shift = vec2(1.0 / 255.0, 1.0);
+                return vec2(dot(value.xy, shift), dot(value.zw, shift));
+            }
+
+            void main()
+            {
+                vec2 velocity = unpack(texture2D(u_product, v_uv));
+
+                velocity = velocity * 2.0 - 1.0;
+                velocity += (v_data - velocity) * (1.0 / mass) * u_dt;
+                velocity = clamp(velocity, vec2(-1.0), vec2(1.0));
+
+                gl_FragColor = pack(velocity * 0.5 + 0.5);
+            }
+        ]]></fragment>
+    </shaders>
+
+    <a_locations>
+        <location name="a_field_uv" index="0"/>
+        <location name="a_field_data" index="1"/>
+    </a_locations>
+
+    <u_locations>
+        <location name="u_product" index="0"/>
+        <location name="u_dt" index="1"/>
+    </u_locations>
+
+</program>

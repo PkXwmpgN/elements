@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<program name="square_color">
+    <shaders>
+        <vertex><![CDATA[
+            attribute vec2 a_vertex_xy;
+            attribute vec2 a_vertex_uv;
+
+            uniform mat4 u_transform;
+
+            varying vec2 v_uv;
+
+            void main()
+            {
+                gl_Position = u_transform * vec4(a_vertex_xy, 0.0, 1.0);
+                v_uv = a_vertex_uv;
+            }
+        ]]></vertex>
+
+        <fragment><![CDATA[
+            precision lowp float;
+
+            varying vec2 v_uv;
+
+            uniform vec4 u_color;
+
+            void main()
+            {
+                gl_FragColor = u_color;
+            }
+
+        ]]></fragment>
+    </shaders>
+
+    <a_locations>
+        <location name="a_vertex_xy" index="0"/>
+        <location name="a_vertex_uv" index="1"/>
+    </a_locations>
+
+    <u_locations>
+        <location name="u_transform" index="0"/>
+        <location name="u_color" index="1"/>
+    </u_locations>
+
+</program>

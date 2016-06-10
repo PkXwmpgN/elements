@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<program name="particles_product_process">
+    <shaders>
+        <vertex><![CDATA[
+            attribute vec2 a_vertex_xy;
+            varying vec2 v_uv;
+
+            void main()
+            {
+                gl_Position = vec4(a_vertex_xy, 0.0, 1.0);
+                v_uv = a_vertex_xy * 0.5 + 0.5;
+            }
+        ]]></vertex>
+
+        <fragment><![CDATA[
+            precision highp float;
+
+            varying vec2 v_uv;
+
+            uniform lowp float u_attractor_a;
+            uniform lowp float u_attractor_b;
+            uniform lowp float u_attractor_c;
+            uniform lowp float u_attractor_d;
+
+            vec4 pack(vec2 value)
+            {
+                vec2 shift = vec2(255.0, 1.0);
+                vec2 mask = vec2(0.0, 0.00392156863);
+
+                vec4 result = fract(value.xxyy * shift.xyxy);
+                return result - result.xxzz * mask.xyxy;
+            }
+
+            void main()
+            {
+                vec2 pos = v_uv * 4.0 - 2.0;
+                for(int i = 0; i < 3; ++i)
+                {
+                    pos = vec2(sin(u_attractor_a * pos.y) - cos(u_attractor_b * pos.x),
+                               sin(u_attractor_c * pos.x) - cos(u_attractor_d * pos.y));
+                }
+
+                pos = clamp(pos, vec2(-2.0), vec2(2.0));
+                gl_FragColor = pack(pos * 0.25 + 0.5);
+            }
+
+        ]]></fragment>
+    </shaders>
+
+    <a_locations>
+        <location name="a_vertex_xy" index="0"/>
+    </a_locations>
+
+    <u_locations>
+        <location name="u_attractor_a" index="0"/>
+        <location name="u_attractor_b" index="1"/>
+        <location name="u_attractor_c" index="2"/>
+        <location name="u_attractor_d" index="3"/>
+    </u_locations>
+
+</program>

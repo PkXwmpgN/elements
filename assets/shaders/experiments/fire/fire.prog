@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<program name="fire">
+    <shaders>
+        <vertex><![CDATA[
+            attribute vec2 a_vertex_xy;
+            attribute vec2 a_vertex_uv;
+
+            varying vec2 v_uv;
+
+            void main()
+            {
+                gl_Position = vec4(a_vertex_xy, 0.0, 1.0);
+                v_uv = a_vertex_uv;
+            }
+        ]]></vertex>
+
+        <fragment><![CDATA[
+            precision lowp float;
+
+            varying vec2 v_uv;
+
+            uniform sampler2D u_fire;
+            uniform sampler2D u_background;
+            uniform vec2 u_texel;
+
+            vec3 fn_normal(sampler2D tex, vec2 coord, float strength)
+            {
+                float center = texture2D(tex, coord).a;
+                float right = texture2D(tex, coord + vec2(u_texel.x, 0.0)).a;
+                float up = texture2D(tex, coord + vec2(0.0, u_texel.y)).a;
+
+                return normalize(cross(vec3(1.0, 0.0, (right - center) * strength),
+                                       vec3(0.0, 1.0, (up - center) * strength)));
+            }
+
+            vec4 fn_blend(vec4 s, vec4 d)
+            {
+                return s * s.a + d * (1.0 - s.a);
+            }
+
+            void main()
+            {
+                vec4 color = texture2D(u_fire, v_uv);
+                vec3 normal = fn_normal(u_fire, v_uv, 0.1);
+                gl_FragColor = fn_blend(color, texture2D(u_background, v_uv + normal.xy * 2.0));
+            }
+        ]]></fragment>
+    </shaders>
+
+    <a_locations>
+        <location name="a_vertex_xy" index="0"/>
+        <location name="a_vertex_uv" index="1"/>
+    </a_locations>
+
+    <u_locations>
+        <location name="u_fire" index="0"/>
+        <location name="u_background" index="1"/>
+        <location name="u_texel" index="2"/>
+    </u_locations>
+
+</program>

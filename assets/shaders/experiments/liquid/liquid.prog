@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<program name="liquid">
+    <shaders>
+        <vertex><![CDATA[
+            attribute vec2 a_vertex_xy;
+            attribute vec2 a_vertex_uv;
+
+            varying vec2 v_surface_uv;
+
+            void main()
+            {
+                gl_Position = vec4(a_vertex_xy, 0.0, 1.0);
+                v_surface_uv = a_vertex_uv;
+            }
+        ]]></vertex>
+
+        <fragment><![CDATA[
+            precision lowp float;
+
+            varying vec2 v_surface_uv;
+
+            uniform sampler2D u_surface;
+            uniform sampler2D u_surface_background;
+
+            uniform vec4 u_surface_color;
+            uniform vec2 u_surface_texel;
+
+            const vec3  light_position = vec3(0.0, 0.0, 10.0);
+            const vec3  specular_color = vec3(0.3, 0.3, 0.3);
+            const float shininess = 10.0;
+            const vec3  shadow_color = vec3(0.1, 0.1, 0.1);
+            const float thickness = 2.0;
+
+            float fn_fresnel(vec3 normal, vec3 eyevec, float power, float bias)
+            {
+                float value = pow(clamp(abs(dot(normal, eyevec)), 0.0, 1.0), power) + bias;
+                return clamp(value, 0.0, 1.0);
+            }
+
+            vec3 fn_normal(sampler2D tex, vec2 coord, float center)
+            {
+                float right = texture2D(tex, coord + vec2(u_surface_texel.x, 0.0)).a;
+                float up = texture2D(tex, coord + vec2(0.0, u_surface_texel.y)).a;
+
+                return normalize(cross(vec3(max(0.1, center), 0.0, (right - center)),
+                                       vec3(0.0, max(0.1, center), (up - center))));
+
+            }
+
+            vec4 fn_lighting(vec4 color, vec3 normal, vec3 vertex, vec3 eyedir, vec3 light)
+            {
+                vec3 lightdir = normalize(light - vertex);
+                vec3 reflectdir = normalize(reflect(-lightdir, normal));
+
+                float specular = max(dot(reflectdir, eyedir), 0.0);
+                float lambertian = max(dot(lightdir, normal), 0.0);
+
+                specular = pow(specular, shininess) * fn_fresnel(vertex, eyedir, 1.0, 0.0);
+                return vec4(color.rgb * lambertian + specular_color * specular, color.a);
+            }
+
+            vec4 fn_blend(vec4 s, vec4 d)
+            {
+                return s * s.a + d * (1.0 - s.a);
+            }
+
+            vec4 fn_color_inside_shadow(vec4 color, float alpha, float fresnel)
+            {
+                 vec4 s = vec4(shadow_color * fresnel, 0.5 * alpha);
+                 return fn_blend(s, color);
+            }
+
+            vec4 fn_color_inside(float alpha)
+            {
+                vec3 camera = vec3(0.0, 0.0, 5.0);
+                vec3 vertex = vec3(2.0 * v_surface_uv - 1.0, alpha);
+                vec3 eyedir = normalize(camera - vertex);
+                vec3 normal = fn_normal(u_surface, v_surface_uv, alpha);
+                float fresnel = fn_fresnel(vertex, eyedir, 1.0, 0.0);
+
+                vec4 color = texture2D(u_surface_background,
+                                       v_surface_uv + normal.xy * thickness * fresnel);
+
+                alpha = 1.0 - alpha;
+                color = mix(color, fn_color_inside_shadow(color, alpha, fresnel),
+                            step(0.001, alpha));
+
+                color = fn_blend(u_surface_color, color);
+                color = fn_lighting(color, normal, vertex, eyedir, light_position);
+
+                return color;
+            }
+
+            vec4 fn_color_outside_shadow(vec4 color, float alpha)
+            {
+                vec4 s = vec4(shadow_color, 5.0 * alpha);
+                return fn_blend(s, color);
+            }
+
+            vec4 fn_color_outside(float alpha)
+            {
+                vec4 color = texture2D(u_surface_background, v_surface_uv);
+                return mix(color, fn_color_outside_shadow(color, alpha),
+                           step(0.001, alpha));
+            }
+
+            void main()
+            {
+                vec4 color = texture2D(u_surface, v_surface_uv);
+                gl_FragColor = mix(fn_color_outside(color.a), fn_color_inside(color.a),
+                                   step(0.1, color.a));
+            }
+        ]]></fragment>
+    </shaders>
+
+    <a_locations>
+        <location name="a_vertex_xy" index="0"/>
+        <location name="a_vertex_uv" index="1"/>
+    </a_locations>
+
+    <u_locations>
+        <location name="u_surface" index="0"/>
+        <location name="u_surface_background" index="1"/>
+        <location name="u_surface_color" index="2"/>
+        <location name="u_surface_texel" index="3"/>
+    </u_locations>
+
+</program>

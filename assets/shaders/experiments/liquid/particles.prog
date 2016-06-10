@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<program name="particles">
+    <shaders>
+        <vertex><![CDATA[
+            attribute vec2 a_vertex_xy;
+
+            uniform mat4  u_transform;
+            uniform float u_size;
+
+            void main()
+            {
+               gl_Position = u_transform * vec4(a_vertex_xy, 0.0, 1.0);
+               gl_PointSize = u_size;
+            }
+        ]]></vertex>
+
+        <fragment><![CDATA[
+            precision lowp float;
+
+            void main()
+            {
+                vec2 pos = gl_PointCoord * 2.0 - 1.0;
+                if(dot(pos, pos) > 1.0)
+                    discard;
+
+                gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+            }
+
+        ]]></fragment>
+    </shaders>
+
+    <a_locations>
+        <location name="a_vertex_xy" index="0"/>
+    </a_locations>
+
+    <u_locations>
+        <location name="u_transform" index="0"/>
+        <location name="u_size" index="1"/>
+    </u_locations>
+
+</program>

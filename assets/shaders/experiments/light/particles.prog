@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<program name="particles">
+    <shaders>
+        <vertex><![CDATA[
+            attribute vec2 a_product_uv;
+
+            uniform sampler2D u_positions;
+            uniform sampler2D u_velocities;
+            uniform vec2 u_texel;
+            uniform float u_size;
+
+            varying vec2 v_background_offset;
+            varying vec2 v_background_scale;
+            varying float v_intensity;
+
+            vec2 unpack(vec4 value)
+            {
+                vec2 shift = vec2(0.00392156863, 1.0);
+                return vec2(dot(value.xy, shift), dot(value.zw, shift));
+            }
+
+            void main()
+            {
+                vec2 position = unpack(texture2D(u_positions, a_product_uv));
+                vec2 velocity = unpack(texture2D(u_velocities, position));
+
+                gl_Position = vec4(position * 2.0 - 1.0, 0.0, 1.0);
+                gl_PointSize = u_size;
+
+                v_background_scale = u_size * u_texel;
+                v_background_offset = position - v_background_scale * 0.5;
+                v_intensity = clamp(length(velocity * 2.0 - 1.0) * 4.0, 0.0, 1.0);
+            }
+        ]]></vertex>
+
+        <fragment><![CDATA[
+            precision highp float;
+
+            uniform sampler2D u_background;
+
+            varying vec2 v_background_offset;
+            varying vec2 v_background_scale;
+            varying float v_intensity;
+
+            vec4 fn_error_function(vec4 x)
+            {
+                vec4 s = sign(x);
+                vec4 a = abs(x);
+                x = 1.0 + (0.278393 + (0.230389 + 0.078108 * (a * a)) * a) * a;
+                return s - s / (x * x * x * x);
+            }
+
+            float fn_shadow_product(vec2 point, float sigma)
+            {
+                vec4 query = vec4(point - vec2(0.0), point - vec2(1.0));
+                vec4 integral = 0.5 + 0.5 * fn_error_function(query * 0.707106 * sigma);
+                return (integral.z - integral.x) * (integral.w - integral.y);
+            }
+
+            vec4 fn_shadow(vec2 point)
+            {
+                return vec4(0.0, 0.0, 0.0, 0.9 * fn_shadow_product(point, 20.0) - 0.5);
+            }
+
+            vec4 fn_color(vec2 point)
+            {
+                vec2 tex_coord = vec2(v_background_offset.x + point.x * v_background_scale.x,
+                                      v_background_offset.y - point.y * v_background_scale.y);
+                vec4 tex_color = texture2D(u_background, tex_coord);
+                vec3 grayscale = vec3(dot(tex_color.rgb, vec3(0.299, 0.587, 0.114)));
+                return vec4(mix(grayscale, tex_color.rgb, v_intensity), tex_color.a);
+            }
+
+            void main()
+            {
+                float displacement = step(0.025, gl_PointCoord.x) *
+                                     step(0.025, gl_PointCoord.y) *
+                                     (1.0 - step(0.9, gl_PointCoord.x)) *
+                                     (1.0 - step(0.9, gl_PointCoord.y));
+                gl_FragColor = mix(fn_shadow(gl_PointCoord), fn_color(gl_PointCoord), displacement);
+            }
+        ]]></fragment>
+    </shaders>
+
+    <a_locations>
+        <location name="a_product_uv" index="0"/>
+    </a_locations>
+
+    <u_locations>
+        <location name="u_positions" index="0"/>
+        <location name="u_velocities" index="1"/>
+        <location name="u_background" index="2"/>
+        <location name="u_texel" index="3"/>
+        <location name="u_size" index="4"/>
+    </u_locations>
+
+</program>

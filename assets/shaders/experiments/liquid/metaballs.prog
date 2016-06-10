@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<program name="metaball">
+    <shaders>
+        <vertex><![CDATA[
+            attribute vec2 a_vertex_xy;
+            attribute vec2 a_vertex_uv;
+
+            varying vec2 v_uv;
+
+            void main()
+            {
+                gl_Position = vec4(a_vertex_xy, 0.0, 1.0);
+                v_uv = a_vertex_uv;
+            }
+        ]]></vertex>
+
+        <fragment><![CDATA[
+            precision lowp float;
+
+            varying vec2 v_uv;
+            uniform sampler2D u_source;
+
+            void main()
+            {
+                vec4 color = texture2D(u_source, v_uv);
+
+                if(color.a < 0.1)
+                   discard;
+
+                gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+            }
+
+        ]]></fragment>
+    </shaders>
+
+    <a_locations>
+        <location name="a_vertex_xy" index="0"/>
+        <location name="a_vertex_uv" index="1"/>
+    </a_locations>
+
+    <u_locations>
+        <location name="u_source" index="0"/>
+    </u_locations>
+
+</program>

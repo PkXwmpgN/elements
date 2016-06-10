@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<program name="tone">
+    <shaders>
+        <vertex><![CDATA[
+            attribute vec2 a_vertex_xy;
+            attribute vec2 a_vertex_uv;
+
+            varying vec2 v_uv;
+
+            void main()
+            {
+                gl_Position = vec4(a_vertex_xy, 0.0, 1.0);
+                v_uv = a_vertex_uv;
+            }
+        ]]></vertex>
+
+        <fragment><![CDATA[
+            precision lowp float;
+
+            uniform sampler2D u_source_1;
+            uniform sampler2D u_source_2;
+            uniform float u_exposure;
+            uniform float u_gamma;
+
+            varying vec2 v_uv;
+
+            void main()
+            {
+                vec4 color = texture2D(u_source_1, v_uv) + texture2D(u_source_2, v_uv);
+                color = vec4(1.0) - exp(-color * u_exposure);
+                color = pow(color, vec4(1.0 / u_gamma));
+                gl_FragColor = color;
+            }
+        ]]></fragment>
+    </shaders>
+
+    <a_locations>
+        <location name="a_vertex_xy" index="0"/>
+        <location name="a_vertex_uv" index="1"/>
+    </a_locations>
+
+    <u_locations>
+        <location name="u_source_1" index="0"/>
+        <location name="u_source_2" index="1"/>
+        <location name="u_exposure" index="2"/>
+        <location name="u_gamma" index="3"/>
+    </u_locations>
+
+</program>

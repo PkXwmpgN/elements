@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<program name="gradient_mapping">
+    <shaders>
+        <vertex><![CDATA[
+            attribute vec2 a_vertex_xy;
+            attribute vec2 a_vertex_uv;
+
+            varying vec2 v_uv;
+
+            void main()
+            {
+                gl_Position = vec4(a_vertex_xy, 0.0, 1.0);
+                v_uv = a_vertex_uv;
+            }
+        ]]></vertex>
+
+        <fragment><![CDATA[
+            precision lowp float;
+
+            uniform sampler2D u_source;
+            uniform vec3 u_color_1;
+            uniform vec3 u_color_2;
+
+            varying vec2 v_uv;
+
+            void main()
+            {
+                vec4 color = texture2D(u_source, v_uv);
+                float brightness = dot(color.rgb * color.a, vec3(0.299, 0.587, 0.114));
+                vec3 gradient = mix(u_color_1, u_color_2, smoothstep(0.4, 0.8, brightness));
+                gl_FragColor = vec4(gradient, color.a);
+            }
+
+        ]]></fragment>
+    </shaders>
+
+    <a_locations>
+        <location name="a_vertex_xy" index="0"/>
+        <location name="a_vertex_uv" index="1"/>
+    </a_locations>
+
+    <u_locations>
+        <location name="u_source" index="0"/>
+        <location name="u_color_1" index="1"/>
+        <location name="u_color_2" index="2"/>
+    </u_locations>
+
+</program>

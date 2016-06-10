@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<program name="light_scattered">
+    <shaders>
+        <vertex><![CDATA[
+            attribute vec2 a_vertex_xy;
+            attribute vec2 a_vertex_uv;
+
+            varying vec2 v_uv;
+
+            void main()
+            {
+                gl_Position = vec4(a_vertex_xy, 0.0, 1.0);
+                v_uv = a_vertex_uv;
+            }
+        ]]></vertex>
+
+        <fragment><![CDATA[
+            precision lowp float;
+
+            varying vec2 v_uv;
+
+            uniform sampler2D u_occluding;
+            uniform float u_exposure;
+            uniform float u_decay;
+            uniform float u_density;
+            uniform float u_weight;
+            uniform vec2 u_light_position;
+
+            const int   samples = 4;
+            const float samples_r = 1.0 / 8.0f;
+
+            void main()
+            {
+                vec2 coord = v_uv;
+                vec2 delta = vec2(coord - (u_light_position * 0.5 + 0.5)) * u_density;
+
+                float illumination_decay = 1.0;
+                vec4 result = vec4(0.0);
+                for(int i = 1; i <= samples; ++i)
+                {
+                     coord = v_uv - float(i) * delta * samples_r;
+                     result += texture2D(u_occluding, coord) * illumination_decay * u_weight;
+                     illumination_decay *= u_decay;
+                }
+
+                gl_FragColor = result * u_exposure;
+            }
+        ]]></fragment>
+    </shaders>
+
+    <a_locations>
+        <location name="a_vertex_xy" index="0"/>
+        <location name="a_vertex_uv" index="1"/>
+    </a_locations>
+
+    <u_locations>
+        <location name="u_occluding" index="0"/>
+        <location name="u_exposure" index="1"/>
+        <location name="u_decay" index="2"/>
+        <location name="u_density" index="3"/>
+        <location name="u_weight" index="4"/>
+        <location name="u_light_position" index="5"/>
+    </u_locations>
+
+</program>

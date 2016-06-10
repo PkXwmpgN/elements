@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<program name="light_scattered_occluding">
+    <shaders>
+        <vertex><![CDATA[
+            attribute vec2 a_product_uv;
+
+            uniform sampler2D u_positions;
+            uniform float u_size;
+
+            vec2 unpack(vec4 value)
+            {
+                vec2 shift = vec2(0.00392156863, 1.0);
+                return vec2(dot(value.xy, shift), dot(value.zw, shift));
+            }
+
+            void main()
+            {
+                vec2 position = unpack(texture2D(u_positions, a_product_uv));
+                gl_Position = vec4(position * 2.0 - 1.0, 0.0, 1.0);
+                gl_PointSize = u_size;
+            }
+        ]]></vertex>
+
+        <fragment><![CDATA[
+            precision lowp float;
+            void main()
+            {
+                gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0);
+            }
+        ]]></fragment>
+    </shaders>
+
+    <a_locations>
+        <location name="a_product_uv" index="0"/>
+    </a_locations>
+
+    <u_locations>
+        <location name="u_positions" index="0"/>
+        <location name="u_size" index="1"/>
+    </u_locations>
+</program>
