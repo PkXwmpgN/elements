@@ -5,6 +5,7 @@ OpenGL ES 2.0 and C++ experiments.
 * [Liquid Simulation](#liquid-simulation)
 * [Light Scattered](#light-scattered)
 * [Strange Attractors](#strange-attractors)
+* [Wind Field](#wind-field)
 * [Flame Simualtion](#flame-simulation)
 
 -----------------------
@@ -26,8 +27,15 @@ The adaptation of a light scattered effect. Based upon [Volumetric Light Scatter
 
 [![Strange Attractors](https://raw.githubusercontent.com/PkXwmpgN/elements/master/screenshots/strange.jpeg)](https://www.youtube.com/watch?v=lx3xy8CakE0)
 
-The implementation of a dynamic system based on the particles, called [Strange Attractors](https://en.wikipedia.org/wiki/Attractor). 
+The implementation of a dynamic system based on the particles (2^20), called [Strange Attractors](https://en.wikipedia.org/wiki/Attractor). 
 - Sources experiments/strange
+
+###Wind Field
+
+[![Wind Field preview](https://raw.githubusercontent.com/PkXwmpgN/elements/master/screenshots/air.jpeg)](https://www.youtube.com/watch?v=n3TOHyJzNDs)
+
+The implementation of a dynamic system based on the particles (2^20) that handles [Navier-Stokes](http://www.intpowertechcorp.com/GDC03.pdf) and wind Forward-Euler integration.
+- Sources experiments/air
 
 ###Flame Simulation
 
