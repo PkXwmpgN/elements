@@ -117,6 +117,8 @@ LOCAL_SRC_FILES := $(ELEMENTS_PATH)/rendering/core/shader.cpp \
     $(ELEMENTS_PATH)/preferences/preferences.cpp \
     $(ELEMENTS_PATH)/metrics/metrics.cpp \
     $(ELEMENTS_PATH)/timing/framerate.cpp \
+    $(ELEMENTS_PATH)/timing/update.cpp \
+    $(ELEMENTS_PATH)/timing/timer.cpp \
     $(ELEMENTS_PATH)/simulation/liquid/system.cpp \
     $(ELEMENTS_PATH)/simulation/liquid/volume.cpp \
     $(ELEMENTS_PATH)/simulation/liquid/config.cpp \
