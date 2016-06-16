@@ -26,9 +26,8 @@ IN THE SOFTWARE.
 
 #include "math/types.h"
 #include "types.h"
-
+#include "utils/std/pointer.h"
 #include <vector>
-#include <memory>
 
 namespace eps {
 namespace ui {
@@ -52,11 +51,11 @@ public:
     const math::vec2 & get_size() const { return size_; }
 
     template<typename _TControl, typename ..._TParams>
-    _TControl & add(_TParams ...params)
+    utils::link<_TControl> add(_TParams ...params)
     {
-        _TControl * control = new _TControl(params..., this);
-        childs_.emplace_back(control);
-        return *control;
+        utils::pointer<_TControl> control(new _TControl(params..., this));
+        childs_.push_back(control);
+        return control;
     }
 
 protected:
@@ -71,7 +70,7 @@ protected:
 
 private:
 
-    std::vector<std::shared_ptr<control>> childs_;
+    std::vector<utils::pointer<control>> childs_;
 
     math::vec2 position_;
     math::vec2 size_;
