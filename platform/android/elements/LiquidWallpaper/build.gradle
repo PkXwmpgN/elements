@@ -1,0 +1,37 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.2"
+    defaultConfig {
+        applicationId "com.yegorov.alexey.elements.liquid"
+        minSdkVersion 18
+        targetSdkVersion 23
+        versionCode 13
+        versionName "2.0"
+    }
+
+    signingConfigs {
+	release {
+	   
+	}
+    }
+
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+    }
+}
+
+repositories { mavenCentral() }
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'com.android.support:appcompat-v7:23.1.1'
+    compile project(':Elements')
+    compile project(':Preferences')
+}

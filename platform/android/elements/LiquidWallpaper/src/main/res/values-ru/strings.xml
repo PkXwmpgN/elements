@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <!-- Simple strings. -->
+    <string name="application_name">Liquid Elements</string>
+    <string name="service_name">Liquid Elements</string>
+    <string name="prefs_activity_title">Настройки</string>
+    <string name="prefs_activity_applications_title">Приложения</string>
+
+    <string name="prefs_personalization_category_title">Персональные настройки</string>
+    <string name="prefs_display_category_title">Настройки отображения</string>
+    <string name="prefs_project_category_title">Проект</string>
+
+    <string name="prefs_background_summary">Выберите изображение из Вашей галереи, для установки в качестве фона</string>
+    <string name="prefs_background_title">Фон</string>
+
+    <string name="prefs_color_title">Цвет</string>
+    <string name="prefs_color_summary">Выберите цвет жидкости</string>
+
+    <string name="prefs_quality_title">Качество</string>
+
+    <string-array name="prefs_quality_entries">
+        <item>Низкое</item>
+        <item>Среднее</item>
+        <item>Высокое</item>
+    </string-array>
+
+    <string name="prefs_more_title">Другие Приложения</string>
+    <string name="prefs_more_summary">Попробуйте другие наши приложения в Google Play</string>
+
+    <string name="prefs_rate_title">Оценка</string>
+    <string name="prefs_rate_summary">Пожалуйста, найдите немного времени, чтобы оценить это приложение. Спасибо за Вашу поддержку!</string>
+
+    <string name="prefs_donate_title">Поддержать Проект</string>
+
+    <string name="permission_title">Доступ</string>
+    <string name="permission_text">Эта функциональность зависит от возможности доступа к фотографиям и медиа-файлам. Данный доступ небыл получен.</string>
+
+</resources>
+

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <!-- Simple strings. -->
+    <string name="application_name">Air Elements</string>
+    <string name="service_name">Air Elements</string>
+    <string name="prefs_activity_title">Настройки</string>
+
+    <string name="prefs_personalization_category_title">Персональные настройки</string>
+    <string name="prefs_application_category_title">Приложение</string>
+
+    <string name="prefs_color_speed_down_summary">Выберите цвет быстрой частицы</string>
+    <string name="prefs_color_speed_down_title">Цвет ускорения</string>
+
+    <string name="prefs_color_speed_up_summary">Выберите цвет медленной частицы</string>
+    <string name="prefs_color_speed_up_title">Цвет замедления</string>
+
+    <string name="prefs_quantity_title">Количество частиц</string>
+
+</resources>
+

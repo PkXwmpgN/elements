@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/prefs_personalization_category_title" >
+        <com.yegorov.alexey.preferences.PreferenceColorPicker
+            android:title="@string/prefs_color_background_title"
+            android:summary="@string/prefs_color_background_summary"
+            android:key="@string/prefs_color_background_key"
+            android:defaultValue="#202020"
+            alphaSlider="false"/>
+        <com.yegorov.alexey.preferences.PreferenceColorPicker
+            android:title="@string/prefs_color_gradient_1_title"
+            android:summary="@string/prefs_color_gradient_1_summary"
+            android:key="@string/prefs_color_gradient_1_key"
+            android:defaultValue="#747474"
+            alphaSlider="false"/>
+        <com.yegorov.alexey.preferences.PreferenceColorPicker
+            android:title="@string/prefs_color_gradient_2_title"
+            android:summary="@string/prefs_color_gradient_2_summary"
+            android:key="@string/prefs_color_gradient_2_key"
+            android:defaultValue="#fff9f517"
+            alphaSlider="false"/>
+        <com.yegorov.alexey.preferences.PreferenceList
+            android:title="@string/prefs_quantity_title"
+            android:summary="%s"
+            android:key="@string/prefs_quantity_key"
+            android:defaultValue="500000"
+            android:entries="@array/prefs_quantity_entries"
+            android:entryValues="@array/prefs_quantity_values" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

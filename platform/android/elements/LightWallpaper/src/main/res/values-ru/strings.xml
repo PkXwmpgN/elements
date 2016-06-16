@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <!-- Simple strings. -->
+    <string name="application_name">Light Elements</string>
+    <string name="service_name">Light Elements</string>
+    <string name="prefs_activity_title">Настройки</string>
+
+    <string name="prefs_personalization_category_title">Персональные настройки</string>
+    <string name="prefs_project_category_title">Проект</string>
+
+    <string name="prefs_background_summary">Выберите изображение из Вашей галереи, для установки в качестве фона</string>
+    <string name="prefs_background_title">Фон</string>
+
+    <string name="prefs_color_title">Рассеянный свет</string>
+    <string name="prefs_color_summary">Выберите цвет рассеянного света</string>
+
+    <string name="prefs_quantity_title">Количество частиц</string>
+
+    <string name="permission_title">Доступ</string>
+    <string name="permission_text">Эта функциональность зависит от возможности доступа к фотографиям и медиа-файлам. Данный доступ небыл получен.</string>
+
+</resources>
+

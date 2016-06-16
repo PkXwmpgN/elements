@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <!-- Simple strings. -->
+    <string name="application_name">Strange Elements</string>
+    <string name="service_name">Strange Elements</string>
+    <string name="prefs_activity_title">Настройки</string>
+    <string name="prefs_activity_applications_title">Приложения</string>
+
+    <string name="prefs_personalization_category_title">Персональные настройки</string>
+    <string name="prefs_application_category_title">Приложение</string>
+
+    <string name="prefs_color_background_summary">Выберите цвет фона</string>
+    <string name="prefs_color_background_title">Фон</string>
+
+    <string name="prefs_color_gradient_1_summary">Выберите первый цвет градиента</string>
+    <string name="prefs_color_gradient_1_title">Первый цвет градиента</string>
+
+    <string name="prefs_color_gradient_2_summary">Выберите второй цвет градиента</string>
+    <string name="prefs_color_gradient_2_title">Второй цвет градиента</string>
+
+    <string name="prefs_quantity_title">Количество частиц</string>
+
+</resources>
+

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/prefs_personalization_category_title" >
+        <com.yegorov.alexey.preferences.PreferenceImagePicker
+            android:title="@string/prefs_background_title"
+            android:summary="@string/prefs_background_summary"
+            android:key="@string/prefs_background_key"/>
+        <com.yegorov.alexey.preferences.PreferenceColorPicker
+            android:title="@string/prefs_color_title"
+            android:summary="@string/prefs_color_summary"
+            android:key="@string/prefs_color_key"
+            android:defaultValue="#FFFFFFFF"
+            alphaSlider="false"/>
+        <com.yegorov.alexey.preferences.PreferenceList
+            android:title="@string/prefs_quantity_title"
+            android:summary="%s"
+            android:key="@string/prefs_quantity_key"
+            android:defaultValue="1000"
+            android:entries="@array/prefs_quantity_entries"
+            android:entryValues="@array/prefs_quantity_values" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

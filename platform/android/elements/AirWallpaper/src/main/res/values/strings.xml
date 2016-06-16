@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <!-- Simple strings. -->
+    <string name="application_name">Air Elements</string>
+    <string name="service_name">Air Elements</string>
+    <string name="prefs_activity_title">Settings</string>
+
+    <string name="prefs_personalization_category_title">Personalization</string>
+    <string name="prefs_application_category_title">Application</string>
+
+    <string name="prefs_color_speed_down_summary">Select a speed down color</string>
+    <string name="prefs_color_speed_down_title">Speed down</string>
+    <string name="prefs_color_speed_down_key" translatable="false">color_speed_down</string>
+
+    <string name="prefs_color_speed_up_summary">Select a speed up color</string>
+    <string name="prefs_color_speed_up_title">Speed up</string>
+    <string name="prefs_color_speed_up_key" translatable="false">color_speed_up</string>
+
+    <string name="prefs_quantity_title">The quantity of particles</string>
+    <string name="prefs_quantity_key" translatable="false">quantity</string>
+
+    <string-array name="prefs_quantity_entries" translatable="false">
+        <item>0.10m</item>
+        <item>0.25m</item>
+        <item>0.50m</item>
+        <item>0.75m</item>
+        <item>1.00m</item>
+    </string-array>
+
+    <string-array name="prefs_quantity_values" translatable="false">
+        <item>100000</item>
+        <item>250000</item>
+        <item>500000</item>
+        <item>750000</item>
+        <item>1000000</item>
+    </string-array>
+</resources>
+

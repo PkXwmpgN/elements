@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/prefs_personalization_category_title" >
+        <com.yegorov.alexey.preferences.PreferenceColorPicker
+            android:title="@string/prefs_color_speed_down_title"
+            android:summary="@string/prefs_color_speed_down_summary"
+            android:key="@string/prefs_color_speed_down_key"
+            android:defaultValue="#FF0091EA"
+            alphaSlider="false"/>
+        <com.yegorov.alexey.preferences.PreferenceColorPicker
+            android:title="@string/prefs_color_speed_up_title"
+            android:summary="@string/prefs_color_speed_up_summary"
+            android:key="@string/prefs_color_speed_up_key"
+            android:defaultValue="#FFFF6F00"
+            alphaSlider="false"/>
+        <com.yegorov.alexey.preferences.PreferenceList
+            android:title="@string/prefs_quantity_title"
+            android:summary="%s"
+            android:key="@string/prefs_quantity_key"
+            android:defaultValue="1000000"
+            android:entries="@array/prefs_quantity_entries"
+            android:entryValues="@array/prefs_quantity_values" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

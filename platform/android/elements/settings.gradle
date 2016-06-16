@@ -1,0 +1,10 @@
+include ':Elements'
+include ':Preferences'
+include ':LiquidWallpaper'
+include ':FireWallpaper'
+include ':AirWallpaper'
+include ':StrangeWallpaper'
+include ':LightWallpaper'
+
+project(':Elements').projectDir = new File('libs/Elements')
+project(':Preferences').projectDir = new File('libs/Preferences')

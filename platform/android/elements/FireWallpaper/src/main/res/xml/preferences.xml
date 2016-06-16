@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/prefs_personalization_category_title" >
+        <com.yegorov.alexey.preferences.PreferenceImagePicker
+            android:title="@string/prefs_background_title"
+            android:summary="@string/prefs_background_summary"
+            android:key="@string/prefs_background_key"
+            android:defaultValue="images/background.jpg"/>
+        <com.yegorov.alexey.preferences.PreferenceColorPicker
+            android:title="@string/prefs_color_hot_title"
+            android:summary="@string/prefs_color_hot_summary"
+            android:key="@string/prefs_color_hot_key"
+            android:defaultValue="#ff1980ff"/>
+        <com.yegorov.alexey.preferences.PreferenceColorPicker
+            android:title="@string/prefs_color_cold_title"
+            android:summary="@string/prefs_color_cold_summary"
+            android:key="@string/prefs_color_cold_key"
+            android:defaultValue="#ffff8019"/>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/prefs_display_category_title" >
+        <com.yegorov.alexey.preferences.PreferenceList
+            android:title="@string/prefs_quality_title"
+            android:summary="%s"
+            android:key="@string/prefs_quality_key"
+            android:defaultValue="1"
+            android:entries="@array/prefs_quality_entries"
+            android:entryValues="@array/quality_entry_values" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/prefs_activity_applications_title" >
+        <com.yegorov.alexey.preferences.PreferenceProducts
+            android:title="@string/prefs_more_title"
+            android:summary="@string/prefs_more_summary"
+            android:key="@string/prefs_more_key"/>
+        <com.yegorov.alexey.preferences.PreferenceRate
+            android:title="@string/prefs_rate_title"
+            android:summary="@string/prefs_rate_summary"
+            android:key="@string/prefs_rate_key"/>
+    </PreferenceCategory>
+
+</PreferenceScreen>

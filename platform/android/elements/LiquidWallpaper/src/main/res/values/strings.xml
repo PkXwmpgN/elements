@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <!-- Simple strings. -->
+    <string name="application_name">Liquid Elements</string>
+    <string name="service_name">Liquid Elements</string>
+    <string name="prefs_activity_title">Settings</string>
+    <string name="prefs_activity_applications_title">Applications</string>
+
+    <string name="prefs_personalization_category_title">Personalization</string>
+    <string name="prefs_display_category_title">Display</string>
+    <string name="prefs_project_category_title">Project</string>
+
+    <string name="prefs_background_summary">Select an image from your gallery to set as background</string>
+    <string name="prefs_background_title">Background</string>
+    <string name="prefs_background_key" translatable="false">background</string>
+
+    <string name="prefs_color_title">Color</string>
+    <string name="prefs_color_summary">Select a color of Liquid surface</string>
+    <string name="prefs_color_key" translatable="false">color</string>
+
+    <string name="prefs_quality_title">Display Quality</string>
+    <string name="prefs_quality_key" translatable="false">quality</string>
+
+    <string-array name="prefs_quality_entries">
+        <item>Low</item>
+        <item>Medium</item>
+        <item>High</item>
+    </string-array>
+
+    <string-array name="quality_entry_values" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <string name="prefs_more_title">More</string>
+    <string name="prefs_more_summary">Check out more of our Apps on the Google Play</string>
+    <string name="prefs_more_key" translatable="false">more</string>
+
+    <string name="prefs_rate_title">Rate</string>
+    <string name="prefs_rate_summary">Please take a moment to rate this application. Thank you!</string>
+    <string name="prefs_rate_key" translatable="false">rate</string>
+
+    <string name="prefs_donate_title">Donate</string>
+    <string name="prefs_donate_key" translatable="false">donate</string>
+
+    <string name="permission_title">Permission</string>
+    <string name="permission_text">This functionality depends on granted to access photos and media. Permission was not granted.</string>
+
+</resources>
+
