@@ -74,13 +74,21 @@ void renderer::set_field(sync::future<math::vec2> field)
 
 bool renderer::construct(const math::uvec2 & size, size_t particles_count)
 {
-    if(auto link = link_positions_.lock())
-        link->set_count(particles_count);
-    if(auto link = link_particles_.lock())
-        link->set_count(particles_count);
+    if(particles_count_ != particles_count ||
+       size_ != size)
+   {
+       particles_count_ = particles_count;
+       size_ = size;
 
-    passes_.construct(size);
-    return true;
+       if(auto link = link_positions_.lock())
+           link->set_count(particles_count);
+       if(auto link = link_particles_.lock())
+           link->set_count(particles_count);
+
+       passes_.construct(size);
+       return true;
+   }
+   return false;
 }
 
 void renderer::render(float dt)

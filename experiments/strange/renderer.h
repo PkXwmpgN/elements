@@ -32,12 +32,14 @@ namespace eps {
 namespace experiment {
 namespace strange {
 
+class particles_product;
+
 class renderer
 {
 public:
 
-    bool initialize(size_t particles_count);
-    bool construct(const math::uvec2 & size);
+    bool initialize();
+    bool construct(const math::uvec2 & size, size_t particles_count);
 
     void render(float dt);
 
@@ -48,8 +50,12 @@ private:
 
     rendering::pass_composition passes_;
 
+    utils::link<particles_product> link_product_;
     utils::link<rendering::effect::gradient> link_gradient_;
     utils::link<rendering::effect::clear> link_clear_;
+
+    size_t particles_count_ = 0;
+    math::uvec2 size_;
 };
 
 } /* strange */

@@ -54,6 +54,9 @@ private:
     utils::link<pass_velocities> link_velocities_;
     utils::link<pass_positions> link_positions_;
     utils::link<pass_particles> link_particles_;
+
+    size_t particles_count_ = 0;
+    math::uvec2 size_;
 };
 
 

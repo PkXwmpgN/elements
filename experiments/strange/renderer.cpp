@@ -35,7 +35,7 @@ namespace eps {
 namespace experiment {
 namespace strange {
 
-bool renderer::initialize(size_t particles_count)
+bool renderer::initialize()
 {
     using namespace rendering;
     // TODO: from xml + register user types
@@ -46,8 +46,8 @@ bool renderer::initialize(size_t particles_count)
     if(link_clear_.expired())
         return false;
 
-    auto link_particles = passes_.add_pass<particles_product>();
-    if(link_particles.expired())
+    link_product_ = passes_.add_pass<particles_product>();
+    if(link_product_.expired())
         return false;
 
     link_gradient_ = passes_.add_pass<effect::gradient>();
@@ -66,7 +66,7 @@ bool renderer::initialize(size_t particles_count)
     if(link_blend.expired())
         return false;
 
-    passes_.add_dependency(link_gradient_, link_particles, pass_input_slot::input_0);
+    passes_.add_dependency(link_gradient_, link_product_, pass_input_slot::input_0);
     passes_.add_dependency(link_blur, link_gradient_, pass_input_slot::input_0);
     passes_.add_dependency(link_tone, link_blur, pass_input_slot::input_0);
     passes_.add_dependency(link_tone, link_gradient_, pass_input_slot::input_1);
@@ -75,15 +75,25 @@ bool renderer::initialize(size_t particles_count)
     link_blur.lock()->set_strong(2.0f);
     link_blur.lock()->set_downsample(2);
     link_tone.lock()->set_tone(1.0f, 1.6f);
-    link_particles.lock()->set_count(particles_count);
 
     return true;
 }
 
-bool renderer::construct(const math::uvec2 & size)
+bool renderer::construct(const math::uvec2 & size, size_t particles_count)
 {
-    passes_.construct(size);
-    return true;
+    if(particles_count_ != particles_count ||
+       size_ != size)
+    {
+        particles_count_ = particles_count;
+        size_ = size;
+
+        if(auto link = link_product_.lock())
+            link->set_count(particles_count);
+        passes_.construct(size);
+        return true;
+    }
+
+    return false;
 }
 
 void renderer::render(float dt)

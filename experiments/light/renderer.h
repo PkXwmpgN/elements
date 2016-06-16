@@ -60,6 +60,9 @@ private:
     utils::link<pass_occluding> link_occluding_;
     utils::link<rendering::effect::light_scattered> link_ls_;
     utils::link<rendering::effect::clear> link_clear_;
+
+    size_t particles_count_ = 0;
+    math::uvec2 size_;
 };
 
 } /* light */

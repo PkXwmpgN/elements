@@ -25,8 +25,8 @@ IN THE SOFTWARE.
 #include "pass_particles.h"
 #include "pass_metaballs.h"
 #include "pass_liquid.h"
-
 #include <elements/rendering/effects/blur.h>
+
 #include <elements/math/common.h>
 #include <elements/math/transform.h>
 
