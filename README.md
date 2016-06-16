@@ -2,13 +2,17 @@
 OpenGL ES 2.0 and C++ experiments.
 
 ###Contents
-* [Liquid Simulation](#liquid-simulation)
-* [Light Scattered](#light-scattered)
-* [Strange Attractors](#strange-attractors)
-* [Wind Field](#wind-field)
-* [Flame Simualtion](#flame-simulation)
+* [Experiments](#experiments)
+ * [Liquid Simulation](#liquid-simulation)
+ * [Light Scattered](#light-scattered)
+ * [Strange Attractors](#strange-attractors)
+ * [Wind Field](#wind-field)
+ * [Flame Simualtion](#flame-simulation)
+* [Build](#build)
 
 -----------------------
+
+##Experiments
 
 ###Liquid Simulation 
 ![Liquid Simulation](https://raw.githubusercontent.com/PkXwmpgN/elements/master/screenshots/liquid.jpeg)
@@ -49,6 +53,18 @@ The adaptation of a [raymarching](http://iquilezles.org/www/articles/raymarching
 - Sources experiments/fire
 - Preview into [the YouTube](https://www.youtube.com/watch?v=eYFEQRwEKm4)
 - Demo into [the Google Play](https://play.google.com/store/apps/details?id=com.yegorov.alexey.elements.fire)
+
+##Build
+
+* Install [Android Studio](https://developer.android.com/studio/index.html);
+* Open the project elements/platform/android;
+* Download the required components;
+ * Android SDK Platform;
+ * Android Platform-Tools;
+ * Android Tools;
+ * Android Support Repository.
+* Open Project Structure (Menu->File->Project Structure...) and setup Android NDK;
+* Run.
 
 ###Author
 Alexey Yegorov.
