@@ -1,3 +1,5 @@
+import org.apache.tools.ant.taskdefs.condition.Os
+
 apply plugin: 'com.android.library'
 
 android {
@@ -34,7 +36,10 @@ clean.dependsOn 'nativeClean'
 task nativeBuild(type: Exec) {
     Properties properties = new Properties()
     properties.load(project.rootProject.file('local.properties').newDataInputStream())
-    def ndkbuild = properties.getProperty('ndk.dir', null) + "/ndk-build"
+    def ndkbuild = properties.getProperty('ndk.dir', null) + File.separator + "ndk-build"
+    if(Os.isFamily(Os.FAMILY_WINDOWS)) {
+        ndkbuild += ".cmd"
+    }
     commandLine ndkbuild,
             '-C', file('src/main/jni').absolutePath,
             '-j', Runtime.runtime.availableProcessors()
@@ -43,7 +48,10 @@ task nativeBuild(type: Exec) {
 task nativeClean(type: Exec) {
     Properties properties = new Properties()
     properties.load(project.rootProject.file('local.properties').newDataInputStream())
-    def ndkbuild = properties.getProperty('ndk.dir', null) + "/ndk-build"
+    def ndkbuild = properties.getProperty('ndk.dir', null) + File.separator + "ndk-build"
+    if(Os.isFamily(Os.FAMILY_WINDOWS)) {
+        ndkbuild += ".cmd"
+    }
     commandLine ndkbuild,
             '-C', file('src/main/jni').absolutePath,
             'clean'
