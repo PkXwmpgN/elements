@@ -49,10 +49,10 @@ void system::touch_up(float x, float y)
 
 system::future system::spawn(float dt)
 {
-    system::promice input(std::distance(volume_.begin(), volume_.end()));
+    system::promise input(std::distance(volume_.begin(), volume_.end()));
     system::future  output = input.get_future();
 
-    std::thread([this](system::promice input, float dt)
+    std::thread([this](system::promise input, float dt)
     {
         while(input.valid())
         {

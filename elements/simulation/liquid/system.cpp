@@ -67,10 +67,10 @@ void system::init_particles_distribution()
 
 system::future system::spawn(float dt)
 {
-    promice input(volume_.get_particles_range().size());
+    promise input(volume_.get_particles_range().size());
     future  output = input.get_future();
 
-    std::thread([this](promice input, float dt)
+    std::thread([this](promise input, float dt)
     {
         config cfg;
         while(input.valid())

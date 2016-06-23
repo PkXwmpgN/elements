@@ -35,7 +35,7 @@ namespace sync {
 
 template<typename _Type> class transport;
 template<typename _Type> class future;
-template<typename _Type> class promice;
+template<typename _Type> class promise;
 
 template<typename _Type>
 struct traits
@@ -48,20 +48,20 @@ struct traits
 };
 
 template<typename _Type>
-class promice
+class promise
 {
 public:
 
     using container_type = typename traits<_Type>::container_type;
 
-    explicit promice(size_t size)
+    explicit promise(size_t size)
         : transport_(new typename traits<_Type>::transport_type(size))
     {}
 
-    promice(promice &&) = default;
-    promice & operator=(promice &&) = default;
-    promice(const promice &) = delete;
-    promice & operator=(const promice &) = delete;
+    promise(promise &&) = default;
+    promise & operator=(promise &&) = default;
+    promise(const promise &) = delete;
+    promise & operator=(const promise &) = delete;
 
     void send()
     {

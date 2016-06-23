@@ -37,7 +37,7 @@ class system
 public:
 
     using future  = sync::future<math::vec2>;
-    using promice = sync::promice<math::vec2>;
+    using promise = sync::promise<math::vec2>;
 
     bool construct(const math::uvec2 & size);
 
