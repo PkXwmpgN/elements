@@ -97,7 +97,7 @@ void pass_velocities::pass_process(float dt)
     {
         field_.wait();
         vertices_data_.allocate(field_.output().data(),
-                                field_.output().size() * sizeof(math::vec2));
+                                field_.output().size(), sizeof(math::vec2));
 
         EPS_STATE_SAMPLER_0(get_inputs().get_product());
         EPS_STATE_PROGRAM(program_process_.get_product());

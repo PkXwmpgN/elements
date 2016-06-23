@@ -36,7 +36,7 @@ struct state_blend;
 struct state_target;
 struct state_sampler;
 struct state_vertices;
-struct state_indecies;
+struct state_indices;
 struct state_program;
 
 template<>
@@ -159,7 +159,7 @@ struct state_traits<state_vertices>
 };
 
 template<>
-struct state_traits<state_indecies>
+struct state_traits<state_indices>
 {
     using value_type = GLuint;
 

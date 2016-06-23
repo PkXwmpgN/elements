@@ -51,7 +51,7 @@ void compute_product_index::construct(const math::uvec2 & size)
         uvs[i].y = (i / size.x + 0.5f) * t;
     }
 
-    vertices_.allocate(uvs.data(), uvs.size() * sizeof(math::vec2));
+    vertices_.allocate(uvs.data(), uvs.size(), sizeof(math::vec2));
 }
 
 } /* rendering */

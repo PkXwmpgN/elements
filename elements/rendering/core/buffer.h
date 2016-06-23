@@ -53,17 +53,20 @@ public:
     buffer(buffer &&) = default;
     buffer & operator=(buffer &&) = default;
 
-    void allocate(const void * data, size_t count);
+    void allocate(const void * data, size_t count, size_t size);
     const product_type & get_product() const;
+    size_t get_count() const;
 
 private:
 
     product_type product_;
     buffer_usage usage_;
+
+    size_t count_ = 0;
 };
 
 using vertices = buffer<buffer_type::VERTEX>;
-using indicies = buffer<buffer_type::INDEX>;
+using indices = buffer<buffer_type::INDEX>;
 
 template<buffer_type _Type>
 inline buffer<_Type>::buffer(buffer_usage usage)
@@ -79,10 +82,10 @@ inline buffer<_Type>::~buffer()
 }
 
 template<buffer_type _Type>
-inline void buffer<_Type>::allocate(const void * data, size_t count)
+inline void buffer<_Type>::allocate(const void * data, size_t count, size_t size)
 {
     glBindBuffer(static_cast<GLenum>(_Type), utils::raw_product(product_));
-    glBufferData(static_cast<GLenum>(_Type), count, data,
+    glBufferData(static_cast<GLenum>(_Type), count * size, data,
                  static_cast<GLenum>(usage_));
 }
 
@@ -90,6 +93,12 @@ template<buffer_type _Type>
 inline const product_type & buffer<_Type>::get_product() const
 {
     return product_;
+}
+
+template<buffer_type _Type>
+inline size_t buffer<_Type>::get_count() const
+{
+    return count_;
 }
 
 } /* rendering */

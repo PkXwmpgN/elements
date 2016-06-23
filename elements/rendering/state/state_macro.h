@@ -45,7 +45,7 @@ IN THE SOFTWARE.
 #define EPS_STATE_SAMPLER_2(...) __STATE_BASE__(eps::rendering::state_sampler, __VA_ARGS__, 2);
 #define EPS_STATE_SAMPLER_3(...) __STATE_BASE__(eps::rendering::state_sampler, __VA_ARGS__, 3);
 #define EPS_STATE_VERTICES(...) __STATE_BASE__(eps::rendering::state_vertices, __VA_ARGS__);
-#define EPS_STATE_INDECIES(...) __STATE_BASE__(eps::rendering::state_indecies, __VA_ARGS__);
+#define EPS_STATE_INDICES(...) __STATE_BASE__(eps::rendering::state_indices, __VA_ARGS__);
 #define EPS_STATE_PROGRAM(...) __STATE_BASE__(eps::rendering::state_program, __VA_ARGS__);
 
 

@@ -44,7 +44,7 @@ public:
 private:
 
     vertices texture_vertices_;
-    indicies texture_indicies_;
+    indices texture_indices_;
 };
 
 } /* primitive */

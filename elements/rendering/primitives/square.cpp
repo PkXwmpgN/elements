@@ -37,7 +37,7 @@ square::square(buffer_usage usage)
         2, 3, 0,
         0, 1, 2
     };
-    texture_indicies_.allocate(elements, 6 * sizeof(GLubyte));
+    texture_indices_.allocate(elements, 6, sizeof(GLubyte));
 
     // vertices
     GLfloat vertices[] =
@@ -48,13 +48,13 @@ square::square(buffer_usage usage)
         -1.0f,  1.0f, 0.0f, 1.0f
     };
 
-    texture_vertices_.allocate(vertices, 16 * sizeof(GLfloat));
+    texture_vertices_.allocate(vertices, 16, sizeof(GLfloat));
 }
 
 void square::render(program & program, short a_position)
 {
     EPS_STATE_VERTICES(texture_vertices_.get_product());
-    EPS_STATE_INDECIES(texture_indicies_.get_product());
+    EPS_STATE_INDICES(texture_indices_.get_product());
 
     program.attribute_array(a_position, 0, 2, 4 * sizeof(GLfloat));
     program.attribute_array_enable(a_position);
@@ -65,7 +65,7 @@ void square::render(program & program, short a_position)
 void square::render(program & program, short a_position, short a_texture)
 {
     EPS_STATE_VERTICES(texture_vertices_.get_product());
-    EPS_STATE_INDECIES(texture_indicies_.get_product());
+    EPS_STATE_INDICES(texture_indices_.get_product());
 
     program.attribute_array(a_position, 0, 2, 4 * sizeof(GLfloat));
     program.attribute_array_enable(a_position);
@@ -78,7 +78,7 @@ void square::render(program & program, short a_position, short a_texture)
 
 void square::construct(float * vertices)
 {
-    texture_vertices_.allocate(vertices, 16 * sizeof(float));
+    texture_vertices_.allocate(vertices, 16, sizeof(float));
 }
 
 } /* primitive */

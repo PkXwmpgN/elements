@@ -65,7 +65,7 @@ void pass_particles::process(float)
     {
         particles_.wait();
         vertices_.allocate(particles_.output().data(),
-                           particles_.output().size() * sizeof(math::vec2));
+                           particles_.output().size(), sizeof(math::vec2));
 
         EPS_STATE_VERTICES(vertices_.get_product());
         EPS_STATE_PROGRAM(program_.get_product());
