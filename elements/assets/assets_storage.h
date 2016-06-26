@@ -38,9 +38,9 @@ class assets_storage
 public:
 
     template<typename _TReader, typename ..._TArgs>
-    static void init(_TArgs ...args)
+    static void init(_TArgs&& ...args)
     {
-        _TReader * reader = new _TReader(args...);
+        _TReader * reader = new _TReader(std::forward<_TArgs>(args)...);
         instance_.reset(new assets_storage(reader));
     }
 

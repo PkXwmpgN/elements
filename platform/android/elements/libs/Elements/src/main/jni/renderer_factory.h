@@ -37,16 +37,16 @@ public:
     using renderer_pointer = std::shared_ptr<renderer_type>;
 
     template<typename ..._Tparams>
-    size_t open(_Tparams... params)
+    size_t open(_Tparams&&... params)
     {
         auto closed = std::find(renderers_.begin(), renderers_.end(), nullptr);
         if(closed == renderers_.end())
         {
-            renderers_.emplace_back(new renderer_type(params...));
+            renderers_.emplace_back(new renderer_type(std::forward<_Tparams>(params)...));
             return renderers_.size() - 1;
         }
 
-        closed->reset(new renderer_type(params...));
+        closed->reset(new renderer_type(std::forward<_Tparams>(params)...));
         return std::distance(renderers_.begin(), closed);
     }
 

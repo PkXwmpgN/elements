@@ -49,9 +49,9 @@ public:
     };
 
     template<typename _TPreferences, typename ..._TArgs>
-    static void init(_TArgs ...args)
+    static void init(_TArgs&& ...args)
     {
-        _TPreferences * impl = new _TPreferences(args...);
+        _TPreferences * impl = new _TPreferences(std::forward<_TArgs>(args)...);
         instance_.reset(new preferences(impl));
     }
 

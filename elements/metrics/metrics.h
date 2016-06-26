@@ -39,9 +39,9 @@ class metrics
 public:
 
     template<typename _TMetrics, typename ..._TArgs>
-    static void init(_TArgs ...args)
+    static void init(_TArgs&&... args)
     {
-        _TMetrics * impl = new _TMetrics(args...);
+        _TMetrics * impl = new _TMetrics(std::forward<_TArgs>(args)...);
         instance_.reset(new metrics(impl));
     }
 

@@ -38,10 +38,10 @@ template
 struct state_local
 {
     template<typename... _Params>
-    explicit state_local(_Params ...params)
+    explicit state_local(_Params&& ...params)
     {
         _State_traits::init(value_);
-        _State_traits::set(params...);
+        _State_traits::set(std::forward<_Params>(params)...);
     }
     state_local(const state_local &) = delete;
     state_local & operator=(const state_local &) = delete;
@@ -59,9 +59,9 @@ private:
 };
 
 template<typename _State, typename... _State_params>
-state_local<_State> make_state(_State_params ...params)
+state_local<_State> make_state(_State_params&& ...params)
 {
-    return state_local<_State>(params...);
+    return state_local<_State>(std::forward<_State_params>(params)...);
 }
 
 } /* rendering */

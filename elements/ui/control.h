@@ -51,9 +51,9 @@ public:
     const math::vec2 & get_size() const { return size_; }
 
     template<typename _TControl, typename ..._TParams>
-    utils::link<_TControl> add(_TParams ...params)
+    utils::link<_TControl> add(_TParams&&... params)
     {
-        utils::pointer<_TControl> control(new _TControl(params..., this));
+        utils::pointer<_TControl> control(new _TControl(std::forward<_TParams>(params)..., this));
         childs_.push_back(control);
         return control;
     }
