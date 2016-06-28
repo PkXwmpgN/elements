@@ -36,6 +36,7 @@ public:
 
     signal()
         : recieved_(false)
+        , closed_(false)
     {}
 
     signal(signal &&) = default;
@@ -47,7 +48,7 @@ public:
     void send(_Perf perf)
     {
         std::unique_lock<std::mutex> lock(mutex_);
-        condition_.wait(lock, [this](){ return !recieved_; });
+        condition_.wait(lock, [this](){ return !recieved_ || closed_; });
 
         perf();
 
@@ -58,7 +59,7 @@ public:
     void send()
     {
         std::unique_lock<std::mutex> lock(mutex_);
-        condition_.wait(lock, [this](){ return !recieved_; });
+        condition_.wait(lock, [this](){ return !recieved_ || closed_; });
         recieved_ = true;
         condition_.notify_one();
     }
@@ -67,7 +68,7 @@ public:
     void recv(_Perf perf)
     {
         std::unique_lock<std::mutex> lock(mutex_);
-        condition_.wait(lock, [this](){ return recieved_; });
+        condition_.wait(lock, [this](){ return recieved_ || closed_; });
 
         perf();
 
@@ -78,9 +79,21 @@ public:
     void recv()
     {
         std::unique_lock<std::mutex> lock(mutex_);
-        condition_.wait(lock, [this](){ return recieved_; });
+        condition_.wait(lock, [this](){ return recieved_ || closed_; });
         recieved_ = false;
         condition_.notify_one();
+    }
+
+    void close()
+    {
+        std::lock_guard<std::mutex> lock(mutex_);
+        closed_ = true;
+        condition_.notify_one();
+    }
+
+    bool closed() const
+    {
+        return closed_;
     }
 
 private:
@@ -88,6 +101,7 @@ private:
     std::mutex mutex_;
     std::condition_variable condition_;
     bool recieved_;
+    bool closed_;
 };
 
 } /* sync */

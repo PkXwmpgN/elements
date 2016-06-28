@@ -65,52 +65,42 @@ void system::init_particles_distribution()
     });
 }
 
-system::future system::spawn(float dt)
+sync::task<math::vec2>::future system::spawn(float dt)
 {
-    promise input(volume_.get_particles_range().size());
-    future  output = input.get_future();
-
-    std::thread([this](promise input, float dt)
+    const size_t size = volume_.get_particles_range().size();
+    return simulation_task_.start(size, [this](auto begin, auto /*end*/, float dt)
     {
-        config cfg;
-        while(input.valid())
-        {
-            cfg = config_;
+         config cfg = config_;
 
-            // neighbors search
-            volume_.partition();
+         // neighbors search
+         volume_.partition();
 
-            // apply gravity
-            apply_gravity(cfg, dt);
+         // apply gravity
+         apply_gravity(cfg, dt);
 
-            // modify velocities with pairwise viscosity impulses
-            apply_viscosity(cfg, dt);
+         // modify velocities with pairwise viscosity impulses
+         apply_viscosity(cfg, dt);
 
-            // save previous position.
-            // advance to predicted position
-            predict_position(cfg, dt);
+         // save previous position.
+         // advance to predicted position
+         predict_position(cfg, dt);
 
-            // double density relaxation;
-            double_density_relaxation(cfg, dt);
+         // double density relaxation;
+         double_density_relaxation(cfg, dt);
 
-            // resolve collisions
-            resolve_collisions(cfg, dt);
+         // resolve collisions
+         resolve_collisions(cfg, dt);
 
-            // use previous position to compute next velocity
-            next_velocity(cfg, dt);
+         // use previous position to compute next velocity
+         next_velocity(cfg, dt);
 
-            auto dest = input.input().begin();
-            for(auto & particle : volume_.get_particles_range())
-            {
-                *dest = particle.pos;
-                ++dest;
-            }
+         for(auto & particle : volume_.get_particles_range())
+         {
+             *begin = particle.pos;
+             ++begin;
+         }
 
-            input.send();
-        }
-    }, std::move(input), dt).detach();
-
-    return output;
+    }, dt);
 }
 
 void system::touch(const math::vec2 & pos, float radius)

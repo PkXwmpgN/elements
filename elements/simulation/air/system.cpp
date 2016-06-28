@@ -47,30 +47,20 @@ void system::touch_up(float x, float y)
     touch_prev_.y = touch_.y = y;
 }
 
-system::future system::spawn(float dt)
+sync::task<math::vec2>::future system::spawn(float dt)
 {
-    system::promise input(std::distance(volume_.begin(), volume_.end()));
-    system::future  output = input.get_future();
-
-    std::thread([this](system::promise input, float dt)
+    const size_t size = std::distance(volume_.begin(), volume_.end());
+    return simulation_task_.start(size, [this](auto begin, auto /*end*/, float dt)
     {
-        while(input.valid())
+        update_velocities(dt);
+        for(auto & cell : volume_)
         {
-            update_velocities(dt);
-
-            auto dest = input.input().begin();
-            for(auto & cell : volume_)
-            {
-                dest->x = cell.data[volume::cell::U];
-                dest->y = cell.data[volume::cell::V];
-                ++dest;
-            }
-
-            input.send();
+            begin->x = cell.data[volume::cell::U];
+            begin->y = cell.data[volume::cell::V];
+            ++begin;
         }
-    }, std::move(input), dt).detach();
 
-    return output;
+    }, dt);
 }
 
 void system::update_velocities(float dt)

@@ -26,6 +26,7 @@ IN THE SOFTWARE.
 
 #include "math/types.h"
 #include "synchronization/future.h"
+#include "synchronization/task.h"
 
 #include "config.h"
 #include "volume.h"
@@ -39,13 +40,14 @@ class system
 {
 public:
 
-    using promise = sync::promise<math::vec2>;
-    using future  = sync::future<math::vec2>;
+    system() = default;
+    system(const system &) = delete;
+    system & operator=(const system &) = delete;
 
     bool construct(const math::vec2 & size, size_t particle_count);
     void touch(const math::vec2 & pos, float radius);
 
-    future spawn(float dt);
+    sync::task<math::vec2>::future spawn(float dt);
 
     void set_gravity(const math::vec2 & value) { config_.gravity(value); }
     void set_density(float value) { config_.density(value); }
@@ -69,6 +71,8 @@ private:
     volume volume_;
     config config_;
     obstacle touch_;
+
+    sync::task<math::vec2> simulation_task_;
 };
 
 } /* liquid */

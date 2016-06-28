@@ -36,6 +36,7 @@ namespace sync {
 template<typename _Type> class transport;
 template<typename _Type> class future;
 template<typename _Type> class promise;
+template<typename _Type> class controller;
 
 template<typename _Type>
 struct traits
@@ -63,6 +64,12 @@ public:
     promise(const promise &) = delete;
     promise & operator=(const promise &) = delete;
 
+    ~promise()
+    {
+        if(valid())
+            transport_->close();
+    }
+
     void send()
     {
         assert(transport_ != nullptr);
@@ -71,7 +78,7 @@ public:
 
     bool valid() const
     {
-        return transport_ && transport_.use_count() > 1;
+        return transport_ && !transport_->closed();
     }
 
     container_type & input()
@@ -83,6 +90,44 @@ public:
     future<_Type> get_future() const
     {
         return future<_Type>(transport_);
+    }
+
+    controller<_Type> get_controller() const
+    {
+        return controller<_Type>(transport_);
+    }
+
+private:
+
+    typename traits<_Type>::ptransport_type transport_;
+};
+
+template<typename _Type>
+class controller
+{
+public:
+
+    using container_type = typename traits<_Type>::container_type;
+
+    controller() = default;
+    controller(controller &&) = default;
+    controller & operator=(controller &&) = default;
+    controller(const controller &) = delete;
+    controller & operator=(const controller &) = delete;
+
+    explicit controller(typename traits<_Type>::ptransport_type transport)
+        : transport_(transport)
+    {}
+
+    bool valid() const
+    {
+        return transport_ && !transport_->closed();
+    }
+
+    void close()
+    {
+        assert(transport_ != nullptr);
+        transport_->close();
     }
 
 private:
@@ -103,6 +148,12 @@ public:
     future(const future &) = delete;
     future & operator=(const future &) = delete;
 
+    ~future()
+    {
+        if(valid())
+            transport_->close();
+    }
+
     explicit future(typename traits<_Type>::ptransport_type transport)
         : transport_(transport)
     {}
@@ -122,7 +173,7 @@ public:
 
     bool valid() const
     {
-        return transport_ != nullptr;
+        return transport_ && !transport_->closed();
     }
 
     const container_type & output() const
@@ -172,9 +223,18 @@ public:
         customer_.recv();
     }
 
+    void close()
+    {
+        customer_.close();
+    }
+
+    bool closed() const
+    {
+        return customer_.closed();
+    }
+
     container_type & input() { return input_; }
     const container_type & output() const { return output_; }
-
 
 private:
 

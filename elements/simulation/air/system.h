@@ -26,6 +26,7 @@ IN THE SOFTWARE.
 
 #include "math/types.h"
 #include "synchronization/future.h"
+#include "synchronization/task.h"
 #include "volume.h"
 
 namespace eps {
@@ -36,15 +37,12 @@ class system
 {
 public:
 
-    using future  = sync::future<math::vec2>;
-    using promise = sync::promise<math::vec2>;
-
     bool construct(const math::uvec2 & size);
 
     void touch_down(float x, float y);
     void touch_up(float x, float y);
 
-    future spawn(float dt);
+    sync::task<math::vec2>::future spawn(float dt);
 
 private:
 
@@ -56,6 +54,8 @@ private:
 
     math::vec2 touch_;
     math::vec2 touch_prev_;
+
+    sync::task<math::vec2> simulation_task_;
 };
 
 } /* air */
