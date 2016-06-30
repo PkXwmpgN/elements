@@ -27,7 +27,7 @@
             uniform vec2 u_light_position;
 
             const int   samples = 4;
-            const float samples_r = 1.0 / 8.0f;
+            const float samples_r = 1.0 / 8.0;
 
             void main()
             {
