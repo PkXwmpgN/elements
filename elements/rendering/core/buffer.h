@@ -84,6 +84,7 @@ inline buffer<_Type>::~buffer()
 template<buffer_type _Type>
 inline void buffer<_Type>::allocate(const void * data, size_t count, size_t size)
 {
+    count_ = count;
     glBindBuffer(static_cast<GLenum>(_Type), utils::raw_product(product_));
     glBufferData(static_cast<GLenum>(_Type), count * size, data,
                  static_cast<GLenum>(usage_));
