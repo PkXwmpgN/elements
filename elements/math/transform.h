@@ -60,6 +60,16 @@ inline mat4 translate(const vec3 & value)
     return glm::translate(value);
 }
 
+inline mat4 perspective(float fovy, float aspect, float near, float far)
+{
+    return glm::perspective(fovy, aspect, near, far);
+}
+
+inline mat4 lookAt(const vec3 & eye, const vec3 & center, const vec3 & up)
+{
+    return glm::lookAt(eye, center, up);
+}
+
 } /* math */
 } /* eps */
 
