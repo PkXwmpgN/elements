@@ -24,6 +24,8 @@ IN THE SOFTWARE.
 #ifndef UTILS_STD_PRODUCT_H_INCLUDED
 #define UTILS_STD_PRODUCT_H_INCLUDED
 
+#include <utility>
+
 namespace eps {
 namespace utils {
 
@@ -44,7 +46,12 @@ public:
     explicit operator value_const_pointer() const;
     explicit operator value_pointer();
 
+    product(product && temp);
+    product & operator=(product && temp);
+
     bool invalid() const;
+
+    friend void swap(product & l, product & r);
 
     friend bool operator==(const product & l, const product & r);
     friend bool operator!=(const product & l, const product & r);
@@ -87,6 +94,20 @@ inline product<_Type, _Default>::product(const value_type & value)
 {}
 
 template<typename _Type, _Type _Default>
+inline product<_Type, _Default>::product(product && temp)
+    : value_(temp.value_)
+{
+    temp.value_ = _Default;
+}
+
+template<typename _Type, _Type _Default>
+inline product<_Type, _Default> & product<_Type, _Default>::operator=(product && temp)
+{
+    swap(*this, temp);
+    return *this;
+}
+
+template<typename _Type, _Type _Default>
 inline product<_Type, _Default>::operator
     product<_Type, _Default>::value_const_pointer() const
 {
@@ -104,6 +125,12 @@ template<typename _Type, _Type _Default>
 inline bool product<_Type, _Default>::invalid() const
 {
     return value_ == _Default;
+}
+
+template<typename _Type, _Type _Default>
+inline void swap(product<_Type, _Default> & l, product<_Type, _Default> & r)
+{
+    std::swap(l.value_, r.value_);
 }
 
 template<typename _Type, _Type _Default>

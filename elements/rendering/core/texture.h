@@ -41,6 +41,8 @@ public:
     texture();
     ~texture();
 
+    texture(const texture &) = delete;
+    texture & operator=(const texture &) = delete;
     texture(texture &&) = default;
     texture & operator=(texture &&) = default;
 
@@ -71,7 +73,8 @@ inline texture<_Texture_policy>::texture()
 template<typename _Texture_policy>
 inline texture<_Texture_policy>::~texture()
 {
-    glDeleteTextures(1, utils::ptr_product(product_));
+    if(!product_.invalid())
+        glDeleteTextures(1, utils::ptr_product(product_));
 }
 
 template<typename _Texture_policy>

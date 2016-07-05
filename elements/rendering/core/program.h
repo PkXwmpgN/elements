@@ -53,6 +53,8 @@ public:
     program();
     ~program();
 
+    program(const program &) = delete;
+    program & operator=(const program &) = delete;
     program(program &&) = default;
     program & operator=(program &&) = default;
 

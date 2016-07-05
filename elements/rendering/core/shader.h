@@ -43,6 +43,8 @@ public:
     shader(const char * source, shader_type type);
     ~shader();
 
+    shader(const shader &) = delete;
+    shader & operator=(const shader &) = delete;
     shader(shader &&) = default;
     shader & operator=(shader &&) = default;
 

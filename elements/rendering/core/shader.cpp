@@ -35,7 +35,8 @@ shader::shader(const char * source, shader_type type)
 
 shader::~shader()
 {
-    glDeleteShader(utils::raw_product(product_));
+    if(!product_.invalid())
+        glDeleteShader(utils::raw_product(product_));
 }
 
 bool shader::compile()

@@ -41,6 +41,8 @@ public:
     target();
     ~target();
 
+    target(const target &) = delete;
+    target & operator=(const target &) = delete;
     target(target &&) = default;
     target & operator=(target &&) = default;
 
@@ -66,7 +68,8 @@ inline target<_Attachement_policy>::target()
 template<typename _Attachement_policy>
 inline target<_Attachement_policy>::~target()
 {
-    glDeleteFramebuffers(1, utils::ptr_product(product_));
+    if(!product_.invalid())
+        glDeleteFramebuffers(1, utils::ptr_product(product_));
 }
 
 template<typename _Attachement_policy>

@@ -38,7 +38,8 @@ program::program()
 
 program::~program()
 {
-    glDeleteProgram(utils::raw_product(product_));
+    if(!product_.invalid())
+        glDeleteProgram(utils::raw_product(product_));
 }
 
 bool program::attach(const shader & object)
