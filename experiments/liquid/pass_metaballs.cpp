@@ -42,7 +42,7 @@ enum class program_enum : short
 
 bool pass_metaballs::initialize()
 {
-    return rendering::load_program("shaders/experiments/liquid/metaballs.prog", program_);
+    return rendering::load_program("assets/shaders/experiments/liquid/metaballs.prog", program_);
 }
 
 void pass_metaballs::process(float)

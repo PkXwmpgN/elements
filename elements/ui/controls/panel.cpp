@@ -44,7 +44,7 @@ panel::panel(control * parent)
     : control(parent)
     , square_(rendering::buffer_usage::STREAM_DRAW)
 {
-    rendering::load_program("shaders/primitives/square_color.prog",
+    rendering::load_program("assets/shaders/primitives/square_color.prog",
                             program_face_);
 }
 

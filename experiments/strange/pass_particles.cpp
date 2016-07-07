@@ -43,7 +43,7 @@ enum class product_enum : short
 
 bool pass_particles::initialize()
 {
-    return rendering::load_program("shaders/experiments/strange/particles.prog",
+    return rendering::load_program("assets/shaders/experiments/strange/particles.prog",
                                    program_);
 }
 

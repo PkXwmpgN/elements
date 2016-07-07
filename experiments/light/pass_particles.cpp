@@ -55,10 +55,11 @@ void pass_particles::set_count(size_t count)
 
 bool pass_particles::set_background(const std::string & asset_name)
 {
-    asset_texture asset = assets_storage::instance().read<asset_texture>(asset_name);
-    if(asset.pixels())
+    auto asset = assets_storage::instance().read<asset_texture>(asset_name);
+    if(asset)
     {
-        texture_background_.set_data(asset.pixels(), asset.size(), asset.format());
+        auto & value = asset.value();
+        texture_background_.set_data(value.pixels(), value.size(), value.format());
         return true;
     }
     return false;
@@ -66,7 +67,7 @@ bool pass_particles::set_background(const std::string & asset_name)
 
 bool pass_particles::initialize()
 {
-    return rendering::load_program("shaders/experiments/light/particles.prog",
+    return rendering::load_program("assets/shaders/experiments/light/particles.prog",
                                    program_);
 }
 

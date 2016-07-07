@@ -21,28 +21,19 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef ASSETS_ASSET_OPERATIONS_STREAM_H_INCLUDED
-#define ASSETS_ASSET_OPERATIONS_STREAM_H_INCLUDED
+#ifndef IO_PATH_H_INCLUDED
+#define IO_PATH_H_INCLUDED
 
-#include "asset_operations.h"
-#include <stdio.h>
+#include "utils/std/values.h"
 
 namespace eps {
+namespace io {
 
-struct asset_read_operation_stream : public asset_read_operation
-{
-    explicit asset_read_operation_stream(const char * name);
-    ~asset_read_operation_stream();
+const utils::values<char> separator({'\\', '/'});
 
-    size_t read(void * output, size_t size) final;
-    size_t size() const final;
+// TODO: path implementation (like std::filesystem::path)
 
-private:
-
-    FILE * stream_;
-    size_t size_;
-};
-
+} /* io */
 } /* eps */
 
-#endif // ASSETS_ASSET_HANDLE_STREAM_H_INCLUDED
+#endif // IO_FILE_STREAM_H_INCLUDED

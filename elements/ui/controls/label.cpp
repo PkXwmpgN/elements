@@ -56,7 +56,7 @@ label::label(control * parent)
     , valignment_(valignment::TOP)
     , halignment_(halignment::LEFT)
 {
-    rendering::load_program("shaders/primitives/square_texture_alpha.prog",
+    rendering::load_program("assets/shaders/primitives/square_texture_alpha.prog",
                             program_face_);
 }
 

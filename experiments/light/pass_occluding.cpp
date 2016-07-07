@@ -55,7 +55,7 @@ void pass_occluding::set_color(const math::vec4 & color)
 
 bool pass_occluding::initialize()
 {
-    return rendering::load_program("shaders/experiments/light/occluding.prog",
+    return rendering::load_program("assets/shaders/experiments/light/occluding.prog",
                                    program_);
 }
 

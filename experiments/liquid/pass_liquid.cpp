@@ -49,10 +49,11 @@ enum class program_enum : short
 
 bool pass_liquid::set_surface_background(const std::string & asset_name)
 {
-    asset_texture asset = assets_storage::instance().read<asset_texture>(asset_name);
-    if(asset.pixels())
+    auto asset = assets_storage::instance().read<asset_texture>(asset_name);
+    if(asset)
     {
-        surface_background_.set_data(asset.pixels(), asset.size(), asset.format());
+        auto & value = asset.value();
+        surface_background_.set_data(value.pixels(), value.size(), value.format());
         return true;
     }
     return false;
@@ -65,7 +66,7 @@ void pass_liquid::set_surface_color(const math::vec4 & color)
 
 bool pass_liquid::initialize()
 {
-    return rendering::load_program("shaders/experiments/liquid/liquid.prog", program_);
+    return rendering::load_program("assets/shaders/experiments/liquid/liquid.prog", program_);
 }
 
 utils::unique<rendering::pass_target> pass_liquid::construct(const math::uvec2 & size)

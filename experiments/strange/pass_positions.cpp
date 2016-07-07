@@ -45,7 +45,7 @@ enum class program_enum : short
 
 bool pass_positions::initialize()
 {
-    return rendering::load_program("shaders/experiments/strange/positions_product_process.prog",
+    return rendering::load_program("assets/shaders/experiments/strange/positions_product_process.prog",
                                    program_process_);
 }
 

@@ -50,7 +50,7 @@ void tone::set_tone(float exposure, float gamma)
 
 bool tone::initialize()
 {
-    return load_program("shaders/effects/tone.prog", program_);
+    return load_program("assets/shaders/effects/tone.prog", program_);
 }
 
 void tone::process(float)

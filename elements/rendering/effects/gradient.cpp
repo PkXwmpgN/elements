@@ -43,7 +43,7 @@ enum class program_enum : short
 
 bool gradient::initialize()
 {
-    return load_program("shaders/effects/gradient.prog", program_);
+    return load_program("assets/shaders/effects/gradient.prog", program_);
 }
 
 void gradient::process(float)

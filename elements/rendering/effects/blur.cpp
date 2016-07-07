@@ -51,7 +51,7 @@ utils::unique<pass_target> blur_base::construct(const math::uvec2 & size)
 
 bool blur_base::initialize()
 {
-    return load_program("shaders/effects/blur.prog", program_);
+    return load_program("assets/shaders/effects/blur.prog", program_);
 }
 
 void blur_base::process(float)

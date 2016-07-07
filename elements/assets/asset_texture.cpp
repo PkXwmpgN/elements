@@ -22,7 +22,7 @@ IN THE SOFTWARE.
 */
 
 #include "asset_texture.h"
-#include "asset_operations.h"
+#include "io/utils/file_guard.h"
 #include <GLES2/gl2.h>
 #include <png.h>
 #include <stdlib.h>
@@ -35,8 +35,8 @@ static void read_png_data_callback(png_structp png_ptr,
                                    png_byte * raw_data,
                                    png_size_t read_length)
 {
-    asset_read_operation * opt = static_cast<asset_read_operation*>(png_get_io_ptr(png_ptr));
-    opt->read(raw_data, read_length);
+    io::file * stream = static_cast<io::file*>(png_get_io_ptr(png_ptr));
+    stream->read(raw_data, 1, read_length);
 }
 
 static unsigned int png_color_to_gl_color(int color_format)
@@ -70,13 +70,14 @@ asset_texture::asset_texture(const std::string & resource)
     , format_(0)
 {}
 
-bool asset_texture::load(asset_read_operation * opt)
+bool asset_texture::load(utils::link<io::system> fs, const std::string & resource)
 {
-    if(opt == nullptr || opt->size() < 8)
+    io::file_guard stream(fs, resource);
+    if(!stream.valid())
         return false;
 
     png_byte header[8];
-    if(opt->read(header, 8) != 8)
+    if(stream.read(header, 1, 8) != 8)
         return false;
 
     if(png_sig_cmp(header, 0, 8) != 0)
@@ -93,7 +94,7 @@ bool asset_texture::load(asset_read_operation * opt)
         return false;
     }
 
-    png_set_read_fn(png_ptr, opt, read_png_data_callback);
+    png_set_read_fn(png_ptr, stream.get(), read_png_data_callback);
 
     if(setjmp(png_jmpbuf(png_ptr)))
     {

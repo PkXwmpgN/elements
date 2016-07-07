@@ -26,7 +26,7 @@ IN THE SOFTWARE.
 #include <android/asset_manager.h>
 #include <android/asset_manager_jni.h>
 
-#include "asset_reader.h"
+#include "asset_fs.h"
 #include "preferences.h"
 #include "metrics.h"
 
@@ -48,7 +48,8 @@ extern "C"
 JNIEXPORT void JNICALL Java_com_yegorov_alexey_elements_api_Elements_initializeAssets(JNIEnv * env,
         jobject, jobject asset_manager)
 {
-    eps::assets_storage::init<asset_reader>(AAssetManager_fromJava(env, asset_manager));
+    AAssetManager * manager = AAssetManager_fromJava(env, asset_manager);
+    eps::assets_storage::instance().mount<asset_fs>("assets", manager);
 }
 
 JNIEXPORT void JNICALL Java_com_yegorov_alexey_elements_api_Elements_initializePreferences(JNIEnv * env,

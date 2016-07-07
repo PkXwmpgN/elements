@@ -30,8 +30,7 @@ IN THE SOFTWARE.
 
 namespace eps {
 
-struct asset_texture : public asset,
-                       public asset_dispatcher<asset_texture>
+struct asset_texture : public asset
 {
 public:
 
@@ -47,7 +46,7 @@ public:
     const math::uvec2 & size() const { return size_; }
     unsigned int format() const { return format_; }
 
-    bool load(asset_read_operation * opt) final;
+    bool load(utils::link<io::system> fs, const std::string & resource) final;
 
 private:
 

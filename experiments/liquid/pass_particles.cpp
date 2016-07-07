@@ -56,7 +56,7 @@ void pass_particles::set_particles_size(float size)
 
 bool pass_particles::initialize()
 {
-    return rendering::load_program("shaders/experiments/liquid/particles.prog", program_);
+    return rendering::load_program("assets/shaders/experiments/liquid/particles.prog", program_);
 }
 
 void pass_particles::process(float)

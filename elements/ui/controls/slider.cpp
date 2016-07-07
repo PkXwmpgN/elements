@@ -48,9 +48,9 @@ slider::slider(slider_model * model, control * parent)
     , color_tracker_(0.8f, 0.8f, 0.8f, 1.0f)
     , model_(model)
 {
-    rendering::load_program("shaders/primitives/square_color.prog",
+    rendering::load_program("assets/shaders/primitives/square_color.prog",
                             program_slider_);
-    rendering::load_program("shaders/primitives/circle_color.prog",
+    rendering::load_program("assets/shaders/primitives/circle_color.prog",
                             program_slider_tracker_);
 }
 

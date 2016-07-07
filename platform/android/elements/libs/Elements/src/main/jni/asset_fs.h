@@ -21,21 +21,26 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef ASSETS_ASSET_OPERATIONS_H_INCLUDED
-#define ASSETS_ASSET_OPERATIONS_H_INCLUDED
+#ifndef PLATFORM_ANDROID_ASSET_FS_H_INCLUDED
+#define PLATFORM_ANDROID_ASSET_FS_H_INCLUDED
 
-#include <stddef.h>
+#include <elements/io/system.h>
+#include <elements/assets/assets.h>
+#include <elements/assets/assets_storage.h>
 
-namespace eps {
+struct AAssetManager;
 
-struct asset_read_operation
+struct asset_fs : public eps::io::system
 {
-    virtual size_t read(void * output, size_t size) = 0;
-    virtual size_t size() const = 0;
+    explicit asset_fs(AAssetManager * mgr);
 
-    virtual ~asset_read_operation() {}
+    eps::io::file * open(const std::string & file) final;
+    bool exists(const std::string & file) final;
+    void close(eps::io::file * file) final;
+
+private:
+
+    AAssetManager * mgr_;
 };
 
-} /* eps */
-
-#endif // ASSETS_ASSET_OPERATIONS_H_INCLUDED
+#endif // PLATFORM_ANDROID_ASSET_FS_H_INCLUDED

@@ -21,44 +21,68 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef ASSETS_ASSETS_H_INCLUDED
-#define ASSETS_ASSETS_H_INCLUDED
+#ifndef IO_UTILS_FILE_GUARD_H_INCLUDED
+#define IO_UTILS_FILE_GUARD_H_INCLUDED
 
 #include <string>
+#include <cassert>
+#include "io/system.h"
+#include "io/file.h"
 #include "utils/std/pointer.h"
 
 namespace eps {
+namespace io {
 
-namespace io { struct system; }
-
-struct asset
+struct file_guard
 {
-    asset()
-    {}
+    file_guard(utils::link<io::system> fs, const std::string & file)
+        : fs_(fs)
+    {
+        if(!fs_.expired())
+            stream_ = fs_.lock()->open(file);
+    }
 
-    virtual ~asset()
-    {}
+    ~file_guard()
+    {
+        if(!fs_.expired())
+            fs_.lock()->close(stream_);
+    }
 
-    explicit asset(const std::string & resource)
-        : resource_(resource)
-    {}
+    bool valid() const { return stream_ != nullptr; }
 
-    asset(const asset &) = delete;
-    asset & operator=(const asset &) = delete;
-    asset(asset &&) = default;
-    asset & operator=(asset&&) = default;
+    size_t read(void * output, size_t size, size_t count)
+    {
+        assert(stream_);
+        return stream_->read(output, size, count);
+    }
 
-    const std::string & resource() const { return resource_; }
+    size_t tell() const
+    {
+        assert(stream_);
+        return stream_->tell();
+    }
 
-public:
+    size_t size() const
+    {
+        assert(stream_);
+        return stream_->size();
+    }
 
-    virtual bool load(utils::link<io::system> fs, const std::string & resource) = 0;
+    int seek(size_t offset, int origin)
+    {
+        assert(stream_);
+        return stream_->seek(offset, origin);
+    }
+
+    file * get() { return stream_; }
 
 private:
 
-    std::string resource_;
+    utils::link<io::system> fs_;
+    io::file * stream_ = nullptr;
 };
 
+} /* io */
 } /* eps */
 
-#endif // ASSET_ASSETS_H_INCLUDED
+#endif // IO_UTILS_FILE_GUARD_H_INCLUDED

@@ -46,18 +46,19 @@ button::button(control * parent)
     , square_(rendering::buffer_usage::STREAM_DRAW)
     , state_(state::NONE)
 {
-    rendering::load_program("shaders/primitives/square_texture.prog",
-                                program_face_);
+    rendering::load_program("assets/shaders/primitives/square_texture.prog",
+                            program_face_);
 }
 
 bool button::set_asset(const char * asset)
 {
     std::string asset_name(asset);
-    asset_texture face = assets_storage::instance().read<asset_texture>(asset_name);
+    auto face = assets_storage::instance().read<asset_texture>(asset_name);
 
-    if(face.pixels())
+    if(face)
     {
-        texture_face_.set_data(face.pixels(), face.size(), face.format());
+        auto & value = face.value();
+        texture_face_.set_data(value.pixels(), value.size(), value.format());
         return true;
     }
 

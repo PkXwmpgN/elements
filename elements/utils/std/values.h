@@ -21,25 +21,44 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef PLATFORM_ANDROID_ASSET_READER_H_INCLUDED
-#define PLATFORM_ANDROID_ASSET_READER_H_INCLUDED
+#ifndef STD_UTILS_VALUES_H_INCLUDED
+#define STD_UTILS_VALUES_H_INCLUDED
 
-#include <elements/assets/assets.h>
-#include <elements/assets/assets_storage.h>
+#include <functional>
+#include <initializer_list>
 
-struct AAssetManager;
+namespace eps {
+namespace utils {
 
-struct asset_reader : public eps::asset_reader
+template<typename _Type, typename _Equal = std::equal_to<_Type>>
+struct values
 {
-    explicit asset_reader(AAssetManager * mgr);
+    explicit values(std::initializer_list<_Type> v)
+        : values_(v)
+    {}
 
-    bool visit(eps::asset_texture & asset) final;
-    bool visit(eps::asset_blob & asset) final;
-    bool visit(eps::asset_xml & asset) final;
+    friend bool operator==(const _Type & l, const values & r) { return r.equal(l); }
+    friend bool operator==(const values & l, const _Type & r) { return l.equal(r); }
+    friend bool operator!=(const _Type & l, const values & r) { return !r.equal(l); }
+    friend bool operator!=(const values & l, const _Type & r) { return !l.equal(r); }
 
 private:
 
-    AAssetManager * mgr_;
+    bool equal(const _Type & obj) const
+    {
+        _Equal opt;
+        for(const auto & v : values_)
+            if(opt(v, obj))
+                return true;
+        return false;
+    }
+
+private:
+
+    std::initializer_list<_Type> values_;
 };
 
-#endif // PLATFORM_ANDROID_ASSET_READER_H_INCLUDED
+} /* utils */
+} /* eps */
+
+#endif // STD_UTILS_VALUES_H_INCLUDED

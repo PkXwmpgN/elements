@@ -67,15 +67,17 @@ bool program_data::read(const pugi::xml_document & doc)
 bool load_program(const char * asset_program, program & result)
 {
     auto data = assets_storage::instance().read<program_data>(asset_program);
-
-    if(!data.v_shader() || !data.f_shader())
+    if(!data)
         return false;
 
-    shader v_shader(data.v_shader(), shader_type::VERTEX);
+    if(!data.value().v_shader() || !data.value().f_shader())
+        return false;
+
+    shader v_shader(data.value().v_shader(), shader_type::VERTEX);
     if(!v_shader.compile())
         return false;
 
-    shader f_shader(data.f_shader(), shader_type::FRAGMENT);
+    shader f_shader(data.value().f_shader(), shader_type::FRAGMENT);
     if(!f_shader.compile())
         return false;
 
@@ -84,10 +86,10 @@ bool load_program(const char * asset_program, program & result)
     if(!result.link())
         return false;
 
-    for(const auto & location : data.a_locations())
+    for(const auto & location : data.value().a_locations())
         result.attribute_location(location.name, location.index);
 
-    for(const auto & location : data.u_locations())
+    for(const auto & location : data.value().u_locations())
         result.uniform_location(location.name, location.index);
 
     return true;

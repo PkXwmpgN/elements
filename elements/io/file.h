@@ -21,21 +21,26 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#include "asset_blob.h"
-#include "io/utils/file_guard.h"
+#ifndef IO_FILE_H_INCLUDED
+#define IO_FILE_H_INCLUDED
+
+#include <cstddef>
 
 namespace eps {
+namespace io {
 
-bool asset_blob::load(utils::link<io::system> fs, const std::string & resource)
+struct file
 {
-    io::file_guard stream(fs, resource);
-    if(stream.valid())
-    {
-        blob_.resize(stream.size());
-        return stream.read(blob_.data(), 1, blob_.size()) == stream.size();
-    }
+    virtual size_t read(void * output, size_t size, size_t count) = 0;
+    virtual size_t tell() const = 0;
+    virtual size_t size() const = 0;
+    virtual int seek(size_t offset, int origin) = 0;
+    virtual void flush() = 0;
 
-    return false;
-}
+    virtual ~file() {}
+};
 
-}
+} /* io */
+} /* eps */
+
+#endif // IO_FILE_H_INCLUDED

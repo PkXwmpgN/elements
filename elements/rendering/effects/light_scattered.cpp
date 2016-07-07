@@ -74,7 +74,7 @@ public:
 
     bool initialize() final
     {
-        return load_program("shaders/effects/light_scattered.prog", program_);
+        return load_program("assets/shaders/effects/light_scattered.prog", program_);
     }
 
     void process(float) final

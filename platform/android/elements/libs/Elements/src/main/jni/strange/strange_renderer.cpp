@@ -72,7 +72,7 @@ bool strange_renderer::create_diagnostic_ui(const eps::math::uvec2 &)
         {
             label->set_size(128_dp, 18_dp);
             label->set_position(8_dp, 58_dp);
-            label->set_font("ui/fonts/OpenSans-Regular.ttf", std::floor(18_dp));
+            label->set_font("assets/ui/fonts/OpenSans-Regular.ttf", std::floor(18_dp));
             label->set_color(eps::math::vec4(0.9f, 0.25f, 0.2f, 1.0f));
         }
     }

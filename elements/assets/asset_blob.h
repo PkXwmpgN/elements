@@ -29,8 +29,7 @@ IN THE SOFTWARE.
 
 namespace eps {
 
-struct asset_blob : public asset,
-                    public asset_dispatcher<asset_blob>
+struct asset_blob : public asset
 {
 public:
 
@@ -39,7 +38,7 @@ public:
     const char * data() const { return blob_.data(); }
     size_t size() const { return blob_.size(); }
 
-    bool load(asset_read_operation * opt) final;
+    bool load(utils::link<io::system> fs, const std::string & resource) final;
 
 private:
 

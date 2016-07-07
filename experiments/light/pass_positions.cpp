@@ -60,17 +60,18 @@ void pass_positions::set_count(size_t count)
 
 bool pass_positions::initialize()
 {
-    std::string asset_name("textures/noise.png");
-    asset_texture asset = assets_storage::instance().read<asset_texture>(asset_name);
+    std::string asset_name("assets/textures/noise.png");
+    auto asset = assets_storage::instance().read<asset_texture>(asset_name);
 
-    if(!asset.pixels())
+    if(!asset)
         return false;
 
-    texture_displacement_.set_data(asset.pixels(), asset.size(), asset.format());
+    auto & value = asset.value();
+    texture_displacement_.set_data(value.pixels(), value.size(), value.format());
 
-    return rendering::load_program("shaders/experiments/light/positions_product_reset.prog",
+    return rendering::load_program("assets/shaders/experiments/light/positions_product_reset.prog",
                                    program_reset_) &&
-           rendering::load_program("shaders/experiments/light/positions_product_process.prog",
+           rendering::load_program("assets/shaders/experiments/light/positions_product_process.prog",
                                    program_process_);
 }
 

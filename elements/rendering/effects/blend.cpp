@@ -42,7 +42,7 @@ enum class program_enum : short
 
 bool blend::initialize()
 {
-    return load_program("shaders/primitives/square_texture.prog", program_);
+    return load_program("assets/shaders/primitives/square_texture.prog", program_);
 }
 
 void blend::process(float)

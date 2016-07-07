@@ -47,7 +47,7 @@ enum class program_enum : short
 
 bool pass_particles::initialize()
 {
-    return rendering::load_program("shaders/experiments/air/particles.prog",
+    return rendering::load_program("assets/shaders/experiments/air/particles.prog",
                                    program_);
 }
 

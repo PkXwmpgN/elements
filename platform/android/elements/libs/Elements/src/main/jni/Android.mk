@@ -15,7 +15,7 @@ LOCAL_MODULE := elements
 LOCAL_CPPFLAGS  := -std=c++14 -O3 -s -DNDEBUG -ffast-math -Wall -Wextra -Werror
 LOCAL_SRC_FILES += \
 	jni_common.cpp \
-	asset_reader.cpp \
+	asset_fs.cpp \
 	preferences.cpp \
 	metrics.cpp
 

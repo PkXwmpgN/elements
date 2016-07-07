@@ -21,37 +21,26 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#include "asset_operations_stream.h"
-#include <sys/stat.h>
+#ifndef IO_SYSTEM_H_INCLUDED
+#define IO_SYSTEM_H_INCLUDED
+
+#include <string>
 
 namespace eps {
+namespace io {
 
-asset_read_operation_stream::asset_read_operation_stream(const char * name)
-    : stream_(fopen(name, "rb"))
-    , size_(0)
+struct file;
+
+struct system
 {
-    if(stream_)
-    {
-        struct stat st;
-        stat(name, &st);
-        size_ = st.st_size;
-    }
-}
+    virtual file * open(const std::string & file) = 0;
+    virtual bool exists(const std::string & file) = 0;
+    virtual void close(file * file) = 0;
 
-asset_read_operation_stream::~asset_read_operation_stream()
-{
-    if(stream_)
-        fclose(stream_);
-}
+    virtual ~system() {}
+};
 
-size_t asset_read_operation_stream::read(void * output, size_t size)
-{
-    return stream_ ? fread(output, 1, size, stream_) : 0;
-}
+} /* io */
+} /* eps */
 
-size_t asset_read_operation_stream::size() const
-{
-    return size_;
-}
-
-} /* namespace eps */
+#endif // IO_SYSTEM_H_INCLUDED

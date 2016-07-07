@@ -49,11 +49,12 @@ enum class program_enum : short
 bool pass_fire::set_background(const char * background)
 {
     std::string asset_name(background);
-    asset_texture asset = assets_storage::instance().read<asset_texture>(asset_name);
+    auto asset = assets_storage::instance().read<asset_texture>(asset_name);
 
-    if(asset.pixels())
+    if(asset)
     {
-        texture_background_.set_data(asset.pixels(), asset.size(), asset.format());
+        auto & value = asset.value();
+        texture_background_.set_data(value.pixels(), value.size(), value.format());
         return true;
     }
     return false;
@@ -61,7 +62,7 @@ bool pass_fire::set_background(const char * background)
 
 bool pass_fire::initialize()
 {
-    return rendering::load_program("shaders/experiments/fire/fire.prog", program_);
+    return rendering::load_program("assets/shaders/experiments/fire/fire.prog", program_);
 }
 
 void pass_fire::process(float)

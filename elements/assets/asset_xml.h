@@ -30,13 +30,12 @@ IN THE SOFTWARE.
 
 namespace eps {
 
-struct asset_xml : public asset,
-                   public asset_dispatcher<asset_xml>
+struct asset_xml : public asset
 {
 public:
 
     using asset::asset;
-    bool load(asset_read_operation * opt) final;
+    bool load(utils::link<io::system> fs, const std::string & resource) final;
 
 private:
 

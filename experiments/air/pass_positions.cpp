@@ -56,9 +56,9 @@ void pass_positions::set_count(size_t particles_count)
 
 bool pass_positions::initialize()
 {
-    return load_program("shaders/experiments/air/positions_product_reset.prog",
+    return load_program("assets/shaders/experiments/air/positions_product_reset.prog",
                         program_reset_) &&
-           load_program("shaders/experiments/air/positions_product_process.prog",
+           load_program("assets/shaders/experiments/air/positions_product_process.prog",
                         program_process_);
 }
 

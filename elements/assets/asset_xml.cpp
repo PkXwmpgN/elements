@@ -22,18 +22,22 @@ IN THE SOFTWARE.
 */
 
 #include "asset_xml.h"
-#include "asset_operations.h"
+#include "io/utils/file_guard.h"
 
 namespace eps {
 
-bool asset_xml::load(asset_read_operation * opt)
+bool asset_xml::load(utils::link<io::system> fs, const std::string & resource)
 {
-    char * data = static_cast<char*>(pugi::get_memory_allocation_function()(opt->size()));
-    if(opt->read(data, opt->size()) != opt->size())
+    io::file_guard stream(fs, resource);
+    if(!stream.valid())
+        return false;
+
+    char * data = static_cast<char*>(pugi::get_memory_allocation_function()(stream.size()));
+    if(stream.read(data, 1, stream.size()) != stream.size())
         return false;
 
     doc_.reset(new pugi::xml_document());
-    if(!doc_->load_buffer_inplace_own(data, opt->size()))
+    if(!doc_->load_buffer_inplace_own(data, stream.size()))
         return false;
 
     return read(*doc_);

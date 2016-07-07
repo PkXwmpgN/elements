@@ -241,7 +241,6 @@ LOCAL_SRC_FILES := rendering/core/shader.cpp \
     assets/asset_texture.cpp \
     assets/asset_blob.cpp \
     assets/asset_xml.cpp \
-    assets/asset_operations_stream.cpp \
     preferences/preferences.cpp \
     metrics/metrics.cpp \
     timing/framerate.cpp \

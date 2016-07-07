@@ -68,17 +68,20 @@ line manager::get_line(const std::string & text, face_handle handle, int height)
 
 face_handle manager::load_face(const std::string & ttf)
 {
-    asset_blob ttf_blob = assets_storage::instance().read<asset_blob>(ttf);
-    if(ttf_blob.size() == 0)
+    auto ttf_blob = assets_storage::instance().read<asset_blob>(ttf);
+    if(!ttf_blob)
+        return INVALID_FACE_HANDLE;
+
+    if(ttf_blob.value().size() == 0)
         return INVALID_FACE_HANDLE;
 
     FT_Face face;
-    if(FT_New_Memory_Face(ft_library_, (const FT_Byte* )ttf_blob.data(),
-                          (FT_Long)ttf_blob.size(), 0, &face) != 0)
+    if(FT_New_Memory_Face(ft_library_, (const FT_Byte* )ttf_blob.value().data(),
+                          (FT_Long)ttf_blob.value().size(), 0, &face) != 0)
         return INVALID_FACE_HANDLE;
 
     face_handles_[ttf] = face;
-    face_assets_.push_back(std::move(ttf_blob));
+    face_assets_.push_back(std::move(ttf_blob.value()));
 
     return face;
 }

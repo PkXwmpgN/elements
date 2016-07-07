@@ -56,9 +56,9 @@ void pass_velocities::set_field(sync::future<math::vec2> field)
 
 bool pass_velocities::initialize()
 {
-    return load_program("shaders/experiments/air/velocities_product_reset.prog",
+    return load_program("assets/shaders/experiments/air/velocities_product_reset.prog",
                         program_reset_) &&
-           load_program("shaders/experiments/air/velocities_product_process.prog",
+           load_program("assets/shaders/experiments/air/velocities_product_process.prog",
                         program_process_);
 }
 

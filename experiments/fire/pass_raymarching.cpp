@@ -70,15 +70,16 @@ void pass_raymarching::set_color_cold(const math::vec3 & color)
 
 bool pass_raymarching::initialize()
 {
-    const std::string asset_name("textures/noise.png");
-    asset_texture asset = assets_storage::instance().read<asset_texture>(asset_name);
+    const std::string asset_name("assets/textures/noise.png");
+    auto asset = assets_storage::instance().read<asset_texture>(asset_name);
 
-    if(!asset.pixels())
+    if(!asset)
         return false;
 
-    texture_noise_.set_data(asset.pixels(), asset.size(), asset.format());
+    auto & value = asset.value();
+    texture_noise_.set_data(value.pixels(), value.size(), value.format());
 
-    return rendering::load_program("shaders/experiments/fire/raymarching.prog", program_);
+    return rendering::load_program("assets/shaders/experiments/fire/raymarching.prog", program_);
 }
 
 void pass_raymarching::process(float dt)
