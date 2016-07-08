@@ -13,48 +13,32 @@ include $(CLEAR_VARS)
 
 LOCAL_MODULE := elements
 LOCAL_CPPFLAGS  := -std=c++14 -O3 -s -DNDEBUG -ffast-math -Wall -Wextra -Werror
-LOCAL_SRC_FILES += \
-	jni_common.cpp \
-	asset_fs.cpp \
-	preferences.cpp \
-	metrics.cpp
+
+FILE_LIST := $(wildcard $(LOCAL_PATH)/*.cpp)
 
 ifeq ($(BUILD_FIRE), true)
-	LOCAL_SRC_FILES += \
-		fire/fire_renderer.cpp \
-		fire/fire_config.cpp \
-		fire/fire_ui.cpp \
-		fire/fire_jni.cpp
+	FILE_LIST += $(wildcard $(LOCAL_PATH)/fire/*.cpp)
 endif
 
 ifeq ($(BUILD_LIGHT), true)
-	LOCAL_SRC_FILES += \
-		light/light_jni.cpp \
-		light/light_renderer.cpp
+	FILE_LIST += $(wildcard $(LOCAL_PATH)/light/*.cpp)
 endif
 
 ifeq ($(BUILD_STRANGE), true)
-	LOCAL_SRC_FILES += \
-		strange/strange_jni.cpp \
-		strange/strange_renderer.cpp
+	FILE_LIST += $(wildcard $(LOCAL_PATH)/strange/*.cpp)
 endif
 
 ifeq ($(BUILD_AIR), true)
-	LOCAL_SRC_FILES += \
-		air/air_jni.cpp \
-		air/air_renderer.cpp
+	FILE_LIST += $(wildcard $(LOCAL_PATH)/air/*.cpp)
 endif
 
 ifeq ($(BUILD_LIQUID), true)
-	LOCAL_SRC_FILES += \
-		liquid/liquid_jni.cpp \
-		liquid/liquid_config.cpp \
-		liquid/liquid_renderer.cpp \
-		liquid/liquid_ui.cpp
+	FILE_LIST += $(wildcard $(LOCAL_PATH)/liquid/*.cpp)
 endif
 
-LOCAL_C_INCLUDES := $(PROJECT_ROOT)
-LOCAL_STATIC_LIBRARIES := experiments elements_engine png freetype pugixml
+LOCAL_SRC_FILES := $(FILE_LIST:$(LOCAL_PATH)/%=%)
+LOCAL_C_INCLUDES := $(PROJECT_ROOT) $(LOCAL_PATH)
+LOCAL_STATIC_LIBRARIES := experiments
 LOCAL_LDLIBS := -landroid
 include $(BUILD_SHARED_LIBRARY)
 
