@@ -46,12 +46,12 @@ public:
     explicit operator value_const_pointer() const;
     explicit operator value_pointer();
 
+    void swap(product & r);
+
     product(product && temp);
     product & operator=(product && temp);
 
     bool invalid() const;
-
-    friend void swap(product & l, product & r);
 
     friend bool operator==(const product & l, const product & r);
     friend bool operator!=(const product & l, const product & r);
@@ -103,7 +103,7 @@ inline product<_Type, _Default>::product(product && temp)
 template<typename _Type, _Type _Default>
 inline product<_Type, _Default> & product<_Type, _Default>::operator=(product && temp)
 {
-    swap(*this, temp);
+    swap(temp);
     return *this;
 }
 
@@ -128,9 +128,9 @@ inline bool product<_Type, _Default>::invalid() const
 }
 
 template<typename _Type, _Type _Default>
-inline void swap(product<_Type, _Default> & l, product<_Type, _Default> & r)
+inline void product<_Type, _Default>::swap(product<_Type, _Default> & r)
 {
-    std::swap(l.value_, r.value_);
+    std::swap(value_, r.value_);
 }
 
 template<typename _Type, _Type _Default>
