@@ -42,6 +42,9 @@ struct values
     friend bool operator!=(const _Type & l, const values & r) { return !r.equal(l); }
     friend bool operator!=(const values & l, const _Type & r) { return !l.equal(r); }
 
+    template<typename _Result>
+    explicit operator _Result() const { return _Result(values_); }
+
 private:
 
     bool equal(const _Type & obj) const
@@ -57,6 +60,12 @@ private:
 
     std::initializer_list<_Type> values_;
 };
+
+template<typename _Result, typename _Type, typename _Equal>
+inline _Result values_cast(const values<_Type, _Equal> & v)
+{
+    return static_cast<_Result>(v);
+}
 
 } /* utils */
 } /* eps */

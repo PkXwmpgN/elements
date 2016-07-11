@@ -21,22 +21,16 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef IO_PATH_H_INCLUDED
-#define IO_PATH_H_INCLUDED
-
-#include "utils/std/values.h"
-#include <string>
+#include "path.h"
 
 namespace eps {
 namespace io {
 
-const utils::values<char> separator({'\\', '/'});
-
-// TODO: path implementation (like std::filesystem::path)
-
-std::string parent_path(const std::string & path);
+std::string parent_path(const std::string & path)
+{
+    size_t pos = path.find_last_of(utils::values_cast<std::string>(io::separator));
+    return pos != std::string::npos ? path.substr(0, pos + 1) : "";
+}
 
 } /* io */
 } /* eps */
-
-#endif // IO_FILE_STREAM_H_INCLUDED
