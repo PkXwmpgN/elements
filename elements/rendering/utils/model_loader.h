@@ -21,44 +21,17 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef ASSETS_ASSETS_H_INCLUDED
-#define ASSETS_ASSETS_H_INCLUDED
+#ifndef RENDERING_UTILS_MODEL_LOADER_H_INCLUDED
+#define RENDERING_UTILS_MODEL_LOADER_H_INCLUDED
 
-#include <string>
-#include "utils/std/pointer.h"
+#include "scene/graph/node.h"
 
 namespace eps {
+namespace rendering {
 
-namespace io { struct system; }
+bool load_model(const std::string & name, utils::link<scene::node> node);
 
-struct asset
-{
-    asset()
-    {}
-
-    virtual ~asset()
-    {}
-
-    explicit asset(const std::string & resource)
-        : resource_(resource)
-    {}
-
-    asset(const asset &) = delete;
-    asset & operator=(const asset &) = delete;
-    asset(asset &&) = default;
-    asset & operator=(asset&&) = default;
-
-    const std::string & get_resource() const { return resource_; }
-
-public:
-
-    virtual bool load(utils::link<io::system> fs, const std::string & resource) = 0;
-
-private:
-
-    std::string resource_;
-};
-
+} /* rendering */
 } /* eps */
 
-#endif // ASSET_ASSETS_H_INCLUDED
+#endif // RENDERING_UTILS_MODEL_LOADER_H_INCLUDED

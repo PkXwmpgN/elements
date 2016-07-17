@@ -88,7 +88,7 @@ utils::optional<_TAsset> assets_storage::read(const std::string & resource)
                         resource.end());
     }
 
-    _TAsset asset(relative);
+    _TAsset asset(resource);
     if(asset.load(fs_link, relative))
         return utils::optional<_TAsset>(std::move(asset));
 

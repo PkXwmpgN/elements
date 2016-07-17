@@ -21,44 +21,44 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef ASSETS_ASSETS_H_INCLUDED
-#define ASSETS_ASSETS_H_INCLUDED
+#include "model_loader.h"
 
-#include <string>
-#include "utils/std/pointer.h"
+#include "rendering/models/model.h"
+#include "rendering/models/model_warehouse.h"
+
+#include "assets/assets_storage.h"
+#include "assets/asset_model.h"
 
 namespace eps {
+namespace rendering {
 
-namespace io { struct system; }
-
-struct asset
+bool load_model(const std::string & name, utils::link<scene::node> node)
 {
-    asset()
-    {}
+    auto asset = assets_storage::instance().read<asset_model>(name);
+    if(!asset)
+        return false;
 
-    virtual ~asset()
-    {}
+    auto warehouse = utils::make_shared<model_warehouse>();
 
-    explicit asset(const std::string & resource)
-        : resource_(resource)
-    {}
+    for(size_t i = 0, end = asset->get_geometry_count(); i < end; ++i)
+    {
+        auto geometry = asset->get_geometry(i);
+        warehouse->add_geometry(geometry.get_vertices(), geometry.get_faces());
+    }
 
-    asset(const asset &) = delete;
-    asset & operator=(const asset &) = delete;
-    asset(asset &&) = default;
-    asset & operator=(asset&&) = default;
+    for(size_t i = 0, end = asset->get_geometry_count(); i < end; ++i)
+    {
+        auto material = asset->get_material(i);
+        warehouse->add_material(material.get_material());
+    }
 
-    const std::string & get_resource() const { return resource_; }
+    asset->load_hierarchy(node, [warehouse](utils::link<scene::node> node)
+    {
+        return node.lock()->add_node<model>(warehouse);
+    });
 
-public:
+    return true;
+}
 
-    virtual bool load(utils::link<io::system> fs, const std::string & resource) = 0;
-
-private:
-
-    std::string resource_;
-};
-
+} /* rendering */
 } /* eps */
-
-#endif // ASSET_ASSETS_H_INCLUDED
