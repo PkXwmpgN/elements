@@ -21,45 +21,19 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef UTILS_STD_POINTER_H_INCLUDED
-#define UTILS_STD_POINTER_H_INCLUDED
-
-#include <memory>
+#include "node.h"
 
 namespace eps {
-namespace utils {
+namespace scene {
 
-template<typename _Type>
-using pointer = std::shared_ptr<_Type>;
+node::node(utils::link<node> parent)
+    : parent_(parent)
+    , local_(1.0f)
+    , world_(1.0f)
+{}
 
-template<typename _Type>
-using link = std::weak_ptr<_Type>;
+node::~node()
+{}
 
-template<typename _Type>
-using unique = std::unique_ptr<_Type>;
-
-template<typename _Derived>
-using enable_shared_from_this = std::enable_shared_from_this<_Derived>;
-
-template<typename _Type, typename... _Args>
-inline pointer<_Type> make_shared(_Args&&... args)
-{
-    return std::make_shared<_Type>(std::forward<_Args>(args)...);
-}
-
-template<typename _Type, typename... _Args>
-inline unique<_Type> make_unique(_Args&&... args)
-{
-    return std::make_unique<_Type>(std::forward<_Args>(args)...);
-}
-
-template<typename _To, typename _From>
-inline pointer<_To> dynamic_pointer_cast(const pointer<_From> & from)
-{
-    return std::dynamic_pointer_cast<_To>(from);
-}
-
-} /* utils */
+} /* scene */
 } /* eps */
-
-#endif // UTILS_STD_POINTER_H_INCLUDED

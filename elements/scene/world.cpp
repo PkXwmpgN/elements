@@ -21,45 +21,20 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef UTILS_STD_POINTER_H_INCLUDED
-#define UTILS_STD_POINTER_H_INCLUDED
-
-#include <memory>
+#include "world.h"
+#include <assert.h>
 
 namespace eps {
-namespace utils {
+namespace scene {
 
-template<typename _Type>
-using pointer = std::shared_ptr<_Type>;
-
-template<typename _Type>
-using link = std::weak_ptr<_Type>;
-
-template<typename _Type>
-using unique = std::unique_ptr<_Type>;
-
-template<typename _Derived>
-using enable_shared_from_this = std::enable_shared_from_this<_Derived>;
-
-template<typename _Type, typename... _Args>
-inline pointer<_Type> make_shared(_Args&&... args)
+void world::process()
 {
-    return std::make_shared<_Type>(std::forward<_Args>(args)...);
+    assert(component_camera_);
+    assert(component_graph_);
+
+    component_camera_->process();
+    component_graph_->process(component_camera_->get_view());
 }
 
-template<typename _Type, typename... _Args>
-inline unique<_Type> make_unique(_Args&&... args)
-{
-    return std::make_unique<_Type>(std::forward<_Args>(args)...);
-}
-
-template<typename _To, typename _From>
-inline pointer<_To> dynamic_pointer_cast(const pointer<_From> & from)
-{
-    return std::dynamic_pointer_cast<_To>(from);
-}
-
-} /* utils */
+} /* scene */
 } /* eps */
-
-#endif // UTILS_STD_POINTER_H_INCLUDED

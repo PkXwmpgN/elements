@@ -21,45 +21,41 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef UTILS_STD_POINTER_H_INCLUDED
-#define UTILS_STD_POINTER_H_INCLUDED
-
-#include <memory>
+#include "camera.h"
+#include "math/trigonometry.h"
+#include "math/transform.h"
 
 namespace eps {
-namespace utils {
+namespace scene {
 
-template<typename _Type>
-using pointer = std::shared_ptr<_Type>;
+camera::camera()
+    : up_(0.0f, 1.0f, 0.0)
+    , fov_(math::radians(45.0f))
+    , aspect_(4.0f / 3.0f)
+    , near_(0.1f)
+    , far_(100.0f)
+{}
 
-template<typename _Type>
-using link = std::weak_ptr<_Type>;
-
-template<typename _Type>
-using unique = std::unique_ptr<_Type>;
-
-template<typename _Derived>
-using enable_shared_from_this = std::enable_shared_from_this<_Derived>;
-
-template<typename _Type, typename... _Args>
-inline pointer<_Type> make_shared(_Args&&... args)
+void camera::process()
 {
-    return std::make_shared<_Type>(std::forward<_Args>(args)...);
+    view_ = process_view();
+    projection_ = process_projection();
 }
 
-template<typename _Type, typename... _Args>
-inline unique<_Type> make_unique(_Args&&... args)
+math::mat4 camera::process_view()
 {
-    return std::make_unique<_Type>(std::forward<_Args>(args)...);
+    return math::look_at(get_eye(),
+                         get_center(),
+                         get_up());
 }
 
-template<typename _To, typename _From>
-inline pointer<_To> dynamic_pointer_cast(const pointer<_From> & from)
+math::mat4 camera::process_projection()
 {
-    return std::dynamic_pointer_cast<_To>(from);
+    return math::perspective(get_fov(),
+                             get_aspect(),
+                             get_plain_near(),
+                             get_plain_far());
 }
 
-} /* utils */
+} /* scene */
 } /* eps */
-
-#endif // UTILS_STD_POINTER_H_INCLUDED

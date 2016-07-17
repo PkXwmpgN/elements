@@ -21,45 +21,49 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef UTILS_STD_POINTER_H_INCLUDED
-#define UTILS_STD_POINTER_H_INCLUDED
+#ifndef SCENE_GRAPH_H_INCLUDED
+#define SCENE_GRAPH_H_INCLUDED
 
-#include <memory>
+#include "math/types.h"
+#include "utils/std/pointer.h"
+#include "visitor.h"
+#include "node.h"
 
 namespace eps {
-namespace utils {
+namespace scene {
 
-template<typename _Type>
-using pointer = std::shared_ptr<_Type>;
-
-template<typename _Type>
-using link = std::weak_ptr<_Type>;
-
-template<typename _Type>
-using unique = std::unique_ptr<_Type>;
-
-template<typename _Derived>
-using enable_shared_from_this = std::enable_shared_from_this<_Derived>;
-
-template<typename _Type, typename... _Args>
-inline pointer<_Type> make_shared(_Args&&... args)
+class graph
 {
-    return std::make_shared<_Type>(std::forward<_Args>(args)...);
-}
+public:
 
-template<typename _Type, typename... _Args>
-inline unique<_Type> make_unique(_Args&&... args)
-{
-    return std::make_unique<_Type>(std::forward<_Args>(args)...);
-}
+    graph();
+    graph(graph&&) = default;
+    graph & operator=(graph&&) = default;
+    virtual ~graph() {}
 
-template<typename _To, typename _From>
-inline pointer<_To> dynamic_pointer_cast(const pointer<_From> & from)
-{
-    return std::dynamic_pointer_cast<_To>(from);
-}
+    void process(const math::mat4 & view);
 
-} /* utils */
+    template <typename... _Targets, typename _Operation, typename... _Args>
+    void process(visit_targets<_Targets...> targets, _Operation && ops, _Args&& ...args)
+    {
+        scene::visit(targets, root_, std::forward<_Operation>(ops),
+                     std::forward<_Args>(args)...);
+    }
+
+    template<typename _Node, typename ..._Args>
+    auto add_node(_Args&& ...args)
+    {
+        return root_->add_node<_Node>(std::forward<_Args>(args)...);
+    }
+
+    void clear();
+
+private:
+
+    utils::pointer<node> root_;
+};
+
+} /* scene */
 } /* eps */
 
-#endif // UTILS_STD_POINTER_H_INCLUDED
+#endif // SCENE_GRAPH_H_INCLUDED

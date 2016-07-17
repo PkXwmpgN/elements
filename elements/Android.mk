@@ -94,13 +94,12 @@ FILE_LIST += $(wildcard $(LOCAL_PATH)/$(ASSIMP_PATH)/contrib/openddlparser/code/
 FILE_LIST += $(wildcard $(LOCAL_PATH)/$(ASSIMP_PATH)/contrib/poly2tri/poly2tri/*/*.cc)
 #FILE_LIST += $(LOCAL_PATH)/$(ASSIMP_PATH)/contrib/clipper/clipper.cpp
 FILE_LIST += $(LOCAL_PATH)/$(ASSIMP_PATH)/contrib/ConvertUTF/ConvertUTF.c
-#FILE_LIST += $(LOCAL_PATH)/$(ASSIMP_PATH)/contrib/irrXML/irrXML.cpp
+FILE_LIST += $(LOCAL_PATH)/$(ASSIMP_PATH)/contrib/irrXML/irrXML.cpp
 
 LOCAL_SRC_FILES := $(FILE_LIST:$(LOCAL_PATH)/%=%)
 
 DONT_BUILD_PROCESS = \
     -DASSIMP_BUILD_NO_MAKELEFTHANDED_PROCESS \
-    -DASSIMP_BUILD_NO_CALCTANGENTS_PROCESS \
     -DASSIMP_BUILD_NO_DEBONE_PROCESS \
     -DASSIMP_BUILD_NO_FINDDEGENERATES_PROCESS \
     -DASSIMP_BUILD_NO_FINDINSTANCES_PROCESS \
@@ -145,7 +144,6 @@ DONT_BUILD_IMPORTERS = \
     -DASSIMP_BUILD_NO_IRR_IMPORTER \
     -DASSIMP_BUILD_NO_Q3D_IMPORTER \
     -DASSIMP_BUILD_NO_B3D_IMPORTER \
-    -DASSIMP_BUILD_NO_COLLADA_IMPORTER \
     -DASSIMP_BUILD_NO_TERRAGEN_IMPORTER \
     -DASSIMP_BUILD_NO_CSM_IMPORTER \
     -DASSIMP_BUILD_NO_3D_IMPORTER \
@@ -205,6 +203,7 @@ FILE_LIST += $(wildcard $(LOCAL_PATH)/math/*/*.cpp)
 FILE_LIST += $(wildcard $(LOCAL_PATH)/metrics/*/*.cpp)
 FILE_LIST += $(wildcard $(LOCAL_PATH)/preferences/*/*.cpp)
 FILE_LIST += $(wildcard $(LOCAL_PATH)/rendering/*/*.cpp)
+FILE_LIST += $(wildcard $(LOCAL_PATH)/scene/*/*.cpp)
 FILE_LIST += $(wildcard $(LOCAL_PATH)/simulation/*/*.cpp)
 FILE_LIST += $(wildcard $(LOCAL_PATH)/synchronization/*/*.cpp)
 FILE_LIST += $(wildcard $(LOCAL_PATH)/timing/*/*.cpp)

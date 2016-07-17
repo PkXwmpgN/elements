@@ -21,45 +21,50 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef UTILS_STD_POINTER_H_INCLUDED
-#define UTILS_STD_POINTER_H_INCLUDED
+#ifndef SCENE_OBJECT_MATERIALS_H_INCLUDED
+#define SCENE_OBJECT_MATERIALS_H_INCLUDED
 
-#include <memory>
+#include "utils/std/enum.h"
+#include "utils/std/optional.h"
+#include <string>
+#include <array>
 
 namespace eps {
-namespace utils {
+namespace scene {
 
-template<typename _Type>
-using pointer = std::shared_ptr<_Type>;
-
-template<typename _Type>
-using link = std::weak_ptr<_Type>;
-
-template<typename _Type>
-using unique = std::unique_ptr<_Type>;
-
-template<typename _Derived>
-using enable_shared_from_this = std::enable_shared_from_this<_Derived>;
-
-template<typename _Type, typename... _Args>
-inline pointer<_Type> make_shared(_Args&&... args)
+struct material
 {
-    return std::make_shared<_Type>(std::forward<_Args>(args)...);
-}
+public:
 
-template<typename _Type, typename... _Args>
-inline unique<_Type> make_unique(_Args&&... args)
-{
-    return std::make_unique<_Type>(std::forward<_Args>(args)...);
-}
+    enum class type : short
+    {
+        diffuse,
+        specular,
+        normals,
+        COUNT
+    };
 
-template<typename _To, typename _From>
-inline pointer<_To> dynamic_pointer_cast(const pointer<_From> & from)
-{
-    return std::dynamic_pointer_cast<_To>(from);
-}
+    void set_texture(type id, const std::string & path)
+    {
+        textures_[utils::to_int(id)] = path;
+    }
 
-} /* utils */
+    const utils::optional<std::string> & get_texture(type id) const
+    {
+        return textures_[utils::to_int(id)];
+    }
+
+private:
+
+    std::array
+    <
+        utils::optional<std::string>,
+        utils::to_int(type::COUNT)
+    >
+    textures_;
+};
+
+} /* scene */
 } /* eps */
 
-#endif // UTILS_STD_POINTER_H_INCLUDED
+#endif // SCENE_OBJECT_MATERIALS_H_INCLUDED

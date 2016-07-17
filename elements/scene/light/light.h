@@ -21,45 +21,43 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef UTILS_STD_POINTER_H_INCLUDED
-#define UTILS_STD_POINTER_H_INCLUDED
+#ifndef SCENE_LIGHT_H_INCLUDED
+#define SCENE_LIGHT_H_INCLUDED
 
-#include <memory>
+#include "math/types.h"
 
 namespace eps {
-namespace utils {
+namespace scene {
 
-template<typename _Type>
-using pointer = std::shared_ptr<_Type>;
-
-template<typename _Type>
-using link = std::weak_ptr<_Type>;
-
-template<typename _Type>
-using unique = std::unique_ptr<_Type>;
-
-template<typename _Derived>
-using enable_shared_from_this = std::enable_shared_from_this<_Derived>;
-
-template<typename _Type, typename... _Args>
-inline pointer<_Type> make_shared(_Args&&... args)
+class light
 {
-    return std::make_shared<_Type>(std::forward<_Args>(args)...);
-}
+public:
 
-template<typename _Type, typename... _Args>
-inline unique<_Type> make_unique(_Args&&... args)
-{
-    return std::make_unique<_Type>(std::forward<_Args>(args)...);
-}
+    light();
+    light(light&&) = default;
+    light & operator=(light&&) = default;
+    virtual ~light() {}
 
-template<typename _To, typename _From>
-inline pointer<_To> dynamic_pointer_cast(const pointer<_From> & from)
-{
-    return std::dynamic_pointer_cast<_To>(from);
-}
+    void set_pos(const math::vec3 & value) { pos_ = value; }
+    void set_diffuse(const math::vec3 & diffuse) { diffuse_ = diffuse; }
+    void set_specular(const math::vec3 & specular) { specular_ = specular; }
+    void set_ambient(const math::vec3 & ambient) { ambient_ = ambient; }
 
-} /* utils */
+    const math::vec3 & get_pos() const { return pos_; }
+    const math::vec3 & get_diffuse() const { return diffuse_; }
+    const math::vec3 & get_specular() const { return specular_; }
+    const math::vec3 & get_ambient() const { return ambient_; }
+
+private:
+
+    math::vec3 pos_;
+
+    math::vec3 diffuse_;
+    math::vec3 specular_;
+    math::vec3 ambient_;
+};
+
+} /* scene */
 } /* eps */
 
-#endif // UTILS_STD_POINTER_H_INCLUDED
+#endif // SCENE_LIGHT_H_INCLUDED

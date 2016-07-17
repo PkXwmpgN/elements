@@ -21,45 +21,30 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef UTILS_STD_POINTER_H_INCLUDED
-#define UTILS_STD_POINTER_H_INCLUDED
-
-#include <memory>
+#include "graph.h"
 
 namespace eps {
-namespace utils {
+namespace scene {
 
-template<typename _Type>
-using pointer = std::shared_ptr<_Type>;
+graph::graph()
+    : root_(utils::make_shared<node>())
+{}
 
-template<typename _Type>
-using link = std::weak_ptr<_Type>;
-
-template<typename _Type>
-using unique = std::unique_ptr<_Type>;
-
-template<typename _Derived>
-using enable_shared_from_this = std::enable_shared_from_this<_Derived>;
-
-template<typename _Type, typename... _Args>
-inline pointer<_Type> make_shared(_Args&&... args)
+void graph::process(const math::mat4 & view)
 {
-    return std::make_shared<_Type>(std::forward<_Args>(args)...);
+    process(visit_targets<scene::node>(), [&view](auto object)
+    {
+        if(auto parent = object->get_parent().lock())
+            object->set_world_matrix(parent->get_world_matrix() * object->get_local_matrix());
+        else
+            object->set_world_matrix(view);
+    });
 }
 
-template<typename _Type, typename... _Args>
-inline unique<_Type> make_unique(_Args&&... args)
+void graph::clear()
 {
-    return std::make_unique<_Type>(std::forward<_Args>(args)...);
+    root_ = utils::make_shared<node>();
 }
 
-template<typename _To, typename _From>
-inline pointer<_To> dynamic_pointer_cast(const pointer<_From> & from)
-{
-    return std::dynamic_pointer_cast<_To>(from);
-}
-
-} /* utils */
+} /* scene */
 } /* eps */
-
-#endif // UTILS_STD_POINTER_H_INCLUDED

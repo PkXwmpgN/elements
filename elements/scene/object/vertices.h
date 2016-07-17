@@ -21,45 +21,36 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef UTILS_STD_POINTER_H_INCLUDED
-#define UTILS_STD_POINTER_H_INCLUDED
+#ifndef SCENE_OBJECT_VERTICES_H_INCLUDED
+#define SCENE_OBJECT_VERTICES_H_INCLUDED
 
-#include <memory>
+#include "math/types.h"
 
 namespace eps {
-namespace utils {
+namespace scene {
 
-template<typename _Type>
-using pointer = std::shared_ptr<_Type>;
-
-template<typename _Type>
-using link = std::weak_ptr<_Type>;
-
-template<typename _Type>
-using unique = std::unique_ptr<_Type>;
-
-template<typename _Derived>
-using enable_shared_from_this = std::enable_shared_from_this<_Derived>;
-
-template<typename _Type, typename... _Args>
-inline pointer<_Type> make_shared(_Args&&... args)
+struct vertex
 {
-    return std::make_shared<_Type>(std::forward<_Args>(args)...);
-}
+    math::vec3 position;
+    math::vec3 normal;
+    math::vec3 tangent;
+    math::vec2 tex;
+};
 
-template<typename _Type, typename... _Args>
-inline unique<_Type> make_unique(_Args&&... args)
+static_assert(offsetof(vertex, position) == 0, "failed");
+static_assert(offsetof(vertex, normal) == sizeof(math::vec3), "failed");
+static_assert(offsetof(vertex, tangent) == sizeof(math::vec3) * 2, "failed");
+static_assert(offsetof(vertex, tex) == sizeof(math::vec3) * 3, "failed");
+
+struct face
 {
-    return std::make_unique<_Type>(std::forward<_Args>(args)...);
-}
+    static const short FACE_INDICES_COUNT = 3;
+    unsigned short indices[FACE_INDICES_COUNT];
+};
 
-template<typename _To, typename _From>
-inline pointer<_To> dynamic_pointer_cast(const pointer<_From> & from)
-{
-    return std::dynamic_pointer_cast<_To>(from);
-}
+static_assert(face::FACE_INDICES_COUNT == 3, "failed");
 
-} /* utils */
+} /* scene */
 } /* eps */
 
-#endif // UTILS_STD_POINTER_H_INCLUDED
+#endif // SCENE_OBJECT_VERTICES_H_INCLUDED

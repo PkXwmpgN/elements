@@ -21,45 +21,34 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef UTILS_STD_POINTER_H_INCLUDED
-#define UTILS_STD_POINTER_H_INCLUDED
+#ifndef SCENE_OBJECT_H_INCLUDED
+#define SCENE_OBJECT_H_INCLUDED
 
-#include <memory>
+#include "scene/graph/node.h"
+#include "mesh.h"
+#include <vector>
 
 namespace eps {
-namespace utils {
+namespace scene {
 
-template<typename _Type>
-using pointer = std::shared_ptr<_Type>;
-
-template<typename _Type>
-using link = std::weak_ptr<_Type>;
-
-template<typename _Type>
-using unique = std::unique_ptr<_Type>;
-
-template<typename _Derived>
-using enable_shared_from_this = std::enable_shared_from_this<_Derived>;
-
-template<typename _Type, typename... _Args>
-inline pointer<_Type> make_shared(_Args&&... args)
+struct object : public scene::node
 {
-    return std::make_shared<_Type>(std::forward<_Args>(args)...);
-}
+    using scene::node::node;
 
-template<typename _Type, typename... _Args>
-inline unique<_Type> make_unique(_Args&&... args)
-{
-    return std::make_unique<_Type>(std::forward<_Args>(args)...);
-}
+    void add_mesh(const scene::mesh & mesh)
+    {
+        meshes_.push_back(mesh);
+    }
 
-template<typename _To, typename _From>
-inline pointer<_To> dynamic_pointer_cast(const pointer<_From> & from)
-{
-    return std::dynamic_pointer_cast<_To>(from);
-}
+    auto begin() const { return meshes_.begin(); }
+    auto end() const { return meshes_.end(); }
 
-} /* utils */
+private:
+
+    std::vector<scene::mesh> meshes_;
+};
+
+} /* scene */
 } /* eps */
 
-#endif // UTILS_STD_POINTER_H_INCLUDED
+#endif // SCENE_OBJECT_H_INCLUDED
