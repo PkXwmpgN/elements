@@ -21,56 +21,29 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef MATH_TRANSFORM_H_INCLUDED
-#define MATH_TRANSFORM_H_INCLUDED
+#ifndef MATH_MATRIX_H_INCLUDED
+#define MATH_MATRIX_H_INCLUDED
 
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/matrix_inverse.hpp>
 #include "types.h"
-#include <glm/gtx/transform.hpp>
 
 namespace eps {
 namespace math {
 
-inline mat4 rotate(float angle, float x, float y, float z)
+template<typename _MatType>
+inline _MatType transpose(const _MatType & mat)
 {
-    return glm::rotate(angle, vec3(x, y, z));
+    return glm::transpose(mat);
 }
 
-inline mat4 rotate(float angle, const vec3 & value)
+template<typename _MatType>
+inline _MatType inverse(const _MatType & mat)
 {
-    return glm::rotate(angle, value);
-}
-
-inline mat4 scale(float x, float y, float z)
-{
-    return glm::scale(vec3(x, y, z));
-}
-
-inline mat4 scale(const vec3 & value)
-{
-    return glm::scale(value);
-}
-
-inline mat4 translate(float x, float y, float z)
-{
-    return glm::translate(vec3(x, y, z));
-}
-
-inline mat4 translate(const vec3 & value)
-{
-    return glm::translate(value);
-}
-
-inline mat4 perspective(float fovy, float aspect, float near, float far)
-{
-    return glm::perspective(fovy, aspect, near, far);
-}
-
-inline mat4 look_at(const vec3 & eye, const vec3 & center, const vec3 & up)
-{
-    return glm::lookAt(eye, center, up);
+    return glm::inverse(mat);
 }
 
 } /* math */
 } /* eps */
 
-#endif // MATH_TRANSFORM_H_INCLUDED
+#endif // MATH_MATRIX_H_INCLUDED

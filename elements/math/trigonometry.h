@@ -39,6 +39,16 @@ inline float degrees(float angle)
     return glm::degrees(angle);
 }
 
+inline float cos(float angle)
+{
+    return glm::cos(angle);
+}
+
+inline float sin(float angle)
+{
+    return glm::sin(angle);
+}
+
 } /* math */
 } /* eps */
 
