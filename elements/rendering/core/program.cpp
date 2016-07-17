@@ -121,7 +121,7 @@ void program::attribute_array_disable(short attribute_index)
 
 bool program::uniform_location(const char * uniform, short uniform_index)
 {
-    if(0 <= uniform_index && uniform_index < MAX_ATTRIBUTES)
+    if(0 <= uniform_index && uniform_index < MAX_UNIFORMS)
     {
         GLint location = glGetUniformLocation(utils::raw_product(product_), uniform);
         if(location != BAD_LOCATION)
@@ -180,6 +180,13 @@ void program::uniform_value(short uniform_index, const math::vec4 & vec4)
     const short location = uniforms_[uniform_index];
     if(location != BAD_LOCATION)
         glUniform4fv(location, 1, math::ptr(vec4));
+}
+
+void program::uniform_value(short uniform_index, const math::mat3 & mat3)
+{
+    const short location = uniforms_[uniform_index];
+    if(location != BAD_LOCATION)
+        glUniformMatrix3fv(location, 1, GL_FALSE, math::ptr(mat3));
 }
 
 void program::uniform_value(short uniform_index, const math::mat4 & mat4)

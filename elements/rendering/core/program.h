@@ -79,6 +79,7 @@ public:
     void uniform_value(short uniform_index, const math::vec2 & vec2);
     void uniform_value(short uniform_index, const math::vec3 & vec3);
     void uniform_value(short uniform_index, const math::vec4 & vec4);
+    void uniform_value(short uniform_index, const math::mat3 & mat3);
     void uniform_value(short uniform_index, const math::mat4 & mat4);
 
 private:
