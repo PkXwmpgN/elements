@@ -120,15 +120,8 @@ struct state_traits<state_sampler>
 {
     using value_type = GLuint;
 
-    static void init(value_type & result)
-    {
-        result = 0;
-    }
-
-    static void restore(const value_type & value)
-    {
-        glBindTexture(GL_TEXTURE_2D, value);
-    }
+    static void init(value_type &) {}
+    static void restore(const value_type &) {}
 
     static void set(const product_type & product, GLenum active)
     {
