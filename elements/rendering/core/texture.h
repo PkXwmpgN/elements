@@ -52,6 +52,8 @@ public:
     const product_type & get_product() const;
     const math::uvec2 & get_size() const;
 
+    bool valid() const;
+
 private:
 
     product_type product_;
@@ -107,6 +109,12 @@ template<typename _Texture_policy>
 inline const math::uvec2 & texture<_Texture_policy>::get_size() const
 {
     return size_;
+}
+
+template<typename _Texture_policy>
+inline bool texture<_Texture_policy>::valid() const
+{
+    return !product_.invalid() && size_.x > 0 && size_.y > 0;
 }
 
 } /* rendering */

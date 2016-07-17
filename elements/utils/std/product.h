@@ -48,6 +48,8 @@ public:
 
     void swap(product & r);
 
+    product(const product &) = default;
+    product & operator=(const product &) = default;
     product(product && temp);
     product & operator=(product && temp);
 
