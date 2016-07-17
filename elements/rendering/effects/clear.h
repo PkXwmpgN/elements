@@ -36,6 +36,7 @@ public:
 
     using pass_base::pass_base;
     void set_color(const math::vec4 & color);
+    void set_bits(size_t bits);
 
 public:
 
@@ -46,6 +47,7 @@ public:
 
 private:
 
+    size_t bits_ = GL_COLOR_BUFFER_BIT;
     math::vec4 color_;
 };
 

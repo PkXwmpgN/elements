@@ -40,12 +40,17 @@ utils::unique<pass_target> clear::construct(const math::uvec2 &)
 void clear::process(float)
 {
     glClearColor(color_.r, color_.g, color_.b, color_.a);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(bits_);
 }
 
 void clear::set_color(const math::vec4 & color)
 {
     color_ = color;
+}
+
+void clear::set_bits(size_t bits)
+{
+    bits_ = bits;
 }
 
 } /* effect */
