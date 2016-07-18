@@ -101,7 +101,7 @@ struct asset_system : public io::system
 utils::unique<assets_storage> assets_storage::instance_ = nullptr;
 
 assets_storage::assets_storage()
-    : default_fs_(new asset_system())
+    : default_fs_(utils::make_shared<asset_system>())
 {}
 
 utils::optional<std::string> assets_storage::mountpoint(const std::string & resource) const

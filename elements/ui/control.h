@@ -53,7 +53,7 @@ public:
     template<typename _TControl, typename ..._TParams>
     utils::link<_TControl> add(_TParams&&... params)
     {
-        utils::pointer<_TControl> control(new _TControl(std::forward<_TParams>(params)..., this));
+        auto control = utils::make_shared<_TControl>(std::forward<_TParams>(params)..., this);
         childs_.push_back(control);
         return control;
     }

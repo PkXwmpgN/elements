@@ -48,7 +48,7 @@ public:
     template<typename _Pass>
     utils::link<_Pass> add_pass(const pass_target_input & inputs)
     {
-        utils::pointer<_Pass> pass(new _Pass(passes_.size(), inputs));
+        auto pass = utils::make_shared<_Pass>(passes_.size(), inputs);
         if(!pass->initialize())
             return utils::link<_Pass>();
 

@@ -36,7 +36,7 @@ bool asset_xml::load(utils::link<io::system> fs, const std::string & resource)
     if(stream.read(data, 1, stream.size()) != stream.size())
         return false;
 
-    doc_.reset(new pugi::xml_document());
+    doc_ = utils::make_unique<pugi::xml_document>();
     if(!doc_->load_buffer_inplace_own(data, stream.size()))
         return false;
 

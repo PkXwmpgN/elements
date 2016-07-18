@@ -73,7 +73,7 @@ private:
 template<typename _TFS, typename ..._TArgs>
 void assets_storage::mount(const std::string & mountpoint, _TArgs&& ...args)
 {
-    mount_fs_[mountpoint].reset(new _TFS(std::forward<_TArgs>(args)...));
+    mount_fs_[mountpoint] = utils::make_shared<_TFS>(std::forward<_TArgs>(args)...);
 }
 
 template<typename _TAsset>

@@ -42,7 +42,7 @@ public:
     template<typename _Target>
     utils::link<pass_target> request_target(const math::uvec2 & size)
     {
-        storage_.emplace_back(new _Target(size));
+        storage_.push_back(utils::make_shared<_Target>(size));
         return storage_.back();
     }
 

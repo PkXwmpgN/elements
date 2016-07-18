@@ -29,7 +29,7 @@ namespace eps {
 namespace rendering {
 
 pass_composition::pass_composition()
-    : placement_(new pass_target_placement())
+    : placement_(utils::make_shared<pass_target_placement>())
 {}
 
 void pass_composition::initialize(size_t places_count)
