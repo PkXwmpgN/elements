@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/prefs_personalization_category_title" >
+        <com.yegorov.alexey.preferences.PreferenceList
+            android:title="@string/prefs_model_title"
+            android:summary="%s"
+            android:key="@string/prefs_model_key"
+            android:defaultValue="assets/models/R2-D2/R2-D2.dae"
+            android:entries="@array/prefs_model_entries"
+            android:entryValues="@array/prefs_model_values" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

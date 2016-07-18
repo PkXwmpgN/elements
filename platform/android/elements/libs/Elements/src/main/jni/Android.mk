@@ -6,6 +6,7 @@ BUILD_LIGHT := true
 BUILD_STRANGE := true
 BUILD_LIQUID := true
 BUILD_AIR := true
+BUILD_CHARACTER := true
 
 # android
 # ------------------------------------
@@ -34,6 +35,10 @@ endif
 
 ifeq ($(BUILD_LIQUID), true)
 	FILE_LIST += $(wildcard $(LOCAL_PATH)/liquid/*.cpp)
+endif
+
+ifeq ($(BUILD_CHARACTER), true)
+	FILE_LIST += $(wildcard $(LOCAL_PATH)/character/*.cpp)
 endif
 
 LOCAL_SRC_FILES := $(FILE_LIST:$(LOCAL_PATH)/%=%)

@@ -5,6 +5,7 @@ include ':FireWallpaper'
 include ':AirWallpaper'
 include ':StrangeWallpaper'
 include ':LightWallpaper'
+include ':CharacterWallpaper'
 
 project(':Elements').projectDir = new File('libs/Elements')
 project(':Preferences').projectDir = new File('libs/Preferences')

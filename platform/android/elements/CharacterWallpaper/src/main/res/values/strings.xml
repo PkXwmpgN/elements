@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <!-- Simple strings. -->
+    <string name="application_name">Character Elements</string>
+    <string name="service_name">Character Elements</string>
+    <string name="prefs_activity_title">Settings</string>
+    <string name="prefs_activity_applications_title">Applications</string>
+
+    <string name="prefs_personalization_category_title">Personalization</string>
+    <string name="prefs_application_category_title">Application</string>
+
+    <string name="prefs_model_summary">Select a character model</string>
+    <string name="prefs_model_title">Character</string>
+    <string name="prefs_model_key" translatable="false">character</string>
+
+    <string-array name="prefs_model_entries" translatable="false">
+        <item>R2-D2</item>
+        <item>C-3PO</item>
+    </string-array>
+
+    <string-array name="prefs_model_values" translatable="false">
+        <item>assets/models/R2-D2/R2-D2.dae</item>
+        <item>assets/models/C-3PO/C-3PO.dae</item>
+    </string-array>
+
+</resources>
+
