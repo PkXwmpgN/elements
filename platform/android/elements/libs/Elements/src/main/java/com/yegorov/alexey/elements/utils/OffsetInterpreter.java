@@ -1,4 +1,4 @@
-package com.yegorov.alexey.elements.liquid;
+package com.yegorov.alexey.elements.utils;
 
 import android.content.Context;
 import android.hardware.SensorManager;

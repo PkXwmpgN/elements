@@ -69,7 +69,7 @@ public abstract class ElementsWallpaperService extends WallpaperService
 
             elementSurface = new ElementSV(ElementsWallpaperService.this);
             elementSurface.setEGLContextClientVersion(2);
-            elementSurface.setEGLConfigChooser(8, 8, 8, 8, 0, 0);
+            elementSurface.setEGLConfigChooser(8, 8, 8, 8, getDepth(), 0);
             elementSurface.setPreserveEGLContextOnPause(true);
             elementSurface.setRenderer(createRenderer());
         }
@@ -123,6 +123,12 @@ public abstract class ElementsWallpaperService extends WallpaperService
             super.onDestroy();
             elementSurface.onDestroy();
             sensors.unregisterListener(this);
+        }
+
+
+        protected int getDepth()
+        {
+            return 0;
         }
 
         abstract protected void onOffsets(float x, float y, float stepX, float stepY);

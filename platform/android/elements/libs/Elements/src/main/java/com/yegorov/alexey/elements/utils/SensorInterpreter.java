@@ -1,4 +1,4 @@
-package com.yegorov.alexey.elements.liquid;
+package com.yegorov.alexey.elements.utils;
 
 import android.content.Context;
 import android.hardware.SensorEvent;
@@ -68,20 +68,13 @@ public class SensorInterpreter
             SensorManager.getAngleChange(tiltVector, rotationMatrixOriented, rotationMatrixTarget);
         }
 
-        for(int i = 0; i < tiltVector.length; i++)
-        {
-            tiltVector[i] /= Math.PI;
-
-            if(tiltVector[i] > 1.0f)
-                tiltVector[i] = 1.0f;
-            else if(tiltVector[i] < -1.0f)
-                tiltVector[i] = -1.0f;
-        }
+        tiltVector[1] = (float)(Math.PI / 2.0 + tiltVector[1]);
+        tiltVector[2] = -tiltVector[2];
 
         return tiltVector;
     }
 
-    float[] accelerometer(Context context, SensorEvent event)
+    public float[] accelerometer(Context context, SensorEvent event)
     {
         if(event == null)
             return null;

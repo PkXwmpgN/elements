@@ -24,6 +24,8 @@ import android.view.MotionEvent;
 import android.view.WindowManager;
 
 import com.yegorov.alexey.elements.service.ElementsWallpaperService;
+import com.yegorov.alexey.elements.utils.OffsetInterpreter;
+import com.yegorov.alexey.elements.utils.SensorInterpreter;
 import com.yegorov.alexey.preferences.PreferenceImagePicker;
 
 public class LiquidWallpaperService extends ElementsWallpaperService
