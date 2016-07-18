@@ -8,6 +8,7 @@ OpenGL ES 2.0 and C++ experiments.
  * [Strange Attractors](#strange-attractors)
  * [Wind Field](#wind-field)
  * [Flame Simualtion](#flame-simulation)
+ * [3D Character](#3d-character)
 * [Build](#build)
 
 -----------------------
@@ -53,6 +54,13 @@ The adaptation of a [raymarching](http://iquilezles.org/www/articles/raymarching
 - Sources experiments/fire
 - Preview into [the YouTube](https://www.youtube.com/watch?v=eYFEQRwEKm4)
 - Demo into [the Google Play](https://play.google.com/store/apps/details?id=com.yegorov.alexey.elements.fire)
+
+###3D Character
+![3D Character preview](https://raw.githubusercontent.com/PkXwmpgN/elements/master/screenshots/character.jpeg)
+
+3D R2-D2 and C-3PO with Android Sensors.
+- Source experiments/character
+- Preview into [the YouTube](https://youtu.be/CaVsHNbGWpI)
 
 ##Build
 
