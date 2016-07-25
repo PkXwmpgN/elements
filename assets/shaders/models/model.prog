@@ -30,14 +30,14 @@
 
             void main()
             {
-                gl_Position = u_matrix_mvp * vec4(a_vertex_pos, 1.0f);
+                gl_Position = u_matrix_mvp * vec4(a_vertex_pos, 1.0);
                 v_uv = a_vertex_uv;
 
                 mat3 tbn = fn_tbn_matrix();
 
                 v_light = tbn * u_light_pos;
                 v_camera = tbn * u_camera_pos;
-                v_pos = tbn * vec3(u_matrix_world * vec4(a_vertex_pos, 1.0f));
+                v_pos = tbn * vec3(u_matrix_world * vec4(a_vertex_pos, 1.0));
             }
         ]]></vertex>
 
