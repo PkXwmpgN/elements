@@ -2,7 +2,7 @@
 
 #include "assets/assets_storage.h"
 #include "assets/asset_texture.h"
-#include "elements/rendering/state/state_macro.h"
+#include "rendering/state/state_macro.h"
 #include "rendering/utils/program_loader.h"
 #include "rendering/core/texture_maker.h"
 #include "rendering/core/texture_policy.h"
