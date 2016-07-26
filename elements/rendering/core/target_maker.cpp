@@ -21,52 +21,29 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef UI_CONTROLS_BUTTON_H_INCLUDED
-#define UI_CONTROLS_BUTTON_H_INCLUDED
-
-#include <functional>
-
-#include "ui/control.h"
-#include "rendering/core/texture.h"
-#include "rendering/core/program.h"
-#include "rendering/primitives/square.h"
+#include "target_maker.h"
 
 namespace eps {
-namespace ui {
+namespace rendering {
 
-class button : public control
+target target_maker::construct(const math::uvec2 & size) const
 {
-public:
-
-    explicit button(control * parent = nullptr);
-
-    void draw() override;
-    bool touch(int x, int y, touch_action action) override;
-
-    bool set_asset(const char * asset);
-    void set_click(const std::function<void()> & handler);
-
-private:
-
-    enum class state
+    target result;
+    for(size_t i = 0; i < utils::to_int(target::attachment::MAX); ++i)
     {
-        NONE = 0,
-        PRESSED
-    };
+        if(makers_[i])
+            result.attach(target::attachment(i), makers_[i]->construct(nullptr, size));
+    }
 
-private:
+    return result;
+}
 
-    std::function<void()> click_;
+target_buffered target_maker::construct_buffered(const math::uvec2 & size) const
+{
+    target_buffered result;
+    result.construct(construct(size), construct(size));
+    return result;
+}
 
-    rendering::program program_face_;
-    rendering::texture texture_face_;
-
-    rendering::primitive::square square_;
-
-    state state_;
-};
-
-} /* ui */
+} /* rendering */
 } /* eps */
-
-#endif // UI_BUTTON_H_INCLUDED

@@ -32,7 +32,6 @@ IN THE SOFTWARE.
 #include "scene/object/materials.h"
 #include "rendering/core/buffer.h"
 #include "rendering/core/texture.h"
-#include "rendering/core/texture_policy.h"
 #include "utils/std/enum.h"
 #include "utils/std/optional.h"
 
@@ -89,8 +88,7 @@ private:
     std::vector<geometry> geometry_;
     std::vector<material> materials_;
 
-    using texture_type = texture<repeat_texture_policy>;
-    std::unordered_map<std::string, texture_type> textures_;
+    std::unordered_map<std::string, texture> textures_;
 };
 
 } /* rendering */

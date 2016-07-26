@@ -25,6 +25,8 @@ IN THE SOFTWARE.
 #include "ui/system.h"
 #include "rendering/state/state_macro.h"
 #include "rendering/utils/program_loader.h"
+#include "rendering/core/texture_maker.h"
+#include "rendering/core/texture_policy.h"
 #include "assets/assets_storage.h"
 #include "assets/asset_texture.h"
 #include "utils/std/enum.h"
@@ -57,8 +59,10 @@ bool button::set_asset(const char * asset)
 
     if(face)
     {
-        auto & value = face.value();
-        texture_face_.set_data(value.pixels(), value.size(), value.format());
+        using namespace rendering;
+
+        auto maker = get_texture_maker<default_texture_policy>(face->format());
+        texture_face_ = maker.construct(face->pixels(), face->size());
         return true;
     }
 

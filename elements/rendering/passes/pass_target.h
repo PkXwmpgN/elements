@@ -26,7 +26,6 @@ IN THE SOFTWARE.
 
 #include "utils/std/pointer.h"
 #include "rendering/core/target.h"
-#include "rendering/core/texture_policy.h"
 
 namespace eps {
 namespace rendering {
@@ -57,7 +56,7 @@ public:
 
 private:
 
-    target<default_texture_policy> target_;
+    target target_;
 };
 
 } /* renderer */
