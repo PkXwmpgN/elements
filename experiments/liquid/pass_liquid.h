@@ -51,9 +51,8 @@ public:
 private:
 
     rendering::program program_;
+    rendering::texture background_;
     rendering::primitive::square square_;
-
-    rendering::texture<rendering::default_texture_policy> surface_background_;
 
     math::vec4 surface_color_;
     math::vec2 surface_texel_;

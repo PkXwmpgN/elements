@@ -52,8 +52,7 @@ private:
 
     rendering::compute_product_index product_index_;
     rendering::program program_;
-
-    rendering::texture<rendering::default_texture_policy> texture_background_;
+    rendering::texture background_;
 
     math::vec2 texel_;
 

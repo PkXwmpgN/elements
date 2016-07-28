@@ -21,78 +21,41 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef RENDERING_TARGET_DOUBLE_BUFFER_H_INCLUDED
-#define RENDERING_TARGET_DOUBLE_BUFFER_H_INCLUDED
-
-#include "opengl.h"
-#include "target.h"
-#include "math/types.h"
+#include "target_buffered.h"
 
 namespace eps {
 namespace rendering {
 
-template<typename _Attachement_policy>
-class target_db
-{
-
-public:
-
-    using target_type  = target<_Attachement_policy>;
-
-    target_db();
-
-    bool construct(const math::uvec2 & size);
-    void swap();
-
-    const product_type & get_target() const;
-    const product_type & get_product() const;
-    const math::uvec2 & get_size() const;
-
-private:
-
-    target_type targets_[2];
-    enum_type write_;
-};
-
-template<typename _Attachement_policy>
-inline target_db<_Attachement_policy>::target_db()
+target_buffered::target_buffered()
     : write_(0)
 {}
 
-template<typename _Attachement_policy>
-inline bool target_db<_Attachement_policy>::construct(const math::uvec2 & size)
+bool target_buffered::construct(target front, target back)
 {
-    for(auto & target : targets_)
-        if(!target.construct(size))
-            return false;
+    targets_[0] = std::move(front);
+    targets_[1] = std::move(back);
     return true;
 }
 
-template<typename _Attachement_policy>
-inline void target_db<_Attachement_policy>::swap()
+void target_buffered::swap()
 {
     write_ = 1 - write_;
 }
 
-template<typename _Attachement_policy>
-inline const product_type & target_db<_Attachement_policy>::get_target() const
+const product_type & target_buffered::get_target() const
 {
     return targets_[write_].get_target();
 }
 
-template<typename _Attachement_policy>
-inline const product_type & target_db<_Attachement_policy>::get_product() const
+const product_type & target_buffered::get_product() const
 {
     return targets_[1 - write_].get_product();
 }
 
-template<typename _Attachement_policy>
-inline const math::uvec2 & target_db<_Attachement_policy>::get_size() const
+const math::uvec2 & target_buffered::get_size() const
 {
     return targets_[1 - write_].get_size();
 }
 
 } /* rendering */
 } /* eps */
-
-#endif // RENDERING_TARGET_DOUBLE_BUFFER_H_INCLUDED

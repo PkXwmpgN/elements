@@ -55,9 +55,10 @@ private:
 
     rendering::program program_process_;
     rendering::program program_reset_;
+    rendering::texture displacement_;
+
     rendering::primitive::square square_;
 
-    rendering::texture<rendering::repeat_texture_policy> texture_displacement_;
 
     size_t particles_count_ = 0;
     bool reset_ = true;

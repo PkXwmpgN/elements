@@ -53,9 +53,8 @@ public:
 private:
 
     rendering::program program_;
+    rendering::texture noise_;
     rendering::primitive::square square_;
-
-    rendering::texture<rendering::repeat_texture_policy> texture_noise_;
 
     math::vec2 texel_;
 

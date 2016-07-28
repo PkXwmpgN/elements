@@ -25,6 +25,8 @@ IN THE SOFTWARE.
 
 #include <elements/rendering/state/state_macro.h>
 #include <elements/rendering/utils/program_loader.h>
+#include <elements/rendering/core/texture_policy.h>
+#include <elements/rendering/core/texture_maker.h>
 
 #include <elements/utils/std/enum.h>
 
@@ -53,8 +55,11 @@ bool pass_fire::set_background(const char * background)
 
     if(asset)
     {
-        auto & value = asset.value();
-        texture_background_.set_data(value.pixels(), value.size(), value.format());
+        using namespace rendering;
+
+        auto maker = get_texture_maker<default_texture_policy>(asset->format());
+        background_ = maker.construct(asset->pixels(), asset->size());
+
         return true;
     }
     return false;
@@ -68,7 +73,7 @@ bool pass_fire::initialize()
 void pass_fire::process(float)
 {
     EPS_STATE_SAMPLER_0(get_inputs().get_slot(rendering::pass_input_slot::input_0));
-    EPS_STATE_SAMPLER_1(texture_background_.get_product());
+    EPS_STATE_SAMPLER_1(background_.get_product());
     EPS_STATE_PROGRAM(program_.get_product());
 
     program_.uniform_value(utils::to_int(program_enum::u_fire), 0);

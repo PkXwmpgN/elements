@@ -39,11 +39,11 @@ template
 >
 struct texture_policy
 {
-    enum_type internal_format() const { return _Internal_format; }
-    enum_type format() const { return _Format; }
-    enum_type type() const { return _Type; }
-    enum_type filter() const { return _Filter; }
-    enum_type wrap() const { return _Wrap; }
+    static constexpr enum_type internal_format() { return _Internal_format; }
+    static constexpr enum_type format() { return _Format; }
+    static constexpr enum_type type() { return _Type; }
+    static constexpr enum_type filter() { return _Filter; }
+    static constexpr enum_type wrap() { return _Wrap; }
 };
 
 using default_texture_policy = texture_policy
@@ -71,6 +71,25 @@ using repeat_texture_policy = texture_policy
     GL_UNSIGNED_BYTE,
     GL_LINEAR,
     GL_REPEAT
+>;
+
+using depth_texture_policy = texture_policy
+<
+    GL_DEPTH_COMPONENT16,
+    GL_DEPTH_COMPONENT,
+    GL_UNSIGNED_SHORT,
+    GL_LINEAR,
+    GL_CLAMP_TO_EDGE
+>;
+
+// GL_OES_depth24 extension
+using depth24_texture_policy = texture_policy
+<
+    GL_DEPTH_COMPONENT24_OES,
+    GL_DEPTH_COMPONENT,
+    GL_UNSIGNED_INT,
+    GL_LINEAR,
+    GL_CLAMP_TO_EDGE
 >;
 
 } /* rendering */

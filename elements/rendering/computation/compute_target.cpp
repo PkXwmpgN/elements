@@ -22,13 +22,16 @@ IN THE SOFTWARE.
 */
 
 #include "compute_target.h"
+#include "rendering/core/texture_policy.h"
+#include "rendering/core/target_maker.h"
 
 namespace eps {
 namespace rendering {
 
 compute_target::compute_target(const math::uvec2 & size)
 {
-    target_.construct(size);
+    auto maker = get_target_maker<default_texture_policy>();
+    target_ = maker.construct_buffered(size);
 }
 
 const product_type & compute_target::get_product() const

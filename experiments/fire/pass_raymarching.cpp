@@ -25,6 +25,8 @@ IN THE SOFTWARE.
 
 #include <elements/rendering/state/state_macro.h>
 #include <elements/rendering/utils/program_loader.h>
+#include <elements/rendering/core/texture_policy.h>
+#include <elements/rendering/core/texture_maker.h>
 #include <elements/utils/std/enum.h>
 #include <elements/assets/assets_storage.h>
 #include <elements/assets/asset_texture.h>
@@ -76,15 +78,17 @@ bool pass_raymarching::initialize()
     if(!asset)
         return false;
 
-    auto & value = asset.value();
-    texture_noise_.set_data(value.pixels(), value.size(), value.format());
+    using namespace rendering;
 
-    return rendering::load_program("assets/shaders/experiments/fire/raymarching.prog", program_);
+    auto maker = get_texture_maker<repeat_texture_policy>(asset->format());
+    noise_ = maker.construct(asset->pixels(), asset->size());
+
+    return load_program("assets/shaders/experiments/fire/raymarching.prog", program_);
 }
 
 void pass_raymarching::process(float dt)
 {
-    EPS_STATE_SAMPLER_0(texture_noise_.get_product());
+    EPS_STATE_SAMPLER_0(noise_.get_product());
     EPS_STATE_PROGRAM(program_.get_product());
 
     program_.uniform_value(utils::to_int(program_enum::u_noise), 0);
