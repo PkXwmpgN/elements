@@ -25,7 +25,7 @@ IN THE SOFTWARE.
 #define RENDERING_COMPUTATION_COMPUTE_TARGET_H_INCLUDED
 
 #include "rendering/passes/pass_target.h"
-#include "rendering/core/target_db.h"
+#include "rendering/core/target_buffered.h"
 #include "rendering/core/texture_policy.h"
 
 namespace eps {
@@ -45,7 +45,7 @@ public:
 
 private:
 
-    target_db<default_texture_policy> target_;
+    target_buffered target_;
 };
 
 } /* rendering */

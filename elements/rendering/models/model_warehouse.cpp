@@ -4,6 +4,8 @@
 #include "assets/asset_texture.h"
 #include "rendering/state/state_macro.h"
 #include "rendering/utils/program_loader.h"
+#include "rendering/core/texture_maker.h"
+#include "rendering/core/texture_policy.h"
 
 namespace eps {
 namespace rendering {
@@ -45,9 +47,8 @@ void model_warehouse::add_material(const scene::material & data)
             {
                 if(auto asset = assets_storage::instance().read<asset_texture>(name.value()))
                 {
-                    texture.set_data(asset.value().pixels(),
-                                     asset.value().size(),
-                                     asset.value().format());
+                    auto maker = get_texture_maker<repeat_texture_policy>(asset->format());
+                    texture = maker.construct(asset->pixels(), asset->size());
                 }
             }
 

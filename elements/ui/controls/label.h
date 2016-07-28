@@ -28,7 +28,6 @@ IN THE SOFTWARE.
 #include "ui/control.h"
 #include "rendering/core/program.h"
 #include "rendering/core/texture.h"
-#include "rendering/core/texture_policy.h"
 #include "rendering/primitives/square.h"
 #include "math/types.h"
 
@@ -52,8 +51,9 @@ public:
 private:
 
     rendering::program program_face_;
+    rendering::texture texture_face_;
+
     rendering::primitive::square square_;
-    rendering::texture<rendering::alpha_texture_policy> texture_face_;
 
     freetype::face_handle font_;
 

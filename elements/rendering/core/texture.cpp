@@ -21,52 +21,37 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef UI_CONTROLS_BUTTON_H_INCLUDED
-#define UI_CONTROLS_BUTTON_H_INCLUDED
-
-#include <functional>
-
-#include "ui/control.h"
-#include "rendering/core/texture.h"
-#include "rendering/core/program.h"
-#include "rendering/primitives/square.h"
+#include "texture.h"
 
 namespace eps {
-namespace ui {
+namespace rendering {
 
-class button : public control
+texture::texture(const math::uvec2 & size)
+    : size_(size)
 {
-public:
+    glGenTextures(1, utils::ptr_product(product_));
+}
 
-    explicit button(control * parent = nullptr);
+texture::~texture()
+{
+    if(!product_.invalid())
+        glDeleteTextures(1, utils::ptr_product(product_));
+}
 
-    void draw() override;
-    bool touch(int x, int y, touch_action action) override;
+const product_type & texture::get_product() const
+{
+    return product_;
+}
 
-    bool set_asset(const char * asset);
-    void set_click(const std::function<void()> & handler);
+const math::uvec2 & texture::get_size() const
+{
+    return size_;
+}
 
-private:
+bool texture::valid() const
+{
+    return !product_.invalid() && size_.x > 0 && size_.y > 0;
+}
 
-    enum class state
-    {
-        NONE = 0,
-        PRESSED
-    };
-
-private:
-
-    std::function<void()> click_;
-
-    rendering::program program_face_;
-    rendering::texture texture_face_;
-
-    rendering::primitive::square square_;
-
-    state state_;
-};
-
-} /* ui */
+} /* rendering */
 } /* eps */
-
-#endif // UI_BUTTON_H_INCLUDED

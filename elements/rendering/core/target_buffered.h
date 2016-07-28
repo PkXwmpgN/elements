@@ -21,52 +21,36 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef UI_CONTROLS_BUTTON_H_INCLUDED
-#define UI_CONTROLS_BUTTON_H_INCLUDED
+#ifndef RENDERING_TARGET_DOUBLE_BUFFER_H_INCLUDED
+#define RENDERING_TARGET_DOUBLE_BUFFER_H_INCLUDED
 
-#include <functional>
-
-#include "ui/control.h"
-#include "rendering/core/texture.h"
-#include "rendering/core/program.h"
-#include "rendering/primitives/square.h"
+#include "target.h"
+#include <array>
 
 namespace eps {
-namespace ui {
+namespace rendering {
 
-class button : public control
+class target_buffered
 {
+
 public:
 
-    explicit button(control * parent = nullptr);
+    target_buffered();
 
-    void draw() override;
-    bool touch(int x, int y, touch_action action) override;
+    bool construct(target front, target back);
+    void swap();
 
-    bool set_asset(const char * asset);
-    void set_click(const std::function<void()> & handler);
-
-private:
-
-    enum class state
-    {
-        NONE = 0,
-        PRESSED
-    };
+    const product_type & get_target() const;
+    const product_type & get_product() const;
+    const math::uvec2 & get_size() const;
 
 private:
 
-    std::function<void()> click_;
-
-    rendering::program program_face_;
-    rendering::texture texture_face_;
-
-    rendering::primitive::square square_;
-
-    state state_;
+    std::array<target, 2> targets_;
+    enum_type write_;
 };
 
-} /* ui */
+} /* rendering */
 } /* eps */
 
-#endif // UI_BUTTON_H_INCLUDED
+#endif // RENDERING_TARGET_DOUBLE_BUFFER_H_INCLUDED

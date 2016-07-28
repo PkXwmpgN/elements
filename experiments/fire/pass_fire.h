@@ -49,9 +49,8 @@ public:
 private:
 
     rendering::program program_;
+    rendering::texture background_;
     rendering::primitive::square square_;
-
-    rendering::texture<rendering::default_texture_policy> texture_background_;
 
     math::vec2 texel_;
 };

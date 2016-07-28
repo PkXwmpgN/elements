@@ -26,6 +26,9 @@ IN THE SOFTWARE.
 #include <elements/rendering/computation/compute_target.h>
 #include <elements/rendering/state/state_macro.h>
 #include <elements/rendering/utils/program_loader.h>
+#include <elements/rendering/core/texture_policy.h>
+#include <elements/rendering/core/texture_maker.h>
+
 #include <elements/utils/std/enum.h>
 #include <elements/assets/assets_storage.h>
 #include <elements/assets/asset_texture.h>
@@ -66,13 +69,15 @@ bool pass_positions::initialize()
     if(!asset)
         return false;
 
-    auto & value = asset.value();
-    texture_displacement_.set_data(value.pixels(), value.size(), value.format());
+    using namespace rendering;
 
-    return rendering::load_program("assets/shaders/experiments/light/positions_product_reset.prog",
-                                   program_reset_) &&
-           rendering::load_program("assets/shaders/experiments/light/positions_product_process.prog",
-                                   program_process_);
+    auto maker = get_texture_maker<repeat_texture_policy>(asset->format());
+    displacement_ = maker.construct(asset->pixels(), asset->size());
+
+    return load_program("assets/shaders/experiments/light/positions_product_reset.prog",
+                         program_reset_) &&
+           load_program("assets/shaders/experiments/light/positions_product_process.prog",
+                        program_process_);
 }
 
 utils::unique<rendering::pass_target> pass_positions::construct(const math::uvec2 & size)
@@ -104,7 +109,7 @@ void pass_positions::process(float dt)
 
 void pass_positions::pass_reset()
 {
-    EPS_STATE_SAMPLER_0(texture_displacement_.get_product());
+    EPS_STATE_SAMPLER_0(displacement_.get_product());
     EPS_STATE_PROGRAM(program_reset_.get_product());
 
     program_reset_.uniform_value(utils::to_int(reset_enum::u_displacement), 0);

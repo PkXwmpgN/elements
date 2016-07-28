@@ -24,19 +24,18 @@ IN THE SOFTWARE.
 #ifndef RENDERING_TARGET_H_INCLUDED
 #define RENDERING_TARGET_H_INCLUDED
 
-#include "opengl.h"
 #include "texture.h"
-#include "math/types.h"
+#include "utils/std/enum.h"
+#include <array>
 
 namespace eps {
 namespace rendering {
 
-template<typename _Attachement_policy>
-class target : private _Attachement_policy
+class target
 {
 public:
 
-    using texture_type = texture<_Attachement_policy>;
+    enum class attachment { color0, depth, MAX };
 
     target();
     ~target();
@@ -46,66 +45,21 @@ public:
     target(target &&) = default;
     target & operator=(target &&) = default;
 
-    bool construct(const math::uvec2 & size);
+    bool attach(attachment id, texture data);
 
     const product_type & get_target() const;
+    
     const product_type & get_product() const;
+    const product_type & get_product(attachment id) const;
 
     const math::uvec2 & get_size() const;
+    const math::uvec2 & get_size(attachment id) const;
 
 private:
 
     product_type product_;
-    texture_type attachement_;
+    std::array<texture, utils::to_int(attachment::MAX)> attachments_;
 };
-
-template<typename _Attachement_policy>
-inline target<_Attachement_policy>::target()
-{
-    glGenFramebuffers(1, utils::ptr_product(product_));
-}
-
-template<typename _Attachement_policy>
-inline target<_Attachement_policy>::~target()
-{
-    if(!product_.invalid())
-        glDeleteFramebuffers(1, utils::ptr_product(product_));
-}
-
-template<typename _Attachement_policy>
-inline bool target<_Attachement_policy>::construct(const math::uvec2 & size)
-{
-    attachement_.set_data(nullptr, size);
-
-    GLint save;
-    glGetIntegerv(GL_FRAMEBUFFER_BINDING, &save);
-    glBindFramebuffer(GL_FRAMEBUFFER, utils::raw_product(product_));
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
-                           utils::raw_product(attachement_.get_product()), 0);
-
-    GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-
-    glBindFramebuffer(GL_FRAMEBUFFER, save);
-
-    return status == GL_FRAMEBUFFER_COMPLETE;
-}
-template<typename _Attachement_policy>
-inline const product_type & target<_Attachement_policy>::get_target() const
-{
-    return product_;
-}
-
-template<typename _Attachement_policy>
-inline const product_type & target<_Attachement_policy>::get_product() const
-{
-    return attachement_.get_product();
-}
-
-template<typename _Attachement_policy>
-inline const math::uvec2 & target<_Attachement_policy>::get_size() const
-{
-    return attachement_.get_size();
-}
 
 } /* rendering */
 } /* eps */
