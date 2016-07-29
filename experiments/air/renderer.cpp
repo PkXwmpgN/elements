@@ -57,9 +57,9 @@ bool renderer::initialize()
     if(link_particles_.expired())
         return false;
 
-    passes_.add_dependency(link_positions_, link_velocities_, pass_input_slot::input_0);
-    passes_.add_dependency(link_particles_, link_positions_, pass_input_slot::input_0);
-    passes_.add_dependency(link_particles_, link_velocities_, pass_input_slot::input_1);
+    passes_.add_dependency(link_positions_, link_velocities_, pass_slot::slot_0);
+    passes_.add_dependency(link_particles_, link_positions_, pass_slot::slot_0);
+    passes_.add_dependency(link_particles_, link_velocities_, pass_slot::slot_1);
 
     link_clear.lock()->set_color(math::vec4(0.0f, 0.0f, 0.0f, 1.0f));
 

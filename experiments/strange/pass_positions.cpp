@@ -51,7 +51,8 @@ bool pass_positions::initialize()
 
 utils::unique<rendering::pass_target> pass_positions::construct(const math::uvec2 & size)
 {
-    return utils::make_unique<rendering::compute_target>(size);
+    using namespace rendering;
+    return get_compute_target<default_texture_policy>(size);
 }
 
 void pass_positions::process(float dt)

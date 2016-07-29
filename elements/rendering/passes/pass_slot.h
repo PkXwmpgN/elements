@@ -21,43 +21,26 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#include "pass_target.h"
-#include "rendering/core/texture_policy.h"
-#include "rendering/core/target_maker.h"
+#ifndef RENDERING_PASSES_SLOT_H_INCLUDED
+#define RENDERING_PASSES_SLOT_H_INCLUDED
 
 namespace eps {
 namespace rendering {
 
-pass_target_default::pass_target_default(target target)
-    : target_(std::move(target))
-{}
-
-const product_type & pass_target_default::get_product(const pass_slot & slot) const
+enum class pass_slot
 {
-    if(utils::to_int(slot) < utils::to_int(attachment::MAX))
-    {
-        static attachment attachments[] =
-        {
-            attachment::color0,
-            attachment::depth
-        };
-        return target_.get_product(attachments[utils::to_int(slot)]);
-    }
-
-    return product_type::default_product();
-}
-
-const product_type & pass_target_default::get_target() const
-{
-    return target_.get_target();
-}
-
-const math::uvec2 & pass_target_default::get_target_size() const
-{
-    return target_.get_size();
-}
-
-void pass_target_default::swap() {}
+    slot_0,
+    slot_1,
+    slot_2,
+    slot_3,
+    slot_4,
+    slot_5,
+    slot_6,
+    slot_7,
+    MAX
+};
 
 } /* rendering */
 } /* eps */
+
+#endif // RENDERING_PASSES_SLOT_H_INCLUDED

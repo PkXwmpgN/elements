@@ -28,15 +28,23 @@ IN THE SOFTWARE.
 namespace eps {
 namespace rendering {
 
-compute_target::compute_target(const math::uvec2 & size)
-{
-    auto maker = get_target_maker<default_texture_policy>();
-    target_ = maker.construct_buffered(size);
-}
+compute_target::compute_target(target_buffered target)
+    : target_(std::move(target))
+{}
 
-const product_type & compute_target::get_product() const
+const product_type & compute_target::get_product(const pass_slot & slot) const
 {
-    return target_.get_product();
+    if(utils::to_int(slot) < utils::to_int(attachment::MAX))
+    {
+        static attachment attachments[] =
+        {
+            attachment::color0,
+            attachment::depth
+        };
+        return target_.get_product(attachments[utils::to_int(slot)]);
+    }
+
+    return product_type::default_product();
 }
 
 const product_type & compute_target::get_target() const
@@ -44,7 +52,7 @@ const product_type & compute_target::get_target() const
     return target_.get_target();
 }
 
-const math::uvec2 & compute_target::get_size() const
+const math::uvec2 & compute_target::get_target_size() const
 {
     return target_.get_size();
 }

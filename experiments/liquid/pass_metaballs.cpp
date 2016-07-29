@@ -47,7 +47,7 @@ bool pass_metaballs::initialize()
 
 void pass_metaballs::process(float)
 {
-    EPS_STATE_SAMPLER_0(get_inputs().get_slot(rendering::pass_input_slot::input_0));
+    EPS_STATE_SAMPLER_0(get_inputs().get_slot(rendering::pass_slot::slot_0));
     EPS_STATE_PROGRAM(program_.get_product());
 
     program_.uniform_value(utils::to_int(program_enum::u_source), 0);

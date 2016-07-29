@@ -26,15 +26,11 @@ IN THE SOFTWARE.
 namespace eps {
 namespace rendering {
 
-target_buffered::target_buffered()
+target_buffered::target_buffered(target front, target back)
     : write_(0)
-{}
-
-bool target_buffered::construct(target front, target back)
 {
     targets_[0] = std::move(front);
     targets_[1] = std::move(back);
-    return true;
 }
 
 void target_buffered::swap()
@@ -52,9 +48,19 @@ const product_type & target_buffered::get_product() const
     return targets_[1 - write_].get_product();
 }
 
+const product_type & target_buffered::get_product(attachment id) const
+{
+    return targets_[1 - write_].get_product(id);
+}
+
 const math::uvec2 & target_buffered::get_size() const
 {
     return targets_[1 - write_].get_size();
+}
+
+const math::uvec2 & target_buffered::get_size(attachment id) const
+{
+    return targets_[1 - write_].get_size(id);
 }
 
 } /* rendering */

@@ -55,7 +55,7 @@ bool particles_product::initialize()
     if(link_particles.expired())
         return false;
 
-    passes_.add_dependency(link_particles, link_positions, rendering::pass_input_slot::input_0);
+    passes_.add_dependency(link_particles, link_positions, rendering::pass_slot::slot_0);
 
     return true;
 }

@@ -25,7 +25,7 @@ IN THE SOFTWARE.
 #define RENDERING_PASSES_PASS_TARGET_INPUT_H_INCLUDED
 
 #include "utils/std/pointer.h"
-#include "pass_input_slot.h"
+#include "pass_slot.h"
 #include "pass_target_placement.h"
 
 namespace eps {
@@ -37,8 +37,8 @@ public:
 
     pass_target_input(size_t place, utils::link<pass_target_placement> placement);
 
-    const product_type & get_slot(const pass_input_slot & slot) const;
-    const product_type & get_product() const;
+    const product_type & get_slot(const pass_slot & slot) const;
+    const product_type & get_product(const pass_slot & slot) const;
 
 private:
 

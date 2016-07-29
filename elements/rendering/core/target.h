@@ -25,6 +25,7 @@ IN THE SOFTWARE.
 #define RENDERING_TARGET_H_INCLUDED
 
 #include "texture.h"
+#include "target_attachment.h"
 #include "utils/std/enum.h"
 #include <array>
 
@@ -34,8 +35,6 @@ namespace rendering {
 class target
 {
 public:
-
-    enum class attachment { color0, depth, MAX };
 
     target();
     ~target();
@@ -48,7 +47,7 @@ public:
     bool attach(attachment id, texture data);
 
     const product_type & get_target() const;
-    
+
     const product_type & get_product() const;
     const product_type & get_product(attachment id) const;
 

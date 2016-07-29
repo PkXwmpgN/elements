@@ -48,7 +48,7 @@ bool gradient::initialize()
 
 void gradient::process(float)
 {
-    EPS_STATE_SAMPLER_0(get_inputs().get_slot(pass_input_slot::input_0));
+    EPS_STATE_SAMPLER_0(get_inputs().get_slot(pass_slot::slot_0));
     EPS_STATE_PROGRAM(program_.get_product());
 
     program_.uniform_value(utils::to_int(program_enum::u_source), 0);

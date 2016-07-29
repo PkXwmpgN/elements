@@ -26,6 +26,7 @@ IN THE SOFTWARE.
 #include "rendering/state/state_macro.h"
 #include "rendering/passes/pass_target.h"
 #include "rendering/core/program.h"
+#include "rendering/core/texture_policy.h"
 #include "rendering/primitives/square.h"
 #include "rendering/utils/program_loader.h"
 #include "utils/std/enum.h"
@@ -79,7 +80,7 @@ public:
 
     void process(float) final
     {
-        EPS_STATE_SAMPLER_0(get_inputs().get_slot(pass_input_slot::input_0));
+        EPS_STATE_SAMPLER_0(get_inputs().get_slot(pass_slot::slot_0));
         EPS_STATE_PROGRAM(program_.get_product());
 
         program_.uniform_value(utils::to_int(enum_ls::u_occluding), 0);
@@ -137,8 +138,8 @@ bool light_scattered::initialize()
     if(link_blend.expired())
         return false;
 
-    passes_.add_dependency(link_ls_1, link_ls_0, pass_input_slot::input_0);
-    passes_.add_dependency(link_ls_2, link_ls_1, pass_input_slot::input_0);
+    passes_.add_dependency(link_ls_1, link_ls_0, pass_slot::slot_0);
+    passes_.add_dependency(link_ls_2, link_ls_1, pass_slot::slot_0);
 
     link_ls_0.lock()->set_density(0.3f);
     link_ls_1.lock()->set_density(0.4f);
@@ -158,7 +159,7 @@ utils::unique<pass_target> light_scattered::construct(const math::uvec2 & size)
     {
         const math::uvec2 down_size = size / downsample_;
         passes_.construct(down_size);
-        return utils::make_unique<pass_target_simple>(down_size);
+        return get_pass_target<default_texture_policy>(down_size);
     }
 
     passes_.construct(size);

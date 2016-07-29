@@ -24,6 +24,7 @@ IN THE SOFTWARE.
 #include "blur.h"
 #include "rendering/passes/pass_target.h"
 #include "rendering/state/state_macro.h"
+#include "rendering/core/texture_policy.h"
 #include "rendering/utils/program_loader.h"
 #include "utils/std/enum.h"
 
@@ -56,7 +57,7 @@ bool blur_base::initialize()
 
 void blur_base::process(float)
 {
-    EPS_STATE_SAMPLER_0(get_inputs().get_slot(pass_input_slot::input_0));
+    EPS_STATE_SAMPLER_0(get_inputs().get_slot(pass_slot::slot_0));
     EPS_STATE_PROGRAM(program_.get_product());
 
     program_.uniform_value(utils::to_int(program_enum::u_source), 0);
@@ -106,7 +107,7 @@ bool blur::initialize()
     if(link_blur_v_.expired())
         return false;
 
-    passes_.add_dependency(link_blur_v_, link_blur_h_, pass_input_slot::input_0);
+    passes_.add_dependency(link_blur_v_, link_blur_h_, pass_slot::slot_0);
 
     return true;
 }
@@ -117,7 +118,8 @@ utils::unique<pass_target> blur::construct(const math::uvec2 & size)
     {
         const math::uvec2 down_size = size / downsample_;
         passes_.construct(down_size);
-        return utils::make_unique<pass_target_simple>(down_size);
+        
+        return get_pass_target<default_texture_policy>(down_size);
     }
 
     passes_.construct(size);

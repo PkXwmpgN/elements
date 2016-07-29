@@ -66,11 +66,11 @@ bool renderer::initialize()
     if(link_liquid_.expired())
         return false;
 
-    passes_.add_dependency(link_particles_blur_, link_particles_, pass_input_slot::input_0);
-    passes_.add_dependency(link_metaballs, link_particles_blur_, pass_input_slot::input_0);
-    passes_.add_dependency(link_surface_blur_0_, link_metaballs, pass_input_slot::input_0);
-    passes_.add_dependency(link_surface_blur_1_, link_surface_blur_0_, pass_input_slot::input_0);
-    passes_.add_dependency(link_liquid_, link_surface_blur_1_, pass_input_slot::input_0);
+    passes_.add_dependency(link_particles_blur_, link_particles_, pass_slot::slot_0);
+    passes_.add_dependency(link_metaballs, link_particles_blur_, pass_slot::slot_0);
+    passes_.add_dependency(link_surface_blur_0_, link_metaballs, pass_slot::slot_0);
+    passes_.add_dependency(link_surface_blur_1_, link_surface_blur_0_, pass_slot::slot_0);
+    passes_.add_dependency(link_liquid_, link_surface_blur_1_, pass_slot::slot_0);
 
     return true;
 }

@@ -30,6 +30,7 @@ IN THE SOFTWARE.
 #include "utils/std/pointer.h"
 #include "utils/std/enum.h"
 #include <array>
+#include <utility>
 
 namespace eps {
 namespace rendering {
@@ -45,7 +46,7 @@ public:
     target_maker & operator=(target_maker &&) = default;
 
     template<typename _Maker, typename... _Args>
-    void register_maker(target::attachment id, _Args&& ...args);
+    void register_maker(attachment id, _Args&& ...args);
 
     target construct(const math::uvec2 & size) const;
     target_buffered construct_buffered(const math::uvec2 & size) const;
@@ -55,22 +56,42 @@ private:
     std::array
     <
         utils::pointer<texture_maker>,
-        utils::to_int(target::attachment::MAX)
+        utils::to_int(attachment::MAX)
     >
     makers_;
 };
 
-template<typename _Policy>
+template<typename... _Policies>
+target_maker get_target_maker();
+
+namespace details {
+
+    template<typename... _Policies>
+    inline void update_target_maker(target_maker &, std::index_sequence<>)
+    {}
+
+    template<typename _Policy, typename... _Policies, size_t _Index, size_t... _Indices>
+    inline void update_target_maker(target_maker & result, std::index_sequence<_Index, _Indices...>)
+    {
+        result.register_maker<texture_maker_policy<_Policy>>(static_cast<attachment>(_Index));
+        update_target_maker<_Policies...>(result, std::index_sequence<_Indices...>{});
+    }
+
+} /* details */
+
+template<typename... _Policies>
 inline target_maker get_target_maker()
 {
-    target_maker maker;
-    maker.register_maker<texture_maker_policy<_Policy>>(target::attachment::color0);
+    static_assert(sizeof...(_Policies) > 0 &&
+                  sizeof...(_Policies) <= utils::to_int(attachment::MAX), "failed");
 
-    return maker;
+    target_maker result;
+    details::update_target_maker<_Policies...>(result, std::index_sequence_for<_Policies...>());
+    return result;
 }
 
 template<typename _Maker, typename... _Args>
-inline void target_maker::register_maker(target::attachment id, _Args&& ...args)
+inline void target_maker::register_maker(attachment id, _Args&& ...args)
 {
     static_assert(std::is_base_of<texture_maker, _Maker>::value, "failed");
     makers_[utils::to_int(id)] = utils::make_shared<_Maker>(std::forward<_Args>(args)...);

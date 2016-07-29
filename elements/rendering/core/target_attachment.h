@@ -21,27 +21,20 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef RENDERING_PASSES_INPUT_SLOT_H_INCLUDED
-#define RENDERING_PASSES_INPUT_SLOT_H_INCLUDED
+#ifndef RENDERING_TARGET_ATTACHMENT_H_INCLUDED
+#define RENDERING_TARGET_ATTACHMENT_H_INCLUDED
 
 namespace eps {
 namespace rendering {
 
-enum class pass_input_slot
+enum class attachment
 {
-    input_0,
-    input_1,
-    input_2,
-    input_3,
-    input_4,
-    input_5,
-    input_6,
-    input_7,
-
-    MAX = input_7
+    color0,
+    depth,
+    MAX
 };
 
 } /* rendering */
 } /* eps */
 
-#endif // RENDERING_PASSES_INPUT_SLOT_H_INCLUDED
+#endif // RENDERING_TARGET_ATTACHMENT_H_INCLUDED

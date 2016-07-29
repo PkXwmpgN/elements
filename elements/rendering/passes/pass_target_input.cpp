@@ -32,20 +32,26 @@ pass_target_input::pass_target_input(size_t place,
     , placement_(placement)
 {}
 
-const product_type & pass_target_input::get_slot(const pass_input_slot & slot) const
+const product_type & pass_target_input::get_slot(const pass_slot & slot) const
 {
     if(auto placement_link = placement_.lock())
-        if(auto link = placement_link->get_input(place_, slot).lock())
-            return link->get_product();
+    {
+        size_t dependency = placement_link->get_dependency(place_, slot);
+        if(auto link = placement_link->get_target(dependency).lock())
+        {
+            pass_slot output = static_cast<pass_slot>(placement_link->get_dependency_slot(place_, slot));
+            return link->get_product(output);
+        }
+    }
 
     return product_type::default_product();
 }
 
-const product_type & pass_target_input::get_product() const
+const product_type & pass_target_input::get_product(const pass_slot & slot) const
 {
     if(auto placement_link = placement_.lock())
-        if(auto link = placement_link->get_output(place_).lock())
-            return link->get_product();
+        if(auto link = placement_link->get_target(place_).lock())
+            return link->get_product(slot);
 
     return product_type::default_product();
 }

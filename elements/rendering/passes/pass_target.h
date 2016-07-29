@@ -24,8 +24,10 @@ IN THE SOFTWARE.
 #ifndef RENDERING_PASSES_PASS_TARGET_H_INCLUDED
 #define RENDERING_PASSES_PASS_TARGET_H_INCLUDED
 
-#include "utils/std/pointer.h"
 #include "rendering/core/target.h"
+#include "rendering/core/target_maker.h"
+#include "utils/std/pointer.h"
+#include "pass_slot.h"
 
 namespace eps {
 namespace rendering {
@@ -34,23 +36,23 @@ class pass_target
 {
 public:
 
-    virtual const product_type & get_product() const = 0;
+    virtual const product_type & get_product(const pass_slot & slot) const = 0;
     virtual const product_type & get_target() const = 0;
-    virtual const math::uvec2 & get_size() const = 0;
+    virtual const math::uvec2 &  get_target_size() const = 0;
     virtual void swap() = 0;
 
     virtual ~pass_target() {}
 };
 
-class pass_target_simple : public pass_target
+class pass_target_default : public pass_target
 {
 public:
 
-    explicit pass_target_simple(const math::uvec2 & size);
+    explicit pass_target_default(target target);
 
-    const product_type & get_product() const final;
+    const product_type & get_product(const pass_slot & slot) const final;
     const product_type & get_target() const final;
-    const math::uvec2 & get_size() const final;
+    const math::uvec2 &  get_target_size() const final;
 
     void swap() final;
 
@@ -58,6 +60,13 @@ private:
 
     target target_;
 };
+
+template<typename... _Policies>
+inline utils::unique<pass_target> get_pass_target(const math::uvec2 & size)
+{
+    auto maker = get_target_maker<_Policies...>();
+    return utils::make_unique<pass_target_default>(maker.construct(size));
+}
 
 } /* renderer */
 } /* eps */

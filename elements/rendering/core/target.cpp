@@ -71,12 +71,12 @@ const math::uvec2 & target::get_size() const
     return get_size(attachment::color0);
 }
 
-const product_type & target::get_product(target::attachment id) const
+const product_type & target::get_product(attachment id) const
 {
     return attachments_[utils::to_int(id)].get_product();
 }
 
-const math::uvec2 & target::get_size(target::attachment id) const
+const math::uvec2 & target::get_size(attachment id) const
 {
     return attachments_[utils::to_int(id)].get_size();
 }

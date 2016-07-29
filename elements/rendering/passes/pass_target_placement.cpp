@@ -22,6 +22,7 @@ IN THE SOFTWARE.
 */
 
 #include "pass_target_placement.h"
+#include "rendering/core/texture_policy.h"
 #include <queue>
 #include <utility>
 #include <algorithm>
@@ -51,6 +52,7 @@ void pass_target_placement::initialize(size_t count)
     if(dependencies_.size() != count)
     {
         dependencies_.resize(count);
+        slots_.resize(count);
         links_.resize(count);
     }
 }
@@ -84,7 +86,7 @@ void pass_target_placement::construct(const math::uvec2 & size)
                 }
                 else
                 {
-                    link = storage_.request_target<pass_target_simple>(size);
+                    link = storage_.request_target<default_texture_policy>(size);
                 }
 
                 links_[i] = link;
@@ -102,24 +104,29 @@ void pass_target_placement::register_target(size_t place, utils::unique<pass_tar
 
 void pass_target_placement::register_dependency(size_t place,
                                                 size_t dependency,
-                                                const pass_input_slot & slot)
+                                                const pass_slot & input,
+                                                const pass_slot & output)
 {
-    dependencies_.add(place, dependency, utils::to_int(slot));
+    dependencies_.add(place, dependency, utils::to_int(input));
+    slots_.add(place, utils::to_int(output), utils::to_int(input));
 }
 
-utils::link<pass_target> pass_target_placement::get_output(size_t place) const
+utils::link<pass_target> pass_target_placement::get_target(size_t place) const
 {
-    return links_[place];
+    return place != pass_target_dependencies::default_value() ?
+                    links_[place] : utils::link<pass_target>();
 }
 
-utils::link<pass_target> pass_target_placement::get_input(size_t place,
-                                                          const pass_input_slot & slot) const
+size_t pass_target_placement::get_dependency(size_t place,
+                                             const pass_slot & slot) const
 {
-    const auto & dependency = dependencies_.get(place);
-    if(dependency[utils::to_int(slot)] != pass_target_dependencies::default_value())
-        return links_[dependency[utils::to_int(slot)]];
+    return dependencies_.get(place)[utils::to_int(slot)];
+}
 
-    return utils::link<pass_target>();
+size_t pass_target_placement::get_dependency_slot(size_t place,
+                                                  const pass_slot & slot) const
+{
+    return slots_.get(place)[utils::to_int(slot)];
 }
 
 void pass_target_placement::clear_targets()

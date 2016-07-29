@@ -84,7 +84,7 @@ utils::unique<rendering::pass_target> pass_liquid::construct(const math::uvec2 &
 
 void pass_liquid::process(float)
 {
-    EPS_STATE_SAMPLER_0(get_inputs().get_slot(rendering::pass_input_slot::input_0));
+    EPS_STATE_SAMPLER_0(get_inputs().get_slot(rendering::pass_slot::slot_0));
     EPS_STATE_SAMPLER_1(background_.get_product());
     EPS_STATE_PROGRAM(program_.get_product());
 

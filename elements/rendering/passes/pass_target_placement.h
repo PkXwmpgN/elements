@@ -25,9 +25,11 @@ IN THE SOFTWARE.
 #define RENDERING_PASSES_PASS_TARGET_PLACEMENT_H_INCLUDED
 
 #include "math/types.h"
+
 #include "utils/std/dependency_index.h"
 #include "utils/std/enum.h"
-#include "pass_input_slot.h"
+
+#include "pass_slot.h"
 #include "pass_target.h"
 #include "pass_target_storage.h"
 
@@ -45,21 +47,25 @@ public:
 
     void register_target(size_t place, utils::unique<pass_target> target);
     void register_dependency(size_t place, size_t dependency,
-                             const pass_input_slot & slot);
+                             const pass_slot & input, const pass_slot & output);
 
-    utils::link<pass_target> get_output(size_t place) const;
-    utils::link<pass_target> get_input(size_t place, const pass_input_slot & slot) const;
+    utils::link<pass_target> get_target(size_t place) const;
+
+    size_t get_dependency(size_t place, const pass_slot & input) const;
+    size_t get_dependency_slot(size_t place, const pass_slot & input) const;
 
     void clear_targets();
 
 private:
 
     using pass_target_links = std::vector<utils::link<pass_target>>;
-    using pass_target_dependencies = utils::dependency_index<utils::to_int(pass_input_slot::MAX), size_t, size_t(-1)>;
+    using pass_target_dependencies = utils::dependency_index<utils::to_int(pass_slot::MAX), size_t, size_t(-1)>;
+    using pass_target_slots = utils::dependency_index<utils::to_int(pass_slot::MAX), size_t, 0>;
 
     pass_target_storage storage_;
     pass_target_links links_;
     pass_target_dependencies dependencies_;
+    pass_target_slots slots_;
 };
 
 } /* rendering */

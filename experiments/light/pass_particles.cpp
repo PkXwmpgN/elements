@@ -94,8 +94,8 @@ utils::unique<rendering::pass_target> pass_particles::construct(const math::uvec
 void pass_particles::process(float)
 {
     EPS_STATE_BLEND(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    EPS_STATE_SAMPLER_0(get_inputs().get_slot(rendering::pass_input_slot::input_0));
-    EPS_STATE_SAMPLER_1(get_inputs().get_slot(rendering::pass_input_slot::input_1));
+    EPS_STATE_SAMPLER_0(get_inputs().get_slot(rendering::pass_slot::slot_0));
+    EPS_STATE_SAMPLER_1(get_inputs().get_slot(rendering::pass_slot::slot_1));
     EPS_STATE_SAMPLER_2(background_.get_product());
     EPS_STATE_VERTICES(product_index_.get_product());
     EPS_STATE_PROGRAM(program_.get_product());

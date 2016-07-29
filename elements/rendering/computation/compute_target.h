@@ -35,11 +35,11 @@ class compute_target : public pass_target
 {
 public:
 
-    explicit compute_target(const math::uvec2 & size);
+    explicit compute_target(target_buffered target);
 
-    const product_type & get_product() const final;
+    const product_type & get_product(const pass_slot & slot) const final;
     const product_type & get_target() const final;
-    const math::uvec2 & get_size() const final;
+    const math::uvec2 &  get_target_size() const final;
 
     void swap() final;
 
@@ -47,6 +47,13 @@ private:
 
     target_buffered target_;
 };
+
+template<typename... _Policies>
+inline utils::unique<pass_target> get_compute_target(const math::uvec2 & size)
+{
+    auto maker = get_target_maker<_Policies...>();
+    return utils::make_unique<compute_target>(maker.construct_buffered(size));
+}
 
 } /* rendering */
 } /* eps */

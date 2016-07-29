@@ -35,14 +35,17 @@ class target_buffered
 
 public:
 
-    target_buffered();
+    target_buffered(target front, target back);
 
-    bool construct(target front, target back);
     void swap();
 
     const product_type & get_target() const;
+
     const product_type & get_product() const;
+    const product_type & get_product(attachment id) const;
+
     const math::uvec2 & get_size() const;
+    const math::uvec2 & get_size(attachment id) const;
 
 private:
 

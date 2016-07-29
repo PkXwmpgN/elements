@@ -71,12 +71,12 @@ bool renderer::initialize()
     if(link_blend_ls.expired())
         return false;
 
-    passes_.add_dependency(link_positions_, link_velocities_, pass_input_slot::input_0);
-    passes_.add_dependency(link_particles_, link_positions_, pass_input_slot::input_0);
-    passes_.add_dependency(link_particles_, link_velocities_, pass_input_slot::input_1);
-    passes_.add_dependency(link_occluding_, link_positions_, pass_input_slot::input_0);
-    passes_.add_dependency(link_ls_, link_occluding_, pass_input_slot::input_0);
-    passes_.add_dependency(link_blend_ls, link_ls_, pass_input_slot::input_0);
+    passes_.add_dependency(link_positions_, link_velocities_, pass_slot::slot_0);
+    passes_.add_dependency(link_particles_, link_positions_, pass_slot::slot_0);
+    passes_.add_dependency(link_particles_, link_velocities_, pass_slot::slot_1);
+    passes_.add_dependency(link_occluding_, link_positions_, pass_slot::slot_0);
+    passes_.add_dependency(link_ls_, link_occluding_, pass_slot::slot_0);
+    passes_.add_dependency(link_blend_ls, link_ls_, pass_slot::slot_0);
 
     link_ls_.lock()->set_downsample(4);
     link_blend_ls.lock()->set_factors(GL_ONE, GL_ONE);

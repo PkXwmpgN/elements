@@ -59,12 +59,20 @@ public:
     template<typename _Pass_target, typename _Pass_dependency>
     void add_dependency(const utils::link<_Pass_target> & target,
                         const utils::link<_Pass_dependency> & dependency,
-                        const pass_input_slot & slot)
+                        const pass_slot & input, const pass_slot & output)
     {
         if(!target.expired() && !dependency.expired())
             placement_->register_dependency(target.lock()->get_place(),
                                             dependency.lock()->get_place(),
-                                            slot);
+                                            input, output);
+    }
+
+    template<typename _Pass_target, typename _Pass_dependency>
+    void add_dependency(const utils::link<_Pass_target> & target,
+                        const utils::link<_Pass_dependency> & dependency,
+                        const pass_slot & input)
+    {
+        add_dependency(target, dependency, input, pass_slot::slot_0);
     }
 
     void initialize(size_t places_count);

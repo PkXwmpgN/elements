@@ -29,10 +29,10 @@ namespace rendering {
 target target_maker::construct(const math::uvec2 & size) const
 {
     target result;
-    for(size_t i = 0; i < utils::to_int(target::attachment::MAX); ++i)
+    for(size_t i = 0; i < utils::to_int(attachment::MAX); ++i)
     {
         if(makers_[i])
-            result.attach(target::attachment(i), makers_[i]->construct(nullptr, size));
+            result.attach(attachment(i), makers_[i]->construct(nullptr, size));
     }
 
     return result;
@@ -40,9 +40,7 @@ target target_maker::construct(const math::uvec2 & size) const
 
 target_buffered target_maker::construct_buffered(const math::uvec2 & size) const
 {
-    target_buffered result;
-    result.construct(construct(size), construct(size));
-    return result;
+    return target_buffered(construct(size), construct(size));
 }
 
 } /* rendering */

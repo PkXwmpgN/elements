@@ -49,8 +49,8 @@ bool renderer::initialize()
     if(link_fire_.expired())
         return false;
 
-    passes_.add_dependency(link_blur_, link_raymarching_, pass_input_slot::input_0);
-    passes_.add_dependency(link_fire_, link_blur_, pass_input_slot::input_0);
+    passes_.add_dependency(link_blur_, link_raymarching_, pass_slot::slot_0);
+    passes_.add_dependency(link_fire_, link_blur_, pass_slot::slot_0);
 
     return true;
 }

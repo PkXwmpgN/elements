@@ -66,11 +66,11 @@ bool renderer::initialize()
     if(link_blend.expired())
         return false;
 
-    passes_.add_dependency(link_gradient_, link_product_, pass_input_slot::input_0);
-    passes_.add_dependency(link_blur, link_gradient_, pass_input_slot::input_0);
-    passes_.add_dependency(link_tone, link_blur, pass_input_slot::input_0);
-    passes_.add_dependency(link_tone, link_gradient_, pass_input_slot::input_1);
-    passes_.add_dependency(link_blend, link_tone, pass_input_slot::input_0);
+    passes_.add_dependency(link_gradient_, link_product_, pass_slot::slot_0);
+    passes_.add_dependency(link_blur, link_gradient_, pass_slot::slot_0);
+    passes_.add_dependency(link_tone, link_blur, pass_slot::slot_0);
+    passes_.add_dependency(link_tone, link_gradient_, pass_slot::slot_1);
+    passes_.add_dependency(link_blend, link_tone, pass_slot::slot_0);
 
     link_blur.lock()->set_strong(2.0f);
     link_blur.lock()->set_downsample(2);

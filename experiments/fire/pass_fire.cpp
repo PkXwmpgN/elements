@@ -72,7 +72,7 @@ bool pass_fire::initialize()
 
 void pass_fire::process(float)
 {
-    EPS_STATE_SAMPLER_0(get_inputs().get_slot(rendering::pass_input_slot::input_0));
+    EPS_STATE_SAMPLER_0(get_inputs().get_slot(rendering::pass_slot::slot_0));
     EPS_STATE_SAMPLER_1(background_.get_product());
     EPS_STATE_PROGRAM(program_.get_product());
 
