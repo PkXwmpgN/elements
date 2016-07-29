@@ -76,23 +76,23 @@ sync::task<math::vec2>::future system::spawn(float dt)
          volume_.partition();
 
          // apply gravity
-         apply_gravity(cfg, dt);
+         this->apply_gravity(cfg, dt);
 
          // modify velocities with pairwise viscosity impulses
-         apply_viscosity(cfg, dt);
+         this->apply_viscosity(cfg, dt);
 
          // save previous position.
          // advance to predicted position
-         predict_position(cfg, dt);
+         this->predict_position(cfg, dt);
 
          // double density relaxation;
-         double_density_relaxation(cfg, dt);
+         this->double_density_relaxation(cfg, dt);
 
          // resolve collisions
-         resolve_collisions(cfg, dt);
+         this->resolve_collisions(cfg, dt);
 
          // use previous position to compute next velocity
-         next_velocity(cfg, dt);
+         this->next_velocity(cfg, dt);
 
          for(auto & particle : volume_.get_particles_range())
          {
