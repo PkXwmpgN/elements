@@ -209,6 +209,7 @@ FILE_LIST += $(wildcard $(LOCAL_PATH)/synchronization/*/*.cpp)
 FILE_LIST += $(wildcard $(LOCAL_PATH)/timing/*/*.cpp)
 FILE_LIST += $(wildcard $(LOCAL_PATH)/ui/*/*.cpp)
 FILE_LIST += $(wildcard $(LOCAL_PATH)/utils/*/*.cpp)
+FILE_LIST += $(wildcard $(LOCAL_PATH)/design/*/*.cpp)
 
 LOCAL_SRC_FILES := $(FILE_LIST:$(LOCAL_PATH)/%=%)
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/.. \
