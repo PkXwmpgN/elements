@@ -49,6 +49,11 @@ inline float sin(float angle)
     return glm::sin(angle);
 }
 
+inline float tan(float angle)
+{
+    return glm::tan(angle);
+}
+
 } /* math */
 } /* eps */
 
