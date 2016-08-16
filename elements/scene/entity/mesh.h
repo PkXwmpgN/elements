@@ -21,36 +21,48 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef SCENE_OBJECT_VERTICES_H_INCLUDED
-#define SCENE_OBJECT_VERTICES_H_INCLUDED
+#ifndef SCENE_ENTITY_MESH_H_INCLUDED
+#define SCENE_ENTITY_MESH_H_INCLUDED
 
-#include "math/types.h"
+#include "utils/std/optional.h"
+#include "utils/std/enum.h"
+#include <array>
 
 namespace eps {
 namespace scene {
 
-struct vertex
+struct mesh
 {
-    math::vec3 position;
-    math::vec3 normal;
-    math::vec3 tangent;
-    math::vec2 tex;
+public:
+
+    enum class feature : short
+    {
+        geometry,
+        material,
+        COUNT
+    };
+
+    void set_feature(feature id, size_t index)
+    {
+        feature_[utils::to_int(id)] = index;
+    }
+
+    size_t get_feature(feature id) const
+    {
+        return feature_[utils::to_int(id)];
+    }
+
+private:
+
+    std::array
+    <
+        size_t,
+        utils::to_int(feature::COUNT)
+    >
+    feature_;
 };
-
-static_assert(offsetof(vertex, position) == 0, "failed");
-static_assert(offsetof(vertex, normal) == sizeof(math::vec3), "failed");
-static_assert(offsetof(vertex, tangent) == sizeof(math::vec3) * 2, "failed");
-static_assert(offsetof(vertex, tex) == sizeof(math::vec3) * 3, "failed");
-
-struct face
-{
-    static const short FACE_INDICES_COUNT = 3;
-    unsigned short indices[FACE_INDICES_COUNT];
-};
-
-static_assert(face::FACE_INDICES_COUNT == 3, "failed");
 
 } /* scene */
 } /* eps */
 
-#endif // SCENE_OBJECT_VERTICES_H_INCLUDED
+#endif // SCENE_ENTITY_MESH_H_INCLUDED

@@ -28,8 +28,8 @@ IN THE SOFTWARE.
 #include <array>
 #include <unordered_map>
 
-#include "scene/object/vertices.h"
-#include "scene/object/materials.h"
+#include "scene/entity/vertices.h"
+#include "scene/entity/materials.h"
 #include "rendering/core/buffer.h"
 #include "rendering/core/texture.h"
 #include "utils/std/enum.h"

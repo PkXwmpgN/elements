@@ -25,9 +25,9 @@ IN THE SOFTWARE.
 #define ASSETS_ASSET_MODEL_H_INCLUDED
 
 #include "assets.h"
-#include "scene/object/vertices.h"
-#include "scene/object/materials.h"
-#include "scene/object/object.h"
+#include "scene/entity/vertices.h"
+#include "scene/entity/materials.h"
+#include "scene/entity/mesh.h"
 #include "scene/graph/node.h"
 #include "utils/std/optional.h"
 #include "utils/std/pointer.h"
@@ -78,7 +78,8 @@ public:
         scene::material material_;
     };
 
-    using node_inserter = std::function<utils::link<scene::object>(utils::link<scene::node>)>;
+    using callback = std::function<void(const utils::link<scene::node> &,
+                                        const std::vector<scene::mesh> &)>;
 
 public:
 
@@ -91,7 +92,7 @@ public:
     geometry get_geometry(size_t index) const;
     material get_material(size_t index) const;
 
-    void load_hierarchy(utils::link<scene::node> node, node_inserter inserter) const;
+    void load_hierarchy(utils::link<scene::node> node, callback cb) const;
 
 private:
 

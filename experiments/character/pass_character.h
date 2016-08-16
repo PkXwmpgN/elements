@@ -25,8 +25,8 @@ IN THE SOFTWARE.
 #define EXPERIMENTS_CHARATER_PASS_CHARACTER_H_INCLUDED
 
 #include <elements/rendering/passes/pass_base.h>
-#include <elements/rendering/models/process.h>
-#include <elements/scene/world.h>
+#include <elements/rendering/models/process_forward.h>
+#include <elements/scene/scene.h>
 
 namespace eps {
 namespace experiment {
@@ -43,16 +43,12 @@ public:
     bool initialize() final;
     void process(float dt) final;
 
-    utils::unique<rendering::pass_target> construct(const math::uvec2 & size) final;
-
-    bool set_model(const std::string & asset);
-    void set_rotation(float theta, float phi);
+    void set_scene(const utils::pointer<scene::scene> & scene);
 
 private:
 
-    scene::world world_;
-    rendering::process_model_rendering process_;
-
+    rendering::process_forward process_;
+    utils::pointer<scene::scene> scene_;
 };
 
 } /* character */

@@ -24,12 +24,14 @@ IN THE SOFTWARE.
 #ifndef RENDERING_UTILS_MODEL_LOADER_H_INCLUDED
 #define RENDERING_UTILS_MODEL_LOADER_H_INCLUDED
 
+#include "scene/scene.h"
 #include "scene/graph/node.h"
 
 namespace eps {
 namespace rendering {
 
-bool load_model(const std::string & name, utils::link<scene::node> node);
+utils::link<scene::node> load_model(const std::string & name,
+                                    utils::pointer<scene::scene> scene);
 
 } /* rendering */
 } /* eps */

@@ -21,30 +21,35 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#include "graph.h"
+#ifndef RENDERING_MODELS_PROCESS_FORWARD_H_INCLUDED
+#define RENDERING_MODELS_PROCESS_FORWARD_H_INCLUDED
+
+#include "rendering/core/program.h"
+#include "utils/std/pointer.h"
+#include "design/visitor.h"
+#include "scene/scene.h"
+#include "model.h"
 
 namespace eps {
-namespace scene {
+namespace rendering {
 
-graph::graph()
-    : root_(utils::make_shared<node>())
-{}
-
-void graph::process(const math::mat4 & view)
+class process_forward : public design::visitor<process_forward, scene::entity, scene::scene &>
 {
-    process(visit_targets<scene::node>(), [&view](auto object)
-    {
-        if(auto parent = object->get_parent().lock())
-            object->set_world_matrix(parent->get_world_matrix() * object->get_local_matrix());
-        else
-            object->set_world_matrix(view);
-    });
-}
+public:
 
-void graph::clear()
-{
-    root_ = utils::make_shared<node>();
-}
+    EPS_DESIGN_VISIT(model);
 
-} /* scene */
+public:
+
+    bool initialize();
+    bool visit(model & m, scene::scene & scene);
+
+private:
+
+    program program_;
+};
+
+} /* rendering */
 } /* eps */
+
+#endif // RENDERING_MODELS_PROCESS_FORWARD_H_INCLUDED

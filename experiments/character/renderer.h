@@ -24,7 +24,11 @@ IN THE SOFTWARE.
 #ifndef EXPERIMENTS_CHARATER_RENDERER_H_INCLUDED
 #define EXPERIMENTS_CHARATER_RENDERER_H_INCLUDED
 
+#include <elements/utils/std/pointer.h>
 #include <elements/rendering/passes/pass_composition.h>
+#include <elements/scene/scene.h>
+#include <elements/scene/camera/camera.h>
+#include <elements/scene/modifier/positioning.h>
 
 namespace eps {
 namespace experiment {
@@ -36,6 +40,8 @@ class renderer
 {
 public:
 
+    renderer();
+
     bool initialize();
     bool construct(const math::uvec2 & size);
 
@@ -46,8 +52,33 @@ public:
 
 private:
 
+    class modifier_polar : public scene::modifier_positioning
+    {
+    public:
+
+        using scene::modifier_positioning::modifier_positioning;
+
+    public:
+
+        void process(float dt) final;
+
+        void set_radius(float value) { radius_ = value; }
+        void set_theta(float value) { theta_ = value; }
+        void set_phi(float value) { phi_ = value; }
+
+    private:
+
+        float radius_ = 1.0f;
+        float theta_  = 0.0f;
+        float phi_    = 0.0f;
+    };
+
+private:
+
     rendering::pass_composition passes_;
-    utils::link<pass_character> link_character_;
+    utils::pointer<scene::scene> scene_;
+    utils::link<scene::node> model_;
+    utils::link<modifier_polar> camera_modifier_;
 };
 
 } /* character */

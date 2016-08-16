@@ -21,11 +21,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#include "process.h"
+
+#include "process_forward.h"
 #include "model_warehouse.h"
 #include "rendering/state/state_macro.h"
 #include "rendering/utils/program_loader.h"
 #include "math/matrix.h"
+#include "math/trigonometry.h"
 
 namespace eps {
 namespace rendering {
@@ -51,27 +53,53 @@ enum class program_enum : short
     u_light_ambient = 10
 };
 
-bool process_model_rendering::initialize()
+struct process_lights : public design::visitor<process_lights, scene::entity, program&>
 {
-    return load_program("assets/shaders/models/model.prog", program_);
+public:
+
+    EPS_DESIGN_VISIT(scene::light_point);
+
+public:
+
+    bool visit(scene::light_point & light, program & prog)
+    {
+        prog.uniform_value(utils::to_int(program_enum::u_light_diffuse), light.get_diffuse());
+        prog.uniform_value(utils::to_int(program_enum::u_light_specular), light.get_specular());
+        prog.uniform_value(utils::to_int(program_enum::u_light_ambient), light.get_ambient());
+        prog.uniform_value(utils::to_int(program_enum::u_light_pos),
+                           scene::get_position(light.get_node()));
+        return true;
+
+        // TODO: process all lights
+        // return false
+    }
+};
+
+bool process_forward::initialize()
+{
+    return load_program("assets/shaders/techniques/forward.prog", program_);
 }
 
-void process_model_rendering::operator()(const utils::pointer<model> & node,
-                                         const utils::link<scene::camera> & link_camera,
-                                         const utils::link<scene::light> & link_light)
+bool process_forward::visit(model & sm, scene::scene & scene)
 {
-    auto camera = link_camera.lock();
+    auto node = sm.get_node().lock();
+    assert(node);
+
+    auto camera = scene.get_camera().lock();
     assert(camera);
 
-    auto light = link_light.lock();
-    assert(light);
-
-    auto warehouse = node->get_warehouse().lock();
+    auto warehouse = sm.get_warehouse().lock();
     assert(warehouse);
 
     EPS_STATE_PROGRAM(program_.get_product());
 
-    for(const auto & mesh : *node)
+    process_lights process;
+    scene.process_lights(process, program_);
+
+    program_.uniform_value(utils::to_int(program_enum::u_camera_pos),
+                           scene::get_position(camera->get_node()));
+
+    for(const auto & mesh : sm)
     {
         const auto & geometry = warehouse->get_geometry(mesh.get_feature(scene::mesh::feature::geometry));
         const auto & material = warehouse->get_material(mesh.get_feature(scene::mesh::feature::material));
@@ -112,13 +140,6 @@ void process_model_rendering::operator()(const utils::pointer<model> & node,
             program_.uniform_value(utils::to_int(program_enum::u_map_normal), 2);
         }
 
-        program_.uniform_value(utils::to_int(program_enum::u_camera_pos), camera->get_eye());
-
-        program_.uniform_value(utils::to_int(program_enum::u_light_pos), light->get_pos());
-        program_.uniform_value(utils::to_int(program_enum::u_light_diffuse), light->get_diffuse());
-        program_.uniform_value(utils::to_int(program_enum::u_light_specular), light->get_specular());
-        program_.uniform_value(utils::to_int(program_enum::u_light_ambient), light->get_ambient());
-
         const math::mat4 & world = node->get_world_matrix();
         const math::mat4 & projection = camera->get_projection();
         program_.uniform_value(utils::to_int(program_enum::u_matrix_mvp), projection * world);
@@ -129,6 +150,8 @@ void process_model_rendering::operator()(const utils::pointer<model> & node,
         EPS_STATE_INDICES(geometry.get_indices());
         glDrawElements(GL_TRIANGLES, geometry.get_indices_count(), GL_UNSIGNED_SHORT, 0);
     }
+
+    return false;
 }
 
 } /* rendering */

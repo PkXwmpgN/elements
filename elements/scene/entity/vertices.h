@@ -21,20 +21,36 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#include "world.h"
-#include <assert.h>
+#ifndef SCENE_ENTITY_VERTICES_H_INCLUDED
+#define SCENE_ENTITY_VERTICES_H_INCLUDED
+
+#include "math/types.h"
 
 namespace eps {
 namespace scene {
 
-void world::process()
+struct vertex
 {
-    assert(component_camera_);
-    assert(component_graph_);
+    math::vec3 position;
+    math::vec3 normal;
+    math::vec3 tangent;
+    math::vec2 tex;
+};
 
-    component_camera_->process();
-    component_graph_->process(component_camera_->get_view());
-}
+static_assert(offsetof(vertex, position) == 0, "failed");
+static_assert(offsetof(vertex, normal) == sizeof(math::vec3), "failed");
+static_assert(offsetof(vertex, tangent) == sizeof(math::vec3) * 2, "failed");
+static_assert(offsetof(vertex, tex) == sizeof(math::vec3) * 3, "failed");
+
+struct face
+{
+    static const short FACE_INDICES_COUNT = 3;
+    unsigned short indices[FACE_INDICES_COUNT];
+};
+
+static_assert(face::FACE_INDICES_COUNT == 3, "failed");
 
 } /* scene */
 } /* eps */
+
+#endif // SCENE_ENTITY_VERTICES_H_INCLUDED

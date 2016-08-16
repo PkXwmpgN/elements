@@ -26,11 +26,5 @@ IN THE SOFTWARE.
 namespace eps {
 namespace scene {
 
-light::light()
-    : diffuse_(1.0f, 1.0f, 1.0f)
-    , specular_(1.0f, 1.0f, 1.0f)
-    , ambient_(0.5f, 0.5f, 0.5f)
-{}
-
 } /* scene */
 } /* eps */

@@ -21,37 +21,44 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef RENDERING_MODELS_MODEL_H_INCLUDED
-#define RENDERING_MODELS_MODEL_H_INCLUDED
-
-#include "scene/entity/geometry.h"
-#include "utils/std/pointer.h"
+#include "positioning.h"
+#include "math/transform.h"
+#include "math/geometric.h"
 
 namespace eps {
-namespace rendering {
+namespace scene {
 
-class model_warehouse;
-
-class model : public scene::geometry
+void modifier_positioning::process(float)
 {
-public:
+    if(auto sn = get_node().lock())
+    {
+        sn->set_local_matrix(math::translate(position_) *
+                             math::to_mat4(rotation_));
+    }
+}
 
-    EPS_DESIGN_VISITABLE();
+void modifier_positioning::set_rotation(const math::vec3 & axis, float degree)
+{
+    rotation_ = math::rotate(rotation_, axis, degree);
+}
 
-public:
+void modifier_positioning::look_at(const math::vec3 & target,
+                                   const math::vec3 & up)
+{
+    const math::vec3 z = math::normalize(position_ - target);
+    const math::vec3 y = math::normalize(up - z * math::dot(up, z));
+    const math::vec3 x = math::cross(y, z);
 
-    model(const utils::link<scene::node> & parent,
-          const std::vector<scene::mesh> & meshes,
-          const utils::pointer<model_warehouse> & warehouse);
+    rotation_ = math::quat(math::mat3(x, y, z));
+}
 
-    utils::link<model_warehouse> get_warehouse() const;
+void modifier_positioning::look_at(const math::vec3 & pos,
+                                   const math::vec3 & target,
+                                   const math::vec3 & up)
+{
+    position_ = pos;
+    look_at(target, up);
+}
 
-private:
-
-    utils::pointer<model_warehouse> warehouse_;
-};
-
-} /* rendering */
+} /* scene */
 } /* eps */
-
-#endif // RENDERING_MODELS_MODEL_H_INCLUDED

@@ -21,34 +21,45 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef SCENE_OBJECT_H_INCLUDED
-#define SCENE_OBJECT_H_INCLUDED
+#ifndef SCENE_MODIFIER_POSITIONING_H_INCLUDED
+#define SCENE_MODIFIER_POSITIONING_H_INCLUDED
 
-#include "scene/graph/node.h"
-#include "mesh.h"
-#include <vector>
+#include "modifier.h"
+#include "math/types.h"
+#include "math/quaternion.h"
 
 namespace eps {
 namespace scene {
 
-struct object : public scene::node
+class modifier_positioning : public modifier
 {
-    using scene::node::node;
+public:
 
-    void add_mesh(const scene::mesh & mesh)
-    {
-        meshes_.push_back(mesh);
-    }
+    using modifier::modifier;
+    void process(float dt) override;
 
-    auto begin() const { return meshes_.begin(); }
-    auto end() const { return meshes_.end(); }
+public:
+
+    void set_position(const math::vec3 & pos) { position_ = pos; }
+    void set_rotation(const math::quat & quat) { rotation_ = quat; }
+    void set_rotation(const math::vec3 & axis, float degree);
+
+    const math::vec3 & get_position() const { return position_; }
+    const math::quat & get_rotation() const { return rotation_; }
+
+    void look_at(const math::vec3 & pos,
+                 const math::vec3 & target,
+                 const math::vec3 & up);
+    void look_at(const math::vec3 & target,
+                 const math::vec3 & up);
 
 private:
 
-    std::vector<scene::mesh> meshes_;
+    math::vec3 position_;
+    math::quat rotation_;
 };
 
 } /* scene */
 } /* eps */
 
-#endif // SCENE_OBJECT_H_INCLUDED
+#endif // SCENE_MODIFIER_POSITIONING_H_INCLUDED

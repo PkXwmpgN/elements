@@ -21,33 +21,50 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef RENDERING_MODELS_PROCESS_H_INCLUDED
-#define RENDERING_MODELS_PROCESS_H_INCLUDED
+#ifndef SCENE_ENTITY_MATERIALS_H_INCLUDED
+#define SCENE_ENTITY_MATERIALS_H_INCLUDED
 
-#include "model.h"
-#include "rendering/core/program.h"
-#include "utils/std/pointer.h"
-#include "scene/camera/camera.h"
-#include "scene/light/light.h"
+#include "utils/std/enum.h"
+#include "utils/std/optional.h"
+#include <string>
+#include <array>
 
 namespace eps {
-namespace rendering {
+namespace scene {
 
-class process_model_rendering
+class material
 {
 public:
 
-    bool initialize();
-    void operator()(const utils::pointer<model> & node,
-                    const utils::link<scene::camera> & camera,
-                    const utils::link<scene::light> & light);
+    enum class type : short
+    {
+        diffuse,
+        specular,
+        normals,
+        COUNT
+    };
+
+    void set_texture(type id, const std::string & path)
+    {
+        textures_[utils::to_int(id)] = path;
+    }
+
+    const utils::optional<std::string> & get_texture(type id) const
+    {
+        return textures_[utils::to_int(id)];
+    }
 
 private:
 
-    program program_;
+    std::array
+    <
+        utils::optional<std::string>,
+        utils::to_int(type::COUNT)
+    >
+    textures_;
 };
 
-} /* rendering */
+} /* scene */
 } /* eps */
 
-#endif // RENDERING_MODELS_PROCESS_H_INCLUDED
+#endif // SCENE_ENTITY_MATERIALS_H_INCLUDED

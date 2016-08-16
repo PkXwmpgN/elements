@@ -21,49 +21,41 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef SCENE_GRAPH_H_INCLUDED
-#define SCENE_GRAPH_H_INCLUDED
+#ifndef SCENE_ENTITY_H_INCLUDED
+#define SCENE_ENTITY_H_INCLUDED
 
-#include "math/types.h"
-#include "utils/std/pointer.h"
-#include "visitor.h"
-#include "node.h"
+#include "scene/graph/node.h"
+#include "design/visitor.h"
 
 namespace eps {
 namespace scene {
 
-class graph
+class entity : public design::visitable<entity>
 {
 public:
 
-    graph();
-    graph(graph&&) = default;
-    graph & operator=(graph&&) = default;
-    virtual ~graph() {}
+    EPS_DESIGN_VISITABLE();
 
-    void process(const math::mat4 & view);
+public:
 
-    template <typename... _Targets, typename _Operation, typename... _Args>
-    void process(visit_targets<_Targets...> targets, _Operation && ops, _Args&& ...args)
-    {
-        scene::visit(targets, root_, std::forward<_Operation>(ops),
-                     std::forward<_Args>(args)...);
-    }
+    explicit entity(const utils::link<node> & parent)
+        : node_(parent)
+    {}
 
-    template<typename _Node, typename ..._Args>
-    auto add_node(_Args&& ...args)
-    {
-        return root_->add_node<_Node>(std::forward<_Args>(args)...);
-    }
+    virtual ~entity()
+    {}
 
-    void clear();
+    entity(entity &&) = default;
+    entity & operator=(entity &&) = default;
+
+    const utils::link<node> & get_node() const { return node_; }
 
 private:
 
-    utils::pointer<node> root_;
+    utils::link<node> node_;
 };
 
 } /* scene */
 } /* eps */
 
-#endif // SCENE_GRAPH_H_INCLUDED
+#endif // SCENE_ENTITY_H_INCLUDED

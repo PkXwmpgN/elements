@@ -30,10 +30,29 @@ node::node(utils::link<node> parent)
     : parent_(parent)
     , local_(1.0f)
     , world_(1.0f)
+    , state_(state::live)
 {}
 
-node::~node()
-{}
+bool node::clear()
+{
+    static auto dead = [](auto & node){ return node->get_state() == state::dead; };
+
+    size_t size = children_.size();
+    children_.remove_if(dead);
+
+    bool result = size != children_.size();
+    for(auto & child : children_)
+        result |= child->clear();
+
+    return result;
+}
+
+utils::link<node> node::add_node()
+{
+    auto sn = utils::make_shared<node>(shared_from_this());
+    children_.push_back(sn);
+    return sn;
+}
 
 } /* scene */
 } /* eps */

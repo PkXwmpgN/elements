@@ -32,11 +32,12 @@ IN THE SOFTWARE.
 namespace eps {
 namespace rendering {
 
-bool load_model(const std::string & name, utils::link<scene::node> node)
+utils::link<scene::node> load_model(const std::string & name,
+                                    utils::pointer<scene::scene> scene)
 {
     auto asset = assets_storage::instance().read<asset_model>(name);
     if(!asset)
-        return false;
+        return utils::link<scene::node>();
 
     auto warehouse = utils::make_shared<model_warehouse>();
 
@@ -52,12 +53,14 @@ bool load_model(const std::string & name, utils::link<scene::node> node)
         warehouse->add_material(material.get_material());
     }
 
-    asset->load_hierarchy(node, [warehouse](utils::link<scene::node> node)
+    auto node = scene->add_node();
+    asset->load_hierarchy(node, [scene, warehouse](const utils::link<scene::node> & node,
+                                                   const std::vector<scene::mesh> & meshes)
     {
-        return node.lock()->add_node<model>(warehouse);
+        scene->add_node_entity<model>(node, meshes, warehouse);
     });
 
-    return true;
+    return node;
 }
 
 } /* rendering */

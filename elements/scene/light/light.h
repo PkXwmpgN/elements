@@ -25,36 +25,45 @@ IN THE SOFTWARE.
 #define SCENE_LIGHT_H_INCLUDED
 
 #include "math/types.h"
+#include "scene/entity/entity.h"
 
 namespace eps {
 namespace scene {
 
-class light
+class light : public entity
 {
 public:
 
-    light();
-    light(light&&) = default;
-    light & operator=(light&&) = default;
-    virtual ~light() {}
+    EPS_DESIGN_VISITABLE();
 
-    void set_pos(const math::vec3 & value) { pos_ = value; }
+public:
+
+    using entity::entity;
+
     void set_diffuse(const math::vec3 & diffuse) { diffuse_ = diffuse; }
     void set_specular(const math::vec3 & specular) { specular_ = specular; }
     void set_ambient(const math::vec3 & ambient) { ambient_ = ambient; }
 
-    const math::vec3 & get_pos() const { return pos_; }
     const math::vec3 & get_diffuse() const { return diffuse_; }
     const math::vec3 & get_specular() const { return specular_; }
     const math::vec3 & get_ambient() const { return ambient_; }
 
 private:
 
-    math::vec3 pos_;
+    math::vec3 diffuse_  = math::vec3(1.0f, 1.0f, 1.0f);
+    math::vec3 specular_ = math::vec3(1.0f, 1.0f, 1.0f);
+    math::vec3 ambient_  = math::vec3(0.5f, 0.5f, 0.5f);
+};
 
-    math::vec3 diffuse_;
-    math::vec3 specular_;
-    math::vec3 ambient_;
+class light_point : public light
+{
+public:
+
+    EPS_DESIGN_VISITABLE();
+
+public:
+
+    using light::light;
 };
 
 } /* scene */

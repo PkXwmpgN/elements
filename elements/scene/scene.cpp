@@ -21,42 +21,60 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#include "camera.h"
+#include "scene.h"
 #include "math/transform.h"
-#include "math/trigonometry.h"
 
 namespace eps {
 namespace scene {
 
-camera::camera(const utils::link<node> & parent)
-    : node_(parent)
-    , fov_(math::radians(60.0f))
-    , aspect_(1.0f)
-    , near_(0.1f)
-    , far_(100.0f)
+scene::scene()
+    : root_(utils::make_shared<node>())
 {}
 
-camera::~camera()
-{}
-
-void camera::process(float)
+utils::link<node> scene::add_node()
 {
-    projection_ = build_projection();
-    if(auto sn = node_.lock())
-    {
-        math::mat4 view(1.0f);
-        while(sn)
-        {
-            sn->set_world_matrix(view);
-            view = sn->get_world_matrix() * math::inverse(sn->get_local_matrix());
-            sn = sn->get_parent().lock();
-        }
-    }
+    return root_->add_node();
 }
 
-math::mat4 camera_perspective::build_projection()
+utils::link<camera> scene::get_camera() const
 {
-    return glm::perspective(get_fov(), get_aspect(), get_near(), get_far());
+    // TODO: process to changing an active camera
+    // default the first
+
+    if(cameras_.size())
+        return cameras_.front();
+
+    return utils::link<camera>();
+}
+
+void scene::update(float dt)
+{
+    // 1. clean dead nodes
+    if(root_->clear())
+    {
+        static auto dead = [](auto & entry){ return entry->get_node().expired(); };
+
+        modifiers_.remove_if(dead);
+        entities_.remove_if(dead);
+        cameras_.remove_if(dead);
+        lights_.remove_if(dead);
+    }
+
+    // 2. process local matrices
+    for(auto & sm : modifiers_)
+        sm->process(dt);
+
+    // 3, process projection and view matrices
+    if(auto camera = get_camera().lock())
+        camera->process(dt);
+
+    // 4. process world matrices
+    static auto process_world_matrices = [](auto & node)
+    {
+        if(auto parent = node.get_parent().lock())
+            node.set_world_matrix(parent->get_world_matrix() * node.get_local_matrix());
+    };
+    root_->process(process_world_matrices);
 }
 
 } /* scene */

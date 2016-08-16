@@ -24,6 +24,7 @@ IN THE SOFTWARE.
 #ifndef SCENE_CAMERA_H_INCLUDED
 #define SCENE_CAMERA_H_INCLUDED
 
+#include "scene/graph/node.h"
 #include "math/types.h"
 
 namespace eps {
@@ -33,52 +34,54 @@ class camera
 {
 public:
 
-    void process();
+    explicit camera(const utils::link<node> & parent);
+    camera(camera &&) = default;
+    camera & operator=(camera &&) = default;
+    virtual ~camera();
 
-    camera();
-    camera(camera&&) = default;
-    camera & operator=(camera&&) = default;
-    virtual ~camera() {}
+    void process(float dt);
 
-    void set_eye(const math::vec3 & value) { eye_ = value; }
-    void set_center(const math::vec3 & value) { center_ = value; }
-    void set_up(const math::vec3 & value) { up_ = value; }
+public:
 
-    void set_fov(float fov) { fov_ = fov; }
-    void set_aspect(float aspect) { aspect_ = aspect; }
-    void set_plain_near(float near) { near_ = near; }
-    void set_plain_far(float far) { far_ = far; }
-
-    const math::vec3 & get_eye() const { return eye_; }
-    const math::vec3 & get_center() const { return center_; }
-    const math::vec3 & get_up() const { return up_; }
+    void set_fov(float value) { fov_ = value; }
+    void set_aspect(float value) { aspect_ = value; }
+    void set_near(float value) { near_ = value; }
+    void set_far(float value) { far_ = value; }
 
     float get_fov() const { return fov_; }
     float get_aspect() const { return aspect_; }
-    float get_plain_near() const { return near_; }
-    float get_plain_far() const { return far_; }
+    float get_near() const { return near_; }
+    float get_far() const { return far_; }
 
-    const math::mat4 & get_view() const { return view_; }
     const math::mat4 & get_projection() const { return projection_; }
 
-private:
-
-    virtual math::mat4 process_view();
-    virtual math::mat4 process_projection();
+    const utils::link<node> & get_node() const { return node_; }
 
 private:
 
-    math::vec3 eye_;
-    math::vec3 center_;
-    math::vec3 up_;
+    virtual math::mat4 build_projection() = 0;
 
-    math::mat4 view_;
+private:
+
+    utils::link<node> node_;
+
     math::mat4 projection_;
 
     float fov_;
     float aspect_;
     float near_;
     float far_;
+};
+
+class camera_perspective : public camera
+{
+public:
+
+    using camera::camera;
+
+private:
+
+    math::mat4 build_projection() final;
 };
 
 } /* scene */

@@ -21,50 +21,37 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef SCENE_OBJECT_MATERIALS_H_INCLUDED
-#define SCENE_OBJECT_MATERIALS_H_INCLUDED
+#ifndef SCENE_MODIFIER_H_INCLUDED
+#define SCENE_MODIFIER_H_INCLUDED
 
-#include "utils/std/enum.h"
-#include "utils/std/optional.h"
-#include <string>
-#include <array>
+#include "scene/graph/node.h"
 
 namespace eps {
 namespace scene {
 
-struct material
+class modifier
 {
 public:
 
-    enum class type : short
-    {
-        diffuse,
-        specular,
-        normals,
-        COUNT
-    };
+    explicit modifier(const utils::link<node> & parent)
+        : node_(parent)
+    {}
 
-    void set_texture(type id, const std::string & path)
-    {
-        textures_[utils::to_int(id)] = path;
-    }
+    virtual ~modifier()
+    {}
 
-    const utils::optional<std::string> & get_texture(type id) const
-    {
-        return textures_[utils::to_int(id)];
-    }
+    modifier(modifier &&) = default;
+    modifier & operator=(modifier &&) = default;
 
+    virtual void process(float dt) = 0;
+    const utils::link<node> & get_node() const { return node_; }
+    
 private:
 
-    std::array
-    <
-        utils::optional<std::string>,
-        utils::to_int(type::COUNT)
-    >
-    textures_;
+    utils::link<node> node_;
 };
 
 } /* scene */
 } /* eps */
 
-#endif // SCENE_OBJECT_MATERIALS_H_INCLUDED
+#endif // SCENE_MODIFIER_H_INCLUDED

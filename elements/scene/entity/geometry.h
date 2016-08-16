@@ -21,48 +21,40 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef SCENE_MODEL_MESH_H_INCLUDED
-#define SCENE_MODEL_MESH_H_INCLUDED
+#ifndef SCENE_ENTITY_GEOMETRY_H_INCLUDED
+#define SCENE_ENTITY_GEOMETRY_H_INCLUDED
 
-#include "utils/std/optional.h"
-#include "utils/std/enum.h"
-#include <array>
+#include "entity.h"
+#include "mesh.h"
+#include <vector>
 
 namespace eps {
 namespace scene {
 
-struct mesh
+class geometry : public entity
 {
 public:
 
-    enum class feature : short
-    {
-        geometry,
-        material,
-        COUNT
-    };
+    EPS_DESIGN_VISITABLE();
 
-    void set_feature(feature id, size_t index)
-    {
-        feature_[utils::to_int(id)] = index;
-    }
+public:
 
-    size_t get_feature(feature id) const
-    {
-        return feature_[utils::to_int(id)];
-    }
+    geometry(const utils::link<node> & parent,
+             const std::vector<mesh> & meshes)
+        : entity(parent)
+        , meshes_(meshes)
+    {}
+
+    auto begin() const { return meshes_.begin(); }
+    auto end() const { return meshes_.end(); }
 
 private:
 
-    std::array
-    <
-        size_t,
-        utils::to_int(feature::COUNT)
-    >
-    feature_;
+    std::vector<mesh> meshes_;
 };
 
 } /* scene */
 } /* eps */
 
-#endif // SCENE_MODEL_MESH_H_INCLUDED
+
+#endif // SCENE_ENTITY_GEOMETRY_H_INCLUDED

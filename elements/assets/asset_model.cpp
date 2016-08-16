@@ -21,6 +21,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
+
 #include "asset_model.h"
 
 #include "io/system.h"
@@ -121,29 +122,41 @@ private:
     utils::link<io::system> fs_;
 };
 
-struct hierarcy_loader
+struct hierarchy_loader
 {
-    hierarcy_loader(utils::pointer<aiScene> scene, asset_model::node_inserter inserter)
+    hierarchy_loader(utils::pointer<aiScene> scene, asset_model::callback callback)
         : scene_(scene)
-        , inserter_(inserter)
+        , callback_(callback)
     {}
 
     void load(const aiNode * source, utils::link<scene::node> dest)
     {
-        dest.lock()->set_local_matrix(aiMatrix4x4_to_mat4(source->mTransformation));
-
-        for(size_t i = 0; i < source->mNumChildren; ++i)
+        if(auto sn = dest.lock())
         {
-            auto link = inserter_(dest);
-            load(source->mChildren[i], link);
+            sn->set_local_matrix(aiMatrix4x4_to_mat4(source->mTransformation));
 
-            auto child = link.lock();
-            for(size_t j = 0; j < source->mChildren[i]->mNumMeshes; ++j)
-                child->add_mesh(generate_mesh(source->mChildren[i]->mMeshes[j]));
+            for(size_t i = 0; i < source->mNumChildren; ++i)
+            {
+                auto link = sn->add_node();
+                load(source->mChildren[i], link);
+                callback_(link, get_meshes(source->mChildren[i]));
+            }
         }
     }
 
 private:
+
+    std::vector<scene::mesh> get_meshes(const aiNode * source)
+    {
+        std::vector<scene::mesh> result(source->mNumMeshes);
+        std::transform(source->mMeshes, source->mMeshes + result.size(),
+                       std::begin(result), [this](size_t index)
+        {
+            return this->generate_mesh(index);
+        });
+
+        return result;
+    }
 
     scene::mesh generate_mesh(size_t index)
     {
@@ -168,7 +181,7 @@ private:
 private:
 
     utils::pointer<aiScene> scene_;
-    asset_model::node_inserter inserter_;
+    asset_model::callback callback_;
 };
 
 
@@ -261,11 +274,11 @@ void asset_model::material::load_material(const aiMaterial * material, const std
     }
 }
 
-void asset_model::load_hierarchy(utils::link<scene::node> node, node_inserter inserter) const
+void asset_model::load_hierarchy(utils::link<scene::node> node, callback callback) const
 {
     if(!node.expired())
     {
-        hierarcy_loader loader(scene_, inserter);
+        hierarchy_loader loader(scene_, callback);
         loader.load(scene_->mRootNode, node);
     }
 }

@@ -24,53 +24,119 @@ IN THE SOFTWARE.
 #include "renderer.h"
 #include "pass_character.h"
 
+#include <assert.h>
+
+#include <elements/rendering/utils/model_loader.h>
 #include <elements/rendering/effects/clear.h>
+#include <elements/math/trigonometry.h>
+#include <elements/math/transform.h>
 
 namespace eps {
 namespace experiment {
 namespace character {
 
+void renderer::modifier_polar::process(float dt)
+{
+    math::vec3 pos = radius_ * math::vec3(math::sin(theta_) * math::sin(phi_),
+                                          math::cos(theta_),
+                                          math::sin(theta_) * math::cos(phi_));
+    look_at(pos, math::vec3(0.0f, 0.0f, 0.0f), math::vec3(0.0f, 1.0f, 0.0f));
+    modifier_positioning::process(dt);
+}
+
+renderer::renderer()
+    : scene_(utils::make_shared<scene::scene>())
+{}
+
 bool renderer::initialize()
 {
-    using namespace rendering;
+    // initialize camera
+    auto node = scene_->add_node();
+    auto camera = scene_->add_node_camera<scene::camera_perspective>(node);
+    if(camera.expired())
+        return false;
 
+    camera_modifier_ = scene_->add_node_modifier<modifier_polar>(node);
+    if(camera_modifier_.expired())
+        return false;
+
+    // initialize lights
+    node = scene_->add_node();
+    auto light = scene_->add_node_light<scene::light_point>(node);
+    if(light.expired())
+        return false;
+
+    scene::set_position(node, math::vec3(20.0f, 20.0f, 20.0f));
+
+    // initialize passes
+    using namespace rendering;
     passes_.initialize(2);
 
     auto link_clear = passes_.add_pass<effect::clear>();
     if(link_clear.expired())
         return false;
 
-    link_character_ = passes_.add_pass<pass_character>();
-    if(link_character_.expired())
+    auto link_character = passes_.add_pass<pass_character>();
+    if(link_character.expired())
         return false;
 
-    link_clear.lock()->set_color(math::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-    link_clear.lock()->set_bits(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    auto clear = link_clear.lock();
+    clear->set_color(math::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+    clear->set_bits(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    auto character = link_character.lock();
+    character->set_scene(scene_);
+
     return true;
 }
 
 bool renderer::construct(const math::uvec2 & size)
 {
+    if(auto camera = scene_->get_camera().lock())
+    {
+        camera->set_aspect(math::aspect(size));
+        camera->set_fov(math::radians(45.0f));
+        camera->set_near(0.1f);
+        camera->set_far(100.0f);
+    }
+
+    if(auto modifier = camera_modifier_.lock())
+    {
+        modifier->look_at(math::vec3(0.0f, 0.0f, 5.0f),
+                          math::vec3(0.0f, 0.0f, 0.0f),
+                          math::vec3(0.0f, 1.0f, 0.0f));
+    }
+
     passes_.construct(size);
     return true;
 }
 
 void renderer::render(float dt)
 {
-    passes_.process(dt);
+    if(scene_)
+    {
+        scene_->update(dt);
+        passes_.process(dt);
+    }
 }
 
 bool renderer::set_model(const std::string & model)
 {
-    if(auto link = link_character_.lock())
-        return link->set_model(model);
-    return false;
+    if(auto m = model_.lock())
+        m->set_state(scene::node::state::dead);
+
+    model_ = rendering::load_model(model, scene_);
+    return !model_.expired();
 }
 
 void renderer::set_rotation(float theta, float phi)
 {
-    if(auto link = link_character_.lock())
-        link->set_rotation(theta, phi);
+    if(auto modifier = camera_modifier_.lock())
+    {
+        modifier->set_theta(theta);
+        modifier->set_phi(phi);
+        modifier->set_radius(5.0f);
+    }
 }
 
 } /* character */

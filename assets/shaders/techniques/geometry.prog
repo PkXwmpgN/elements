@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<program name="geometry">
+    <shaders>
+        <vertex><![CDATA[
+            attribute vec3 a_vertex_pos;
+            attribute vec3 a_vertex_normal;
+            attribute vec3 a_vertex_tangent;
+            attribute vec2 a_vertex_uv;
+
+            uniform mat4 u_matrix_mvp;
+            uniform mat3 u_matrix_normal;
+
+            varying vec2 v_uv;
+            varying mat3 v_tbn;
+
+            mat3 fn_tbn_matrix()
+            {
+                vec3 T = normalize(u_matrix_normal * a_vertex_tangent);
+                vec3 N = normalize(u_matrix_normal * a_vertex_normal);
+                T = normalize(T - dot(T, N) * N);
+                vec3 B = cross(T, N);
+                return mat3(T, B, N);
+            }
+
+            void main()
+            {
+                gl_Position = u_matrix_mvp * vec4(a_vertex_pos, 1.0);
+                v_uv = a_vertex_uv;
+                v_tbn = fn_tbn_matrix();
+            }
+        ]]></vertex>
+
+        <fragment><![CDATA[
+            precision lowp float;
+
+            uniform sampler2D u_map_normal;
+
+            varying vec2 v_uv;
+            varying mat3 v_tbn;
+
+            // enable normal spheremap encode
+            #define ENCODE_NORMAL
+
+            vec3 fn_encode_normal(vec3 normal)
+            {
+            #ifdef ENCODE_NORMAL
+                return vec3(normalize(normal.xy) * sqrt(normal.z * 0.5 + 0.5), 0.0);
+            #else
+                return normal;
+            #endif
+            }
+
+            void main()
+            {
+                vec3 normal = texture2D(u_map_normal, v_uv).rgb * 2.0 - 1.0;
+                normal = normalize(normal * v_tbn);
+                gl_FragColor = vec4(fn_encode_normal(normal), 1.0);
+            }
+
+        ]]></fragment>
+    </shaders>
+
+    <a_locations>
+        <location name="a_vertex_pos" index="0"/>
+        <location name="a_vertex_normal" index="1"/>
+        <location name="a_vertex_tangent" index="2"/>
+        <location name="a_vertex_uv" index="3"/>
+    </a_locations>
+
+    <u_locations>
+        <location name="u_matrix_mvp" index="0"/>
+        <location name="u_matrix_normal" index="1"/>
+        <location name="u_map_normal" index="2"/>
+    </u_locations>
+
+</program>

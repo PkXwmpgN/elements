@@ -25,6 +25,7 @@ IN THE SOFTWARE.
 #define SCENE_NODE_H_INCLUDED
 
 #include "math/types.h"
+#include "math/transform.h"
 #include "utils/std/pointer.h"
 #include <list>
 
@@ -35,45 +36,81 @@ class node : public utils::enable_shared_from_this<node>
 {
 public:
 
-    explicit node(utils::link<node> parent);
-    virtual ~node();
+    enum class state : uint8_t
+    {
+        live,
+        dead
+    };
+
+public:
 
     node() = default;
-    node(node &&) = default;
-    node & operator=(node &&) = default;
+    explicit node(utils::link<node> parent);
 
     const math::mat4 & get_local_matrix() const { return local_; }
     const math::mat4 & get_world_matrix() const { return world_; }
 
-    void set_local_matrix(const math::mat4 & mat) { local_ = mat; }
-    void set_world_matrix(const math::mat4 & mat) { world_ = mat; }
+    void set_local_matrix(const math::mat4 & local) { local_ = local; }
+    void set_world_matrix(const math::mat4 & world) { world_ = world; }
 
-    template<typename _Node, typename ..._Args>
-    utils::link<_Node> add_node(_Args&& ...args)
-    {
-        static_assert(std::is_base_of<node, _Node>::value, "failed");
-
-        auto node = utils::make_shared<_Node>(shared_from_this(), std::forward<_Args>(args)...);
-        children_.push_back(node);
-        return node;
-    }
-
+    utils::link<node> add_node();
     utils::link<node> get_parent() const { return parent_; }
 
-    auto begin() const { return children_.begin(); }
-    auto end() const { return children_.end(); }
+    template<typename _Operation>
+    void process(_Operation && ops);
 
-    auto begin() { return children_.begin(); }
-    auto end() { return children_.end(); }
+    void set_state(const state & s) { state_ = s; }
+    const state & get_state() const { return state_; }
+
+    bool clear();
 
 private:
 
-    utils::link<node> parent_ ;
+    utils::link<node> parent_;
     std::list<utils::pointer<node>> children_;
 
     math::mat4 local_;
     math::mat4 world_;
+
+    state state_;
 };
+
+math::vec3 get_position(const node & sn);
+math::vec3 get_position(const utils::link<node> & sn);
+
+void set_position(node & sn, const math::vec3 & pos);
+void set_position(const utils::link<node> & sn, const math::vec3 & pos);
+
+template<typename _Operation>
+void node::process(_Operation && opt)
+{
+    opt(*this);
+    for(auto & child : children_)
+        child->process(opt);
+}
+
+inline math::vec3 get_position(const node & sn)
+{
+    return math::vec3(sn.get_world_matrix()[3]);
+}
+
+inline math::vec3 get_position(const utils::link<node> & link)
+{
+    if(auto sn = link.lock())
+        return get_position(*sn);
+    return math::vec3();
+}
+
+inline void set_position(node & sn, const math::vec3 & pos)
+{
+    sn.set_local_matrix(math::translate(pos));
+}
+
+inline void set_position(const utils::link<node> & link, const math::vec3 & pos)
+{
+    if(auto sn = link.lock())
+        set_position(*sn, pos);
+}
 
 } /* scene */
 } /* eps*/
