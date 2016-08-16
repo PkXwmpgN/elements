@@ -21,29 +21,29 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#include "pass_character.h"
+#include "forward.h"
 
 namespace eps {
-namespace experiment {
-namespace character {
+namespace rendering {
+namespace techniques {
 
-bool pass_character::initialize()
+bool forward::initialize()
 {
     return process_.initialize();
 }
 
-void pass_character::set_scene(const utils::pointer<scene::scene> & scene)
+void forward::set_scene(const utils::pointer<scene::scene> & scene)
 {
     scene_ = scene;
 }
 
-void pass_character::process(float)
+void forward::process(float)
 {
     if(scene_)
         scene_->process_entities(process_, *scene_);
 }
 
 
-} /* character */
-} /* experiment */
+} /* techniques */
+} /* rendering */
 } /* eps */

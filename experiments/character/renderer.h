@@ -34,8 +34,6 @@ namespace eps {
 namespace experiment {
 namespace character {
 
-class pass_character;
-
 class renderer
 {
 public:

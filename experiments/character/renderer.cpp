@@ -22,12 +22,10 @@ IN THE SOFTWARE.
 */
 
 #include "renderer.h"
-#include "pass_character.h"
-
-#include <assert.h>
 
 #include <elements/rendering/utils/model_loader.h>
 #include <elements/rendering/effects/clear.h>
+#include <elements/rendering/techniques/forward.h>
 #include <elements/math/trigonometry.h>
 #include <elements/math/transform.h>
 
@@ -76,7 +74,7 @@ bool renderer::initialize()
     if(link_clear.expired())
         return false;
 
-    auto link_character = passes_.add_pass<pass_character>();
+    auto link_character = passes_.add_pass<techniques::forward>();
     if(link_character.expired())
         return false;
 

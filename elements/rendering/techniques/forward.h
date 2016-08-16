@@ -21,22 +21,22 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef EXPERIMENTS_CHARATER_PASS_CHARACTER_H_INCLUDED
-#define EXPERIMENTS_CHARATER_PASS_CHARACTER_H_INCLUDED
+#ifndef ELEMENTS_TECHNIQUES_FORWARD_H_INCLUDED
+#define ELEMENTS_TECHNIQUES_FORWARD_H_INCLUDED
 
-#include <elements/rendering/passes/pass_base.h>
-#include <elements/rendering/models/process_forward.h>
-#include <elements/scene/scene.h>
+#include "rendering/passes/pass_base.h"
+#include "rendering/models/process_forward.h"
+#include "scene/scene.h"
 
 namespace eps {
-namespace experiment {
-namespace character {
+namespace rendering {
+namespace techniques {
 
-class pass_character : public rendering::pass_base
+class forward : public pass_base
 {
 public:
 
-    using rendering::pass_base::pass_base;
+    using pass_base::pass_base;
 
 public:
 
@@ -47,13 +47,13 @@ public:
 
 private:
 
-    rendering::process_forward process_;
+    process_forward process_;
     utils::pointer<scene::scene> scene_;
 };
 
-} /* character */
-} /* experiment */
+} /* techniques */
+} /* rendering */
 } /* eps */
 
 
-#endif // EXPERIMENTS_CHARATER_PASS_CHARACTER_H_INCLUDED
+#endif // ELEMENTS_TECHNIQUES_FORWARD_H_INCLUDED
