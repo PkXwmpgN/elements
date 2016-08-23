@@ -49,7 +49,7 @@ bool volume::construct(const math::uvec2 & size)
         size_grid_ = size_grid;
 
         cells_.resize(size_grid_.x * size_grid_.y);
-        std::memset(cells_.data(), cells_.size() * sizeof(cell), 0);
+        std::memset(cells_.data(), 0, cells_.size() * sizeof(cell));
 
         return true;
     }
