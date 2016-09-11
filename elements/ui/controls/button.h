@@ -41,7 +41,7 @@ public:
     explicit button(control * parent = nullptr);
 
     void draw() override;
-    bool touch(int x, int y, touch_action action) override;
+    bool touch(int x, int y, touch_action action, touch_finger finger) override;
 
     bool set_asset(const char * asset);
     void set_click(const std::function<void()> & handler);

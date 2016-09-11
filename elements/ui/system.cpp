@@ -29,14 +29,13 @@ namespace ui {
 
 system::system()
     : control(nullptr)
-    , capture_(nullptr)
 {}
 
-bool system::touch(int x, int y, touch_action action)
+bool system::touch(int x, int y, touch_action action, touch_finger finger)
 {
-    if(capture_)
-        return capture_->touch(x, y, action);
-    return control::touch(x, y, action);
+    if(capture_[utils::to_int(finger)])
+        return capture_[utils::to_int(finger)]->touch(x, y, action, finger);
+    return control::touch(x, y, action, finger);
 }
 
 bool system::construct(const math::uvec2 & size)
@@ -52,19 +51,19 @@ system * system::get_system()
     return this;
 }
 
-void system::capture(control * object)
+void system::capture(control * object, touch_finger finger)
 {
-    capture_ = object;
+    capture_[utils::to_int(finger)] = object;
 }
 
-void system::capture_release()
+void system::capture_release(touch_finger finger)
 {
-    capture_ = nullptr;
+    capture_[utils::to_int(finger)] = nullptr;
 }
 
-bool system::capture_test(control * object) const
+bool system::capture_test(control * object, touch_finger finger) const
 {
-    return capture_ == object;
+    return capture_[utils::to_int(finger)] == object;
 }
 
 } /* ui */

@@ -36,6 +36,13 @@ enum class touch_action : short
     MOVE
 };
 
+enum class touch_finger : short
+{
+    finger0,
+    finger1,
+    COUNT
+};
+
 enum class halignment : short
 {
     LEFT,

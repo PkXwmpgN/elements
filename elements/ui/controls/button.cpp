@@ -99,7 +99,7 @@ void button::draw()
                                   utils::to_int(square_enum::a_vertex_uv));
 }
 
-bool button::touch(int x, int y, touch_action action)
+bool button::touch(int x, int y, touch_action action, touch_finger finger)
 {
     system * sys = get_system();
 
@@ -110,7 +110,7 @@ bool button::touch(int x, int y, touch_action action)
     {
         if(action == touch_action::DOWN)
         {
-            sys->capture(this);
+            sys->capture(this, finger);
             state_ = state::PRESSED;
             return true;
         }
@@ -121,11 +121,11 @@ bool button::touch(int x, int y, touch_action action)
         }
     }
 
-    if(sys->capture_test(this))
+    if(sys->capture_test(this, finger))
     {
         if(action == touch_action::UP)
         {
-            sys->capture_release();
+            sys->capture_release(finger);
             state_ = state::NONE;
         }
         return true;

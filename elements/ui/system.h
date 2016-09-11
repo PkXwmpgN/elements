@@ -25,6 +25,7 @@ IN THE SOFTWARE.
 #define UI_SYSTEM_H_INCLUDED
 
 #include "math/types.h"
+#include "utils/std/enum.h"
 #include "control.h"
 
 namespace eps {
@@ -37,11 +38,11 @@ public:
     system();
 
     bool construct(const math::uvec2 & size);
-    bool touch(int x, int y, touch_action action) override;
+    bool touch(int x, int y, touch_action action, touch_finger finger) override;
 
-    void capture(control * object);
-    void capture_release();
-    bool capture_test(control * object) const;
+    void capture(control * object, touch_finger finger);
+    void capture_release(touch_finger finger);
+    bool capture_test(control * object, touch_finger finger) const;
 
     const math::mat4 & transform() const { return transform_; }
 
@@ -52,7 +53,7 @@ protected:
 private:
 
     math::mat4  transform_;
-    control * capture_;
+    control * capture_[utils::to_int(touch_finger::COUNT)] = {nullptr};
 };
 
 } /* ui */

@@ -39,7 +39,7 @@ class control
 public:
 
     virtual void draw();
-    virtual bool touch(int x, int y, touch_action action);
+    virtual bool touch(int x, int y, touch_action action, touch_finger finger);
 
     void set_position(float x, float y);
     void set_size(float w, float h);

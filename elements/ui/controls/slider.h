@@ -48,7 +48,7 @@ public:
     explicit slider(slider_model * model, control * parent = nullptr);
 
     void draw() override;
-    bool touch(int x, int y, touch_action action) override;
+    bool touch(int x, int y, touch_action action, touch_finger finger) override;
 
     void set_color_slider(const math::vec4 & color);
     void set_color_tracker(const math::vec4 & color);

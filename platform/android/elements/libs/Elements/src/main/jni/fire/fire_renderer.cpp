@@ -150,7 +150,7 @@ void fire_renderer::touch(float x, float y, int action)
     if(ui_ && renderer_)
     {
         const eps::math::vec4 pos = transform_touch_ * eps::math::vec4(x, y, 1.0f, 1.0f);
-        ui_->touch(pos.x, pos.y, ui_touch_action(action));
+        ui_->touch(pos.x, pos.y, ui_touch_action(action), eps::ui::touch_finger::finger0);
     }
 }
 

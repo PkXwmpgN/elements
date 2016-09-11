@@ -142,7 +142,7 @@ void slider::draw_tracker(const math::vec2 & pos, float value)
                                             utils::to_int(program_enum::a_vertex_uv));
 }
 
-bool slider::touch(int x, int y, touch_action action)
+bool slider::touch(int x, int y, touch_action action, touch_finger finger)
 {
     system * sys = get_system();
 
@@ -153,16 +153,16 @@ bool slider::touch(int x, int y, touch_action action)
     {
         if(action == touch_action::DOWN)
         {
-            sys->capture(this);
+            sys->capture(this, finger);
             return true;
         }
     }
 
-    if(sys->capture_test(this))
+    if(sys->capture_test(this, finger))
     {
         if(action == touch_action::UP)
         {
-            sys->capture_release();
+            sys->capture_release(finger);
         }
         else if(action == touch_action::MOVE)
         {

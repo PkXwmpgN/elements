@@ -171,7 +171,7 @@ void liquid_renderer::touch(float x, float y, int action)
     if(renderer_ && liquid_)
     {
         const eps::math::vec4 pos_touch = transform_touch_ * eps::math::vec4(x, y, 1.0f, 1.0f);
-        if(!ui_ || !ui_->touch(pos_touch.x, pos_touch.y, ui_touch_action(action)))
+        if(!ui_ || !ui_->touch(pos_touch.x, pos_touch.y, ui_touch_action(action), eps::ui::touch_finger::finger0))
         {
             const eps::math::vec4 pos = transform_ * eps::math::vec4(x, y, 1.0f, 1.0f);
             if(action == AMOTION_EVENT_ACTION_MOVE)

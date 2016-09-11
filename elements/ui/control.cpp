@@ -52,10 +52,10 @@ void control::draw()
             child->draw();
 }
 
-bool control::touch(int x, int y, touch_action action)
+bool control::touch(int x, int y, touch_action action, touch_finger finger)
 {
     for(auto & child : childs_)
-        if(child->get_visible() && child->touch(x, y, action))
+        if(child->get_visible() && child->touch(x, y, action, finger))
             return true;
     return false;
 }
