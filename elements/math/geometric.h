@@ -70,6 +70,16 @@ inline vec3 normalize(const vec3 & a)
     return glm::normalize(a);
 }
 
+inline vec3 mix(const vec3 & a, const vec3 & b, float factor)
+{
+    return glm::mix(a, b, factor);
+}
+
+inline vec3 reflect(const vec3 & d, const vec3 & n)
+{
+    return glm::reflect(d, n);
+}
+
 } /* math */
 } /* eps */
 
