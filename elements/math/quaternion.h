@@ -24,6 +24,7 @@ IN THE SOFTWARE.
 #ifndef MATH_QUATERNION_H_INCLUDED
 #define MATH_QUATERNION_H_INCLUDED
 
+#include "geometric.h"
 #include <glm/gtc/quaternion.hpp>
 
 namespace eps {
@@ -39,6 +40,14 @@ inline quat rotate(const quat & q, const vec3 & axis, float degree)
 inline mat4 to_mat4(const quat & q)
 {
     return glm::mat4_cast(q);
+}
+
+inline quat look_rotation(const math::vec3 & direction, const math::vec3 & up)
+{
+    const math::vec3 z = normalize(direction);
+    const math::vec3 y = normalize(up - z * dot(up, z));
+    const math::vec3 x = cross(y, z);
+    return quat(mat3(x, y, z));
 }
 
 } /* math */
