@@ -68,6 +68,8 @@ void scene::update(float dt)
     {
         if(auto parent = node.get_parent().lock())
             node.set_world_matrix(parent->get_world_matrix() * node.get_local_matrix());
+        else
+            node.set_world_matrix(node.get_local_matrix());
     };
     root_->process(process_world_matrices);
 }

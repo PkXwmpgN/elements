@@ -140,7 +140,7 @@ bool process_forward::visit(model & sm, scene::scene & scene)
             program_.uniform_value(utils::to_int(program_enum::u_map_normal), 2);
         }
 
-        const math::mat4 & world = node->get_world_matrix();
+        const math::mat4 & world = camera->get_view() * node->get_world_matrix();
         const math::mat4 & projection = camera->get_projection();
         program_.uniform_value(utils::to_int(program_enum::u_matrix_mvp), projection * world);
         program_.uniform_value(utils::to_int(program_enum::u_matrix_world), world);

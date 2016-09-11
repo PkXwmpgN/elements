@@ -54,6 +54,8 @@ public:
     float get_far() const { return far_; }
 
     const math::mat4 & get_projection() const { return projection_; }
+    const math::mat4 & get_view() const { return view_; }
+    const math::mat4 & get_view_projection() const { return view_projection_; }
 
     const utils::link<node> & get_node() const { return node_; }
 
@@ -66,6 +68,8 @@ private:
     utils::link<node> node_;
 
     math::mat4 projection_;
+    math::mat4 view_;
+    math::mat4 view_projection_;
 
     float fov_;
     float aspect_;
