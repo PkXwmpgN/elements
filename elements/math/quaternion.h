@@ -42,6 +42,11 @@ inline mat4 to_mat4(const quat & q)
     return glm::mat4_cast(q);
 }
 
+inline quat slerp(const quat & a, const quat & b, float factor)
+{
+    return glm::slerp(a, b, factor);
+}
+
 inline quat look_rotation(const math::vec3 & direction, const math::vec3 & up)
 {
     const math::vec3 z = normalize(direction);
