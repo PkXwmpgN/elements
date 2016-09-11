@@ -27,7 +27,9 @@ IN THE SOFTWARE.
 #include "math/types.h"
 #include "math/transform.h"
 #include "utils/std/pointer.h"
+
 #include <list>
+#include <string>
 
 namespace eps {
 namespace scene {
@@ -44,8 +46,7 @@ public:
 
 public:
 
-    node() = default;
-    explicit node(utils::link<node> parent);
+    explicit node(const std::string & name);
 
     const math::mat4 & get_local_matrix() const { return local_; }
     const math::mat4 & get_world_matrix() const { return world_; }
@@ -53,11 +54,16 @@ public:
     void set_local_matrix(const math::mat4 & local) { local_ = local; }
     void set_world_matrix(const math::mat4 & world) { world_ = world; }
 
-    utils::link<node> add_node();
-    utils::link<node> get_parent() const { return parent_; }
+    utils::link<node> attach_node(utils::pointer<node> child);
+    utils::link<node> add_node(const std::string & name);
 
-    template<typename _Operation>
-    void process(_Operation && ops);
+    utils::link<node> get_parent() const { return parent_; }
+    void set_parent(utils::link<node> parent) { parent_ = parent; }
+
+    const std::string & get_name() const { return name_; }
+
+    template<typename _Operation, typename... _Args>
+    void process(_Operation && ops, _Args&& ...args);
 
     void set_state(const state & s) { state_ = s; }
     const state & get_state() const { return state_; }
@@ -65,6 +71,8 @@ public:
     bool clear();
 
 private:
+
+    std::string name_;
 
     utils::link<node> parent_;
     std::list<utils::pointer<node>> children_;
@@ -75,19 +83,6 @@ private:
     state state_;
 };
 
-math::vec3 get_position(const node & sn);
-math::vec3 get_position(const utils::link<node> & sn);
-
-void set_position(node & sn, const math::vec3 & pos);
-void set_position(const utils::link<node> & sn, const math::vec3 & pos);
-
-template<typename _Operation>
-void node::process(_Operation && opt)
-{
-    opt(*this);
-    for(auto & child : children_)
-        child->process(opt);
-}
 
 inline math::vec3 get_position(const node & sn)
 {
@@ -101,15 +96,17 @@ inline math::vec3 get_position(const utils::link<node> & link)
     return math::vec3();
 }
 
-inline void set_position(node & sn, const math::vec3 & pos)
+inline utils::pointer<node> make_root(const std::string & name)
 {
-    sn.set_local_matrix(math::translate(pos));
+    return utils::make_shared<node>(name);
 }
 
-inline void set_position(const utils::link<node> & link, const math::vec3 & pos)
+template<typename _Operation, typename... _Args>
+void node::process(_Operation && opt, _Args&& ...args)
 {
-    if(auto sn = link.lock())
-        set_position(*sn, pos);
+    opt(*this, std::forward<_Args>(args)...);
+    for(auto & child : children_)
+        child->process(opt, std::forward<_Args>(args)...);
 }
 
 } /* scene */

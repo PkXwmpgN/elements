@@ -61,17 +61,27 @@ class model_warehouse
     {
     public:
 
-        void set_texture(scene::material::type type, const product_type & texture);
-        const utils::optional<product_type> & get_texture(scene::material::type type) const;
+        void set_texture(scene::material::type_texture type, const product_type & texture);
+        const utils::optional<product_type> & get_texture(scene::material::type_texture type) const;
+
+        void set_color(scene::material::type_color type, const math::vec3 & color);
+        const math::vec3 & get_color(scene::material::type_color type) const;
 
     private:
 
         std::array
         <
             utils::optional<product_type>,
-            utils::to_int(scene::material::type::COUNT)
+            utils::to_int(scene::material::type_texture::COUNT)
         >
         textures_;
+
+        std::array
+        <
+            math::vec3,
+            utils::to_int(scene::material::type_color::COUNT)
+        >
+        colors_;
     };
 
 public:

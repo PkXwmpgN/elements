@@ -28,13 +28,8 @@ namespace eps {
 namespace scene {
 
 scene::scene()
-    : root_(utils::make_shared<node>())
+    : root_(utils::make_shared<node>("Root"))
 {}
-
-utils::link<node> scene::add_node()
-{
-    return root_->add_node();
-}
 
 utils::link<camera> scene::get_camera() const
 {

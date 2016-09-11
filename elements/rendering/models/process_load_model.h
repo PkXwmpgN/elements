@@ -21,47 +21,31 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#include "model_loader.h"
+#ifndef RENDERING_MODELS_PROCESS_LOAD_MODEL_H_INCLUDED
+#define RENDERING_MODELS_PROCESS_LOAD_MODEL_H_INCLUDED
 
-#include "rendering/models/model.h"
-#include "rendering/models/model_warehouse.h"
-
-#include "assets/assets_storage.h"
+#include "scene/scene.h"
+#include "utils/std/pointer.h"
 #include "assets/asset_model.h"
 
 namespace eps {
 namespace rendering {
 
-utils::link<scene::node> load_model(const std::string & name,
-                                    utils::pointer<scene::scene> scene)
+struct process_load_model
 {
-    auto asset = assets_storage::instance().read<asset_model>(name);
-    if(!asset)
-        return utils::link<scene::node>();
+    explicit process_load_model(utils::pointer<scene::scene> scene)
+        : scene_(scene)
+    {}
 
-    auto warehouse = utils::make_shared<model_warehouse>();
+    void operator()(scene::node & node, const asset_model & asset);
 
-    for(size_t i = 0, end = asset->get_geometry_count(); i < end; ++i)
-    {
-        auto geometry = asset->get_geometry(i);
-        warehouse->add_geometry(geometry.get_vertices(), geometry.get_faces());
-    }
+private:
 
-    for(size_t i = 0, end = asset->get_geometry_count(); i < end; ++i)
-    {
-        auto material = asset->get_material(i);
-        warehouse->add_material(material.get_material());
-    }
+    utils::pointer<scene::scene> scene_;
 
-    auto node = scene->add_node();
-    asset->load_hierarchy(node, [scene, warehouse](const utils::link<scene::node> & node,
-                                                   const std::vector<scene::mesh> & meshes)
-    {
-        scene->add_node_entity<model>(node, meshes, warehouse);
-    });
-
-    return node;
-}
+};
 
 } /* rendering */
 } /* eps */
+
+#endif // RENDERING_MODELS_PROCESS_LOAD_MODEL_H_INCLUDED

@@ -21,19 +21,37 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef RENDERING_UTILS_MODEL_LOADER_H_INCLUDED
-#define RENDERING_UTILS_MODEL_LOADER_H_INCLUDED
-
-#include "scene/scene.h"
-#include "scene/graph/node.h"
+#include "process_load_model.h"
+#include "model_warehouse.h"
+#include "model.h"
 
 namespace eps {
 namespace rendering {
 
-utils::link<scene::node> load_model(const std::string & name,
-                                    utils::pointer<scene::scene> scene);
+void process_load_model::operator()(scene::node & node, const asset_model & asset)
+{
+    const auto & geometry = asset.get_node_geometry(node.get_name());
+    const auto & material = asset.get_node_material(node.get_name());
+
+    if(!geometry.empty())
+    {
+        auto warehouse = utils::make_shared<model_warehouse>();
+
+        std::vector<scene::mesh> meshes(geometry.size());
+        for(size_t i = 0, end = meshes.size(); i < end; ++i)
+        {
+            meshes[i].set_feature(scene::mesh::feature::geometry, i);
+            meshes[i].set_feature(scene::mesh::feature::material, i);
+
+            warehouse->add_geometry(geometry[i].get_vertices(), geometry[i].get_faces());
+            warehouse->add_material(material[i].get_material());
+        }
+
+        scene_->add_node_entity<model>(node.shared_from_this(),
+                                       std::move(meshes),
+                                       std::move(warehouse));
+    }
+}
 
 } /* rendering */
 } /* eps */
-
-#endif // RENDERING_UTILS_MODEL_LOADER_H_INCLUDED

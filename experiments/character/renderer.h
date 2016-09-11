@@ -76,7 +76,8 @@ private:
     rendering::pass_composition passes_;
     utils::pointer<scene::scene> scene_;
     utils::link<scene::node> model_;
-    utils::link<modifier_polar> camera_modifier_;
+    utils::link<modifier_polar> modifier_camera_;
+    utils::link<scene::modifier_positioning> modifier_light_;
 };
 
 } /* character */

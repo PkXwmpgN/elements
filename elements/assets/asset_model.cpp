@@ -124,49 +124,32 @@ private:
 
 struct hierarchy_loader
 {
-    hierarchy_loader(utils::pointer<aiScene> scene, asset_model::callback callback)
+    hierarchy_loader(const aiScene * scene)
         : scene_(scene)
-        , callback_(callback)
     {}
 
-    void load(const aiNode * source, utils::link<scene::node> dest)
+    utils::pointer<scene::node> load() const
     {
-        if(auto sn = dest.lock())
-        {
-            sn->set_local_matrix(aiMatrix4x4_to_mat4(source->mTransformation));
+        auto root = scene::make_root(scene_->mRootNode->mName.data);
+        load(scene_->mRootNode, root);
 
-            for(size_t i = 0; i < source->mNumChildren; ++i)
-            {
-                auto link = sn->add_node();
-                load(source->mChildren[i], link);
-                callback_(link, get_meshes(source->mChildren[i]));
-            }
-        }
+        return root;
     }
 
 private:
 
-    std::vector<scene::mesh> get_meshes(const aiNode * source)
+    void load(const aiNode * source, utils::pointer<scene::node> dest) const
     {
-        std::vector<scene::mesh> result(source->mNumMeshes);
-        std::transform(source->mMeshes, source->mMeshes + result.size(),
-                       std::begin(result), [this](size_t index)
+        dest->set_local_matrix(aiMatrix4x4_to_mat4(source->mTransformation));
+
+        for(size_t i = 0; i < source->mNumChildren; ++i)
         {
-            return this->generate_mesh(index);
-        });
-
-        return result;
+            auto child = dest->add_node(source->mChildren[i]->mName.data);
+            load(source->mChildren[i], child.lock());
+        }
     }
 
-    scene::mesh generate_mesh(size_t index)
-    {
-        scene::mesh mesh;
-        mesh.set_feature(scene::mesh::feature::geometry, index);
-        mesh.set_feature(scene::mesh::feature::material, scene_->mMeshes[index]->mMaterialIndex);
-        return mesh;
-    }
-
-    math::mat4 aiMatrix4x4_to_mat4(const aiMatrix4x4 & from)
+    math::mat4 aiMatrix4x4_to_mat4(const aiMatrix4x4 & from) const
     {
         math::mat4 to;
 
@@ -180,10 +163,73 @@ private:
 
 private:
 
-    utils::pointer<aiScene> scene_;
-    asset_model::callback callback_;
+    const aiScene * scene_;
 };
 
+struct geometry_loader
+{
+    explicit geometry_loader(const aiScene * scene)
+        : scene_(scene)
+    {}
+
+    asset_model::gmap load() const
+    {
+        asset_model::gmap geometry;
+        load(scene_->mRootNode, geometry);
+        return geometry;
+    }
+
+    void load(const aiNode * source, asset_model::gmap & geometry) const
+    {
+        auto & meshes = geometry[source->mName.data];
+
+        for(size_t i = 0; i < source->mNumMeshes; ++i)
+            meshes.emplace_back(scene_->mMeshes[source->mMeshes[i]]);
+
+        for(size_t i = 0; i < source->mNumChildren; ++i)
+            load(source->mChildren[i], geometry);
+    }
+
+private:
+
+    const aiScene * scene_;
+};
+
+struct material_loader
+{
+    material_loader(const aiScene * scene, const std::string & path)
+        : scene_(scene)
+        , path_(path)
+    {}
+
+    asset_model::mmap load() const
+    {
+        asset_model::mmap material;
+        load(scene_->mRootNode, material);
+        return material;
+    }
+
+private:
+
+    void load(const aiNode * source, asset_model::mmap & material) const
+    {
+        auto & meshes = material[source->mName.data];
+
+        for(size_t i = 0; i < source->mNumMeshes; ++i)
+        {
+            size_t index = scene_->mMeshes[source->mMeshes[i]]->mMaterialIndex;
+            meshes.emplace_back(scene_->mMaterials[index], path_);
+        }
+
+        for(size_t i = 0; i < source->mNumChildren; ++i)
+            load(source->mChildren[i], material);
+    }
+
+private:
+
+    const aiScene * scene_;
+    std::string path_;
+};
 
 asset_model::geometry::geometry(const aiMesh * mesh)
 {
@@ -253,58 +299,58 @@ void asset_model::geometry::load_faces(const aiMesh * mesh)
 
 asset_model::material::material(const aiMaterial * material, const std::string & path)
 {
-    assert(material != nullptr);
-    load_material(material, path);
+    if(material)
+        load_material(material, path);
 }
 
 void asset_model::material::load_material(const aiMaterial * material, const std::string & path)
 {
-    const aiTextureType aiId[] =
+    static const aiTextureType aiId[] =
     {
         aiTextureType_DIFFUSE,
         aiTextureType_SPECULAR,
         aiTextureType_NORMALS
     };
 
-    aiString name;
-    for(size_t i = 0; i < utils::to_int(scene::material::type::COUNT); ++i)
+    for(size_t i = 0; i < utils::to_int(scene::material::type_texture::COUNT); ++i)
     {
-        if(material->GetTexture(aiId[i], 0, &name) == aiReturn_SUCCESS)
-            material_.set_texture(scene::material::type(i), path + name.C_Str());
+        aiString name;
+        if(material->GetTextureCount(aiId[i]) &&
+           material->GetTexture(aiId[i], 0, &name) == aiReturn_SUCCESS)
+            material_.set_texture(scene::material::type_texture(i), path + name.C_Str());
     }
+
+    aiColor3D color(0.0f, 0.0f, 0.0f);
+
+    if(material->Get(AI_MATKEY_COLOR_DIFFUSE, color) == aiReturn_SUCCESS)
+        material_.set_color(scene::material::type_color::diffuse, math::vec3(color.r, color.g, color.b));
+    if(material->Get(AI_MATKEY_COLOR_SPECULAR, color) == aiReturn_SUCCESS)
+        material_.set_color(scene::material::type_color::specular, math::vec3(color.r, color.g, color.b));
+    if(material->Get(AI_MATKEY_COLOR_AMBIENT, color) == aiReturn_SUCCESS)
+        material_.set_color(scene::material::type_color::ambient, math::vec3(color.r, color.g, color.b));
 }
 
-void asset_model::load_hierarchy(utils::link<scene::node> node, callback callback) const
+utils::pointer<scene::node> asset_model::get_hierarchy() const
 {
-    if(!node.expired())
-    {
-        hierarchy_loader loader(scene_, callback);
-        loader.load(scene_->mRootNode, node);
-    }
+    return hierarchy_;
 }
 
-size_t asset_model::get_geometry_count() const
+const std::vector<asset_model::geometry> &
+    asset_model::get_node_geometry(const std::string & name) const
 {
-    assert(scene_);
-    return scene_->mNumMeshes;
+    static std::vector<geometry> empty;
+
+    auto it = geometry_.find(name);
+    return it != geometry_.end() ? it->second : empty;
 }
 
-size_t asset_model::get_material_count() const
+const std::vector<asset_model::material> &
+    asset_model::get_node_material(const std::string & name) const
 {
-    assert(scene_);
-    return scene_->mNumMaterials;
-}
+    static std::vector<material> empty;
 
-asset_model::geometry asset_model::get_geometry(size_t index) const
-{
-    assert(scene_);
-    return geometry(scene_->mMeshes[index]);
-}
-
-asset_model::material asset_model::get_material(size_t index) const
-{
-    assert(scene_);
-    return material(scene_->mMaterials[index], path_);
+    auto it = material_.find(name);
+    return it != material_.end() ? it->second : empty;
 }
 
 bool asset_model::load(utils::link<io::system> fs, const std::string & resource)
@@ -317,12 +363,20 @@ bool asset_model::load(utils::link<io::system> fs, const std::string & resource)
                                 aiProcess_CalcTangentSpace |
                                 aiProcess_FlipUVs);
 
-    scene_.reset(importer.GetOrphanedScene());
+    const aiScene * scene = importer.GetScene();
 
-    if(!scene_ || scene_->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !scene_->mRootNode)
+    if(!scene || scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
         return false;
 
-    path_ = io::parent_path(get_resource());
+    hierarchy_loader hloader(scene);
+    hierarchy_ = hloader.load();
+
+    geometry_loader gloader(scene);
+    geometry_ = gloader.load();
+
+    material_loader mloader(scene, io::parent_path(get_resource()));
+    material_ = mloader.load();
+
     return true;
 }
 

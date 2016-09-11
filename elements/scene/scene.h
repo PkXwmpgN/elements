@@ -40,7 +40,8 @@ public:
 
     scene();
 
-    utils::link<node> add_node();
+    utils::link<node> add_node(const std::string & name) { return root_->add_node(name); }
+    utils::link<node> get_root() const { return root_; }
 
     template<typename _Modifier, typename... _Args>
     utils::link<_Modifier> add_node_modifier(const utils::link<node> & sn, _Args&& ...args);

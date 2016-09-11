@@ -31,13 +31,12 @@ IN THE SOFTWARE.
 #include "scene/graph/node.h"
 #include "utils/std/optional.h"
 #include "utils/std/pointer.h"
-#include <vector>
-#include <functional>
 
-struct aiScene;
+#include <vector>
+#include <unordered_map>
+
 struct aiMesh;
 struct aiMaterial;
-struct aiNode;
 
 namespace eps {
 
@@ -48,6 +47,7 @@ public:
     struct geometry
     {
         explicit geometry(const aiMesh * mesh);
+
         const auto & get_vertices() const { return vertices_; }
         const auto & get_faces() const { return faces_; }
 
@@ -60,8 +60,9 @@ public:
 
         std::vector<scene::vertex> vertices_;
         std::vector<scene::face> faces_;
-
     };
+
+    using gmap = std::unordered_map<std::string, std::vector<geometry>>;
 
     struct material
     {
@@ -78,26 +79,26 @@ public:
         scene::material material_;
     };
 
-    using callback = std::function<void(const utils::link<scene::node> &,
-                                        const std::vector<scene::mesh> &)>;
+    using mmap = std::unordered_map<std::string, std::vector<material>>;
 
 public:
 
     using asset::asset;
     bool load(utils::link<io::system> fs, const std::string & resource) final;
 
-    size_t get_geometry_count() const;
-    size_t get_material_count() const;
+public:
 
-    geometry get_geometry(size_t index) const;
-    material get_material(size_t index) const;
+    utils::pointer<scene::node> get_hierarchy() const;
 
-    void load_hierarchy(utils::link<scene::node> node, callback cb) const;
+    const std::vector<geometry> & get_node_geometry(const std::string & name) const;
+    const std::vector<material> & get_node_material(const std::string & name) const;
 
 private:
 
-    utils::pointer<aiScene> scene_;
-    std::string path_;
+    utils::pointer<scene::node> hierarchy_;
+
+    gmap geometry_;
+    mmap material_;
 };
 
 } /* eps */

@@ -22,12 +22,13 @@ IN THE SOFTWARE.
 */
 
 #include "renderer.h"
-
-#include <elements/rendering/utils/model_loader.h>
+#include <elements/rendering/models/process_load_model.h>
 #include <elements/rendering/effects/clear.h>
 #include <elements/rendering/techniques/forward.h>
 #include <elements/math/trigonometry.h>
 #include <elements/math/transform.h>
+#include <elements/assets/assets_storage.h>
+#include <elements/assets/asset_model.h>
 
 namespace eps {
 namespace experiment {
@@ -49,22 +50,24 @@ renderer::renderer()
 bool renderer::initialize()
 {
     // initialize camera
-    auto node = scene_->add_node();
+    auto node = scene_->add_node("Camera");
     auto camera = scene_->add_node_camera<scene::camera_perspective>(node);
     if(camera.expired())
         return false;
 
-    camera_modifier_ = scene_->add_node_modifier<modifier_polar>(node);
-    if(camera_modifier_.expired())
+    modifier_camera_ = scene_->add_node_modifier<modifier_polar>(node);
+    if(modifier_camera_.expired())
         return false;
 
     // initialize lights
-    node = scene_->add_node();
+    node = scene_->add_node("Light");
     auto light = scene_->add_node_light<scene::light_point>(node);
     if(light.expired())
         return false;
 
-    scene::set_position(node, math::vec3(20.0f, 20.0f, 20.0f));
+    modifier_light_ = scene_->add_node_modifier<scene::modifier_positioning>(node);
+    if(modifier_light_.expired())
+        return false;
 
     // initialize passes
     using namespace rendering;
@@ -98,11 +101,16 @@ bool renderer::construct(const math::uvec2 & size)
         camera->set_far(100.0f);
     }
 
-    if(auto modifier = camera_modifier_.lock())
+    if(auto modifier = modifier_camera_.lock())
     {
         modifier->look_at(math::vec3(0.0f, 0.0f, 5.0f),
                           math::vec3(0.0f, 0.0f, 0.0f),
                           math::vec3(0.0f, 1.0f, 0.0f));
+    }
+
+    if(auto modifier = modifier_light_.lock())
+    {
+        modifier->set_position(math::vec3(20.0f, 20.0f, 20.0f));
     }
 
     passes_.construct(size);
@@ -123,13 +131,25 @@ bool renderer::set_model(const std::string & model)
     if(auto m = model_.lock())
         m->set_state(scene::node::state::dead);
 
-    model_ = rendering::load_model(model, scene_);
-    return !model_.expired();
+    // load an asset
+    auto asset = assets_storage::instance().read<asset_model>(model);
+    if(!asset)
+        return false;
+
+    // attach the model hierarchy to the scene
+    auto node = asset->get_hierarchy();
+    scene_->get_root().lock()->attach_node(node);
+
+    // load entities to rendering
+    node->process(rendering::process_load_model(scene_), std::cref(asset.value()));
+
+    model_ = node;
+    return true;
 }
 
 void renderer::set_rotation(float theta, float phi)
 {
-    if(auto modifier = camera_modifier_.lock())
+    if(auto modifier = modifier_camera_.lock())
     {
         modifier->set_theta(theta);
         modifier->set_phi(phi);

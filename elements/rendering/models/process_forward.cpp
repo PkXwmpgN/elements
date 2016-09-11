@@ -122,19 +122,19 @@ bool process_forward::visit(model & sm, scene::scene & scene)
         program_.attribute_array(utils::to_int(program_enum::a_vertex_uv),
                                  offsetof(scene::vertex, tex), 2, sizeof(scene::vertex));
 
-        if(const auto & texture = material.get_texture(scene::material::type::diffuse))
+        if(const auto & texture = material.get_texture(scene::material::type_texture::diffuse))
         {
             EPS_STATE_SAMPLER_0(texture.value());
             program_.uniform_value(utils::to_int(program_enum::u_map_diffuse), 0);
         }
 
-        if(const auto & texture = material.get_texture(scene::material::type::specular))
+        if(const auto & texture = material.get_texture(scene::material::type_texture::specular))
         {
             EPS_STATE_SAMPLER_1(texture.value());
             program_.uniform_value(utils::to_int(program_enum::u_map_specular), 1);
         }
 
-        if(const auto & texture = material.get_texture(scene::material::type::normals))
+        if(const auto & texture = material.get_texture(scene::material::type_texture::normals))
         {
             EPS_STATE_SAMPLER_2(texture.value());
             program_.uniform_value(utils::to_int(program_enum::u_map_normal), 2);

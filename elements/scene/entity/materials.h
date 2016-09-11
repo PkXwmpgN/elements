@@ -36,7 +36,7 @@ class material
 {
 public:
 
-    enum class type : short
+    enum class type_texture : short
     {
         diffuse,
         specular,
@@ -44,14 +44,32 @@ public:
         COUNT
     };
 
-    void set_texture(type id, const std::string & path)
+    enum class type_color : short
+    {
+        diffuse,
+        specular,
+        ambient,
+        COUNT
+    };
+
+    void set_texture(type_texture id, const std::string & path)
     {
         textures_[utils::to_int(id)] = path;
     }
 
-    const utils::optional<std::string> & get_texture(type id) const
+    void set_color(type_color id, const math::vec3 & color)
+    {
+        color_[utils::to_int(id)] = color;
+    }
+
+    const utils::optional<std::string> & get_texture(type_texture id) const
     {
         return textures_[utils::to_int(id)];
+    }
+
+    const math::vec3 & get_color(type_color id) const
+    {
+        return color_[utils::to_int(id)];
     }
 
 private:
@@ -59,9 +77,16 @@ private:
     std::array
     <
         utils::optional<std::string>,
-        utils::to_int(type::COUNT)
+        utils::to_int(type_texture::COUNT)
     >
     textures_;
+
+    std::array
+    <
+        math::vec3,
+        utils::to_int(type_color::COUNT)
+    >
+    color_;
 };
 
 } /* scene */

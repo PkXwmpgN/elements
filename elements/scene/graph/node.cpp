@@ -26,8 +26,8 @@ IN THE SOFTWARE.
 namespace eps {
 namespace scene {
 
-node::node(utils::link<node> parent)
-    : parent_(parent)
+node::node(const std::string & name)
+    : name_(name)
     , local_(1.0f)
     , world_(1.0f)
     , state_(state::live)
@@ -47,11 +47,16 @@ bool node::clear()
     return result;
 }
 
-utils::link<node> node::add_node()
+utils::link<node> node::add_node(const std::string & name)
 {
-    auto sn = utils::make_shared<node>(shared_from_this());
-    children_.push_back(sn);
-    return sn;
+    return attach_node(utils::make_shared<node>(name));
+}
+
+utils::link<node> node::attach_node(utils::pointer<node> child)
+{
+    child->set_parent(shared_from_this());
+    children_.push_back(child);
+    return children_.back();
 }
 
 } /* scene */

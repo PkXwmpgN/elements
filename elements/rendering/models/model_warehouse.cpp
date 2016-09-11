@@ -18,15 +18,25 @@ model_warehouse::geometry::geometry(const std::vector<scene::vertex> & vertices,
                       sizeof(unsigned short));
 }
 
-void model_warehouse::material::set_texture(scene::material::type type,
+void model_warehouse::material::set_texture(scene::material::type_texture type,
                                             const product_type & texture)
 {
     textures_[utils::to_int(type)] = texture;
 }
 
-const utils::optional<product_type> & model_warehouse::material::get_texture(scene::material::type type) const
+void model_warehouse::material::set_color(scene::material::type_color type, const math::vec3 & color)
+{
+    colors_[utils::to_int(type)] = color;
+}
+
+const utils::optional<product_type> & model_warehouse::material::get_texture(scene::material::type_texture type) const
 {
     return textures_[utils::to_int(type)];
+}
+
+const math::vec3 & model_warehouse::material::get_color(scene::material::type_color type) const
+{
+    return colors_[utils::to_int(type)];
 }
 
 void model_warehouse::add_geometry(const std::vector<scene::vertex> & vertices,
@@ -38,9 +48,9 @@ void model_warehouse::add_geometry(const std::vector<scene::vertex> & vertices,
 void model_warehouse::add_material(const scene::material & data)
 {
     material result;
-    for(size_t i = 0; i < utils::to_int(scene::material::type::COUNT); ++i)
+    for(size_t i = 0; i < utils::to_int(scene::material::type_texture::COUNT); ++i)
     {
-        if(const auto & name = data.get_texture(scene::material::type(i)))
+        if(const auto & name = data.get_texture(scene::material::type_texture(i)))
         {
             auto & texture = textures_[name.value()];
             if(!texture.valid())
@@ -52,9 +62,13 @@ void model_warehouse::add_material(const scene::material & data)
                 }
             }
 
-            result.set_texture(scene::material::type(i), texture.get_product());
+            result.set_texture(scene::material::type_texture(i), texture.get_product());
         }
     }
+
+    for(size_t i = 0; i < utils::to_int(scene::material::type_color::COUNT); ++i)
+        result.set_color(scene::material::type_color(i), data.get_color(scene::material::type_color(i)));
+
     materials_.push_back(std::move(result));
 }
 
