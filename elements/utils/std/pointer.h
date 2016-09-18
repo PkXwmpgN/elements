@@ -35,8 +35,8 @@ using pointer = std::shared_ptr<_Type>;
 template<typename _Type>
 using link = std::weak_ptr<_Type>;
 
-template<typename _Type>
-using unique = std::unique_ptr<_Type>;
+template<typename _Type, typename _Deleter = std::default_delete<_Type>>
+using unique = std::unique_ptr<_Type, _Deleter>;
 
 template<typename _Derived>
 using enable_shared_from_this = std::enable_shared_from_this<_Derived>;
