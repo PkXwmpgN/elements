@@ -25,15 +25,13 @@ IN THE SOFTWARE.
 #define RENDERING_MODELS_PROCESS_FORWARD_H_INCLUDED
 
 #include "rendering/core/program.h"
-#include "utils/std/pointer.h"
-#include "design/visitor.h"
 #include "scene/scene.h"
 #include "model.h"
 
 namespace eps {
 namespace rendering {
 
-class process_forward : public design::visitor<process_forward, scene::entity, scene::scene &>
+class process_forward : public scene::visitor<process_forward, scene::scene &>
 {
 public:
 
@@ -42,7 +40,7 @@ public:
 public:
 
     bool initialize();
-    bool visit(model & m, scene::scene & scene);
+    void visit(const model & m, scene::scene & scene);
 
 private:
 

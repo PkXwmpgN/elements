@@ -146,7 +146,7 @@ protected:
 template<typename _Visitor, typename _Base, typename... _Args>
 struct visitor
 {
-    using vtbl_type = details::vtbl<_Base, bool(visitor::*)(_Base &, _Args&&...),
+    using vtbl_type = details::vtbl<_Base, void(visitor::*)(_Base &, _Args&&...),
                                     VISITABLE_HIERARCHY_DEPTH>;
 
     visitor()
@@ -154,17 +154,16 @@ struct visitor
     {}
 
     template<typename _Specific>
-    bool thunk(_Base & base, _Args&& ... args)
+    void thunk(_Base & base, _Args&& ... args)
     {
-        return static_cast<_Visitor*>(this)->visit(static_cast<_Specific&>(base),
-                                                   std::forward<_Args>(args)...);
+        static_cast<_Visitor*>(this)->visit(static_cast<_Specific&>(base),
+                                            std::forward<_Args>(args)...);
     }
 
-    bool operator()(_Base & base, _Args&& ... args)
+    void operator()(_Base & base, _Args&& ... args)
     {
         if(auto thunk = (*vtbl_)[base.get_invocation()])
-            return (this->*thunk)(base, std::forward<_Args>(args)...);
-        return false;
+            (this->*thunk)(base, std::forward<_Args>(args)...);
     }
 
 private:

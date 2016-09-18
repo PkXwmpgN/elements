@@ -61,16 +61,14 @@ public:
     void process_entities(_Visitor & visitor, _Args&&... args)
     {
         for(auto & entry : entities_)
-            if(visitor(*entry, std::forward<_Args>(args)...))
-                break;
+            visitor(*entry, std::forward<_Args>(args)...);
     }
 
     template<typename _Visitor, typename... _Args>
     void process_lights(_Visitor & visitor, _Args&&... args)
     {
         for(auto & entry : lights_)
-            if(visitor(*entry, std::forward<_Args>(args)...))
-                break;
+            visitor(*entry, std::forward<_Args>(args)...);
     }
 
     utils::link<camera> get_camera() const;

@@ -55,6 +55,9 @@ private:
     utils::link<node> node_;
 };
 
+template<typename _Visitor, typename... _Args>
+using visitor = design::visitor<_Visitor, entity, _Args...>;
+
 } /* scene */
 } /* eps */
 

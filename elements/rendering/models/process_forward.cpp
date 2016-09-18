@@ -53,7 +53,7 @@ enum class program_enum : short
     u_light_ambient = 10
 };
 
-struct process_lights : public design::visitor<process_lights, scene::entity, program&>
+struct process_lights : public scene::visitor<process_lights, program&>
 {
 public:
 
@@ -61,17 +61,15 @@ public:
 
 public:
 
-    bool visit(scene::light_point & light, program & prog)
+    void visit(const scene::light_point & light, program & prog)
     {
         prog.uniform_value(utils::to_int(program_enum::u_light_diffuse), light.get_diffuse());
         prog.uniform_value(utils::to_int(program_enum::u_light_specular), light.get_specular());
         prog.uniform_value(utils::to_int(program_enum::u_light_ambient), light.get_ambient());
         prog.uniform_value(utils::to_int(program_enum::u_light_pos),
                            scene::get_position(light.get_node()));
-        return true;
 
         // TODO: process all lights
-        // return false
     }
 };
 
@@ -80,7 +78,7 @@ bool process_forward::initialize()
     return load_program("assets/shaders/techniques/forward.prog", program_);
 }
 
-bool process_forward::visit(model & sm, scene::scene & scene)
+void process_forward::visit(const model & sm, scene::scene & scene)
 {
     auto node = sm.get_node().lock();
     assert(node);
@@ -150,8 +148,6 @@ bool process_forward::visit(model & sm, scene::scene & scene)
         EPS_STATE_INDICES(geometry.get_indices());
         glDrawElements(GL_TRIANGLES, geometry.get_indices_count(), GL_UNSIGNED_SHORT, 0);
     }
-
-    return false;
 }
 
 } /* rendering */
