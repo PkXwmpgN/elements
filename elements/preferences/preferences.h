@@ -25,8 +25,8 @@ IN THE SOFTWARE.
 #define PREFERENCES_PREFERENCES_H_INCLUDED
 
 #include <string>
-#include <memory>
 #include <set>
+#include "utils/std/pointer.h"
 
 namespace eps {
 
@@ -83,8 +83,8 @@ private:
 
 private:
 
-    static std::unique_ptr<preferences> instance_;
-    std::unique_ptr<preferences_interface>  impl_;
+    static utils::unique<preferences> instance_;
+    utils::unique<preferences_interface>  impl_;
 
     std::set<on_changed_listener*> listeners_;
 };

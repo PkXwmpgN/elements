@@ -29,8 +29,6 @@ IN THE SOFTWARE.
 #include "scene/entity/materials.h"
 #include "scene/entity/mesh.h"
 #include "scene/graph/node.h"
-#include "utils/std/optional.h"
-#include "utils/std/pointer.h"
 
 #include <vector>
 #include <unordered_map>

@@ -22,7 +22,6 @@ IN THE SOFTWARE.
 */
 
 #include "system.h"
-#include <thread>
 
 namespace eps {
 namespace simulation {

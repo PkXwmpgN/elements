@@ -32,8 +32,6 @@ IN THE SOFTWARE.
 #include <elements/assets/assets_storage.h>
 #include <elements/assets/asset_texture.h>
 
-#include <vector>
-
 namespace eps {
 namespace experiment {
 namespace light {

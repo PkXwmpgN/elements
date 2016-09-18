@@ -24,7 +24,6 @@ IN THE SOFTWARE.
 #include "assets_storage.h"
 #include "io/file.h"
 #include "io/path.h"
-#include <assert.h>
 #include <cstdio>
 #include <sys/stat.h>
 #include <unistd.h>

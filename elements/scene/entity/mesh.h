@@ -24,7 +24,6 @@ IN THE SOFTWARE.
 #ifndef SCENE_ENTITY_MESH_H_INCLUDED
 #define SCENE_ENTITY_MESH_H_INCLUDED
 
-#include "utils/std/optional.h"
 #include "utils/std/enum.h"
 #include <array>
 

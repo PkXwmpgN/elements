@@ -27,8 +27,6 @@ IN THE SOFTWARE.
 #include <elements/rendering/utils/program_loader.h>
 #include <elements/utils/std/enum.h>
 
-#include <vector>
-
 namespace eps {
 namespace experiment {
 namespace strange {

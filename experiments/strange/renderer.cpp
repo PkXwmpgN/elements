@@ -28,8 +28,6 @@ IN THE SOFTWARE.
 #include <elements/rendering/effects/blur.h>
 #include <elements/rendering/effects/tone.h>
 #include <elements/rendering/effects/clear.h>
-#include <elements/utils/std/enum.h>
-#include <elements/math/common.h>
 
 namespace eps {
 namespace experiment {

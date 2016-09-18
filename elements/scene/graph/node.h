@@ -25,7 +25,6 @@ IN THE SOFTWARE.
 #define SCENE_NODE_H_INCLUDED
 
 #include "math/types.h"
-#include "math/transform.h"
 #include "utils/std/pointer.h"
 
 #include <list>

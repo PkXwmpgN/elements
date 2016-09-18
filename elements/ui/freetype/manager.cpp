@@ -24,7 +24,6 @@ IN THE SOFTWARE.
 #include "manager.h"
 #include "line.h"
 
-#include "assets/asset_blob.h"
 #include "assets/assets_storage.h"
 
 namespace eps {

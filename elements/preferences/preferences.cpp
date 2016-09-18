@@ -22,7 +22,7 @@ IN THE SOFTWARE.
 */
 
 #include "preferences.h"
-#include <assert.h>
+#include <cassert>
 
 namespace eps {
 

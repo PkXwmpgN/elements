@@ -22,11 +22,11 @@ IN THE SOFTWARE.
 */
 
 #include "metrics.h"
-#include <assert.h>
+#include <cassert>
 
 namespace eps {
 
-std::unique_ptr<metrics> metrics::instance_ = nullptr;
+utils::unique<metrics> metrics::instance_ = nullptr;
 
 metrics::metrics(metrics_interface * impl)
     : impl_(impl)

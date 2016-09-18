@@ -28,8 +28,6 @@ IN THE SOFTWARE.
 #include <elements/utils/std/enum.h>
 #include <elements/math/common.h>
 
-#include <vector>
-
 namespace eps {
 namespace experiment {
 namespace light {

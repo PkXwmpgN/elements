@@ -25,7 +25,6 @@ IN THE SOFTWARE.
 #define RENDERING_MODELS_MODEL_H_INCLUDED
 
 #include "scene/entity/geometry.h"
-#include "utils/std/pointer.h"
 
 namespace eps {
 namespace rendering {

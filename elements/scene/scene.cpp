@@ -22,7 +22,6 @@ IN THE SOFTWARE.
 */
 
 #include "scene.h"
-#include "math/transform.h"
 
 namespace eps {
 namespace scene {

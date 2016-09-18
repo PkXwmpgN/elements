@@ -24,7 +24,7 @@ IN THE SOFTWARE.
 #ifndef METRICS_METRICS_H_INCLUDED
 #define METRICS_METRICS_H_INCLUDED
 
-#include <memory>
+#include "utils/std/pointer.h"
 
 namespace eps {
 
@@ -63,8 +63,8 @@ private:
 
 private:
 
-    static std::unique_ptr<metrics> instance_;
-    std::unique_ptr<metrics_interface>  impl_;
+    static utils::unique<metrics> instance_;
+    utils::unique<metrics_interface>  impl_;
 };
 
 namespace metric_literals {

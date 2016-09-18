@@ -25,7 +25,6 @@ IN THE SOFTWARE.
 #define RENDERING_MODELS_PROCESS_LOAD_MODEL_H_INCLUDED
 
 #include "scene/scene.h"
-#include "utils/std/pointer.h"
 #include "assets/asset_model.h"
 
 namespace eps {

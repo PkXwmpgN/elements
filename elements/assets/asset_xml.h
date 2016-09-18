@@ -25,7 +25,7 @@ IN THE SOFTWARE.
 #define ASSETS_ASSET_XML_H_INCLUDED
 
 #include "assets.h"
-#include <memory>
+#include "utils/std/pointer.h"
 #include <pugixml.hpp>
 
 namespace eps {
@@ -43,7 +43,7 @@ private:
 
 private:
 
-    std::unique_ptr<pugi::xml_document> doc_;
+    utils::unique<pugi::xml_document> doc_;
 };
 
 } /* eps */

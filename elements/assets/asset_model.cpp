@@ -28,9 +28,7 @@ IN THE SOFTWARE.
 #include "io/file.h"
 #include "io/path.h"
 
-#include "utils/std/enum.h"
-
-#include <assert.h>
+#include <cassert>
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>

@@ -26,6 +26,7 @@ IN THE SOFTWARE.
 #include <elements/rendering/computation/compute_target.h>
 #include <elements/rendering/state/state_macro.h>
 #include <elements/rendering/utils/program_loader.h>
+#include <elements/rendering/core/texture_policy.h>
 #include <elements/utils/std/enum.h>
 #include <elements/math/common.h>
 

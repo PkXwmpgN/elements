@@ -22,8 +22,6 @@ IN THE SOFTWARE.
 */
 
 #include "compute_target.h"
-#include "rendering/core/texture_policy.h"
-#include "rendering/core/target_maker.h"
 
 namespace eps {
 namespace rendering {

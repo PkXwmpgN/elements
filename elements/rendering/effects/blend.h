@@ -24,7 +24,6 @@ IN THE SOFTWARE.
 #ifndef RENDERING_BLEND_H_INCLUDED
 #define RENDERING_BLEND_H_INCLUDED
 
-#include "math/types.h"
 #include "rendering/core/program.h"
 #include "rendering/passes/pass_base.h"
 #include "rendering/primitives/square.h"
