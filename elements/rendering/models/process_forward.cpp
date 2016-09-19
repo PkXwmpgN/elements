@@ -41,16 +41,18 @@ enum class program_enum : short
     a_vertex_uv = 3,
     // uniforms
     u_matrix_mvp = 0,
-    u_matrix_world = 1,
+    u_matrix_model_view = 1,
     u_matrix_normal = 2,
-    u_camera_pos = 3,
-    u_map_diffuse = 4,
-    u_map_specular = 5,
-    u_map_normal = 6,
-    u_light_pos = 7,
-    u_light_diffuse = 8,
-    u_light_specular = 9,
-    u_light_ambient = 10
+    u_matrix_view = 3,
+    u_camera_pos = 4,
+    u_map_diffuse = 5,
+    u_map_specular = 6,
+    u_map_normal = 7,
+    u_light_pos = 8,
+    u_light_diffuse = 9,
+    u_light_specular = 10,
+    u_light_ambient = 11,
+    u_light_range = 12
 };
 
 struct process_lights : public scene::visitor<process_lights, program&>
@@ -66,6 +68,7 @@ public:
         prog.uniform_value(utils::to_int(program_enum::u_light_diffuse), light.get_diffuse());
         prog.uniform_value(utils::to_int(program_enum::u_light_specular), light.get_specular());
         prog.uniform_value(utils::to_int(program_enum::u_light_ambient), light.get_ambient());
+        prog.uniform_value(utils::to_int(program_enum::u_light_range), light.get_range());
         prog.uniform_value(utils::to_int(program_enum::u_light_pos),
                            scene::get_position(light.get_node()));
 
@@ -138,12 +141,13 @@ void process_forward::visit(const model & sm, scene::scene & scene)
             program_.uniform_value(utils::to_int(program_enum::u_map_normal), 2);
         }
 
-        const math::mat4 & world = camera->get_view() * node->get_world_matrix();
+        const math::mat4 & mv = camera->get_view() * node->get_world_matrix();
         const math::mat4 & projection = camera->get_projection();
-        program_.uniform_value(utils::to_int(program_enum::u_matrix_mvp), projection * world);
-        program_.uniform_value(utils::to_int(program_enum::u_matrix_world), world);
+        program_.uniform_value(utils::to_int(program_enum::u_matrix_mvp), projection * mv);
+        program_.uniform_value(utils::to_int(program_enum::u_matrix_model_view), mv);
+        program_.uniform_value(utils::to_int(program_enum::u_matrix_view), camera->get_view());
         program_.uniform_value(utils::to_int(program_enum::u_matrix_normal),
-                               math::transpose(math::inverse(math::mat3(world))));
+                               math::transpose(math::inverse(math::mat3(mv))));
 
         EPS_STATE_INDICES(geometry.get_indices());
         glDrawElements(GL_TRIANGLES, geometry.get_indices_count(), GL_UNSIGNED_SHORT, 0);

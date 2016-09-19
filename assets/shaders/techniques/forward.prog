@@ -8,7 +8,8 @@
             attribute vec2 a_vertex_uv;
 
             uniform mat4 u_matrix_mvp;
-            uniform mat4 u_matrix_world;
+            uniform mat4 u_matrix_model_view;
+            uniform mat4 u_matrix_view;
             uniform mat3 u_matrix_normal;
 
             uniform vec3 u_light_pos;
@@ -35,9 +36,9 @@
 
                 mat3 tbn = fn_tbn_matrix();
 
-                v_light = tbn * u_light_pos;
-                v_camera = tbn * u_camera_pos;
-                v_pos = tbn * vec3(u_matrix_world * vec4(a_vertex_pos, 1.0));
+                v_light = tbn * vec3(u_matrix_view * vec4(u_light_pos, 1.0));
+                v_camera = tbn * vec3(u_matrix_view * vec4(u_camera_pos, 1.0));
+                v_pos = tbn * vec3(u_matrix_model_view * vec4(a_vertex_pos, 1.0));
             }
         ]]></vertex>
 
@@ -51,6 +52,7 @@
             uniform vec3 u_light_diffuse;
             uniform vec3 u_light_specular;
             uniform vec3 u_light_ambient;
+            uniform float u_light_range;
 
             varying vec2 v_uv;
             varying vec3 v_light;
@@ -59,25 +61,45 @@
 
             const float shininess = 32.0;
 
-            vec4 fn_lighting(vec3 normal, vec3 vertex, vec3 camera, vec3 light)
+            float fn_attenuation(float range, float distance)
+            {
+                return 1.0 - smoothstep(range * 0.75, range, distance);
+            }
+
+            vec4 fn_diffuse_light(vec3 color, vec3 normal, vec3 lightdir)
+            {
+                float diff = max(dot(lightdir, normal), 0.0);
+                return vec4(color, 1.0) * diff;
+            }
+
+            vec4 fn_specular_light(vec3 color, vec3 normal, vec3 lightdir, vec3 viewdir)
+            {
+                vec3 halfwaydir = normalize(lightdir + viewdir);
+                float spec = pow(max(dot(normal, halfwaydir), 0.0), shininess);
+                return vec4(color, 1.0) * spec;
+            }
+
+            vec4 fn_point_light(vec3 normal, vec3 vertex, vec3 camera, vec3 light)
             {
                 vec3 lightdir = normalize(light - vertex);
-                vec3 cameradir = normalize(camera - vertex);
-                vec3 halfwaydir = normalize(lightdir + cameradir);
+                vec3 viewdir = normalize(camera - vertex);
 
-                float diff = max(dot(lightdir, normal), 0.0);
-                float spec = pow(max(dot(normal, halfwaydir), 0.0), shininess);
+                float attenuation = fn_attenuation(u_light_range, length(light - vertex));
 
+                vec4 diff_color = fn_diffuse_light(u_light_diffuse, normal, lightdir);
+                vec4 spec_color = fn_specular_light(u_light_specular, normal, lightdir, viewdir);
+                vec4 ambi_color = vec4(u_light_ambient, 1.0);
                 vec4 color = texture2D(u_map_diffuse, v_uv);
-                return vec4(u_light_diffuse, 1.0) * diff * color +
-                       vec4(u_light_specular, 1.0) * spec * texture2D(u_map_specular, v_uv) +
-                       vec4(u_light_ambient, 1.0) * color;
+
+                return diff_color * color  * attenuation+
+                       spec_color * texture2D(u_map_specular, v_uv) * attenuation +
+                       ambi_color * color;
             }
 
             void main()
             {
                 vec3 normal = normalize(texture2D(u_map_normal, v_uv).rgb * 2.0 - 1.0);
-                gl_FragColor = fn_lighting(normal, v_pos, v_camera, v_light);
+                gl_FragColor = fn_point_light(normal, v_pos, v_camera, v_light);
             }
 
         ]]></fragment>
@@ -92,16 +114,18 @@
 
     <u_locations>
         <location name="u_matrix_mvp" index="0"/>
-        <location name="u_matrix_world" index="1"/>
+        <location name="u_matrix_model_view" index="1"/>
         <location name="u_matrix_normal" index="2"/>
-        <location name="u_camera_pos" index="3"/>
-        <location name="u_map_diffuse" index="4"/>
-        <location name="u_map_specular" index="5"/>
-        <location name="u_map_normal" index="6"/>
-        <location name="u_light_pos" index="7"/>
-        <location name="u_light_diffuse" index="8"/>
-        <location name="u_light_specular" index="9"/>
-        <location name="u_light_ambient" index="10"/>
+        <location name="u_matrix_view" index="3"/>
+        <location name="u_camera_pos" index="4"/>
+        <location name="u_map_diffuse" index="5"/>
+        <location name="u_map_specular" index="6"/>
+        <location name="u_map_normal" index="7"/>
+        <location name="u_light_pos" index="8"/>
+        <location name="u_light_diffuse" index="9"/>
+        <location name="u_light_specular" index="10"/>
+        <location name="u_light_ambient" index="11"/>
+        <location name="u_light_range" index="12"/>
     </u_locations>
 
 </program>

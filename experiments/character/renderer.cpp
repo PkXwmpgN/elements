@@ -65,6 +65,8 @@ bool renderer::initialize()
     if(light.expired())
         return false;
 
+    light.lock()->set_range(100.0f);
+
     modifier_light_ = scene_->add_node_modifier<scene::modifier_positioning>(node);
     if(modifier_light_.expired())
         return false;

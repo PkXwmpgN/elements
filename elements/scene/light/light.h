@@ -64,6 +64,13 @@ public:
 public:
 
     using light::light;
+
+    void  set_range(float range) { range_ = range; }
+    float get_range() const { return range_; }
+
+private:
+
+    float range_ = 1.0f;
 };
 
 } /* scene */
