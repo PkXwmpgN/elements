@@ -21,17 +21,18 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef RENDERING_MODELS_PROCESS_FORWARD_H_INCLUDED
-#define RENDERING_MODELS_PROCESS_FORWARD_H_INCLUDED
+#ifndef RENDERING_TECHNIQUES_FORWARD_PROCESS_H_INCLUDED
+#define RENDERING_TECHNIQUES_FORWARD_PROCESS_H_INCLUDED
 
 #include "rendering/core/program.h"
+#include "rendering/models/model.h"
 #include "scene/scene.h"
-#include "model.h"
 
 namespace eps {
 namespace rendering {
+namespace techniques {
 
-class process_forward : public scene::visitor<process_forward, scene::scene &>
+class forward_process : public scene::visitor<forward_process, scene::scene &>
 {
 public:
 
@@ -47,7 +48,8 @@ private:
     program program_;
 };
 
+} /* techniques */
 } /* rendering */
 } /* eps */
 
-#endif // RENDERING_MODELS_PROCESS_FORWARD_H_INCLUDED
+#endif // RENDERING_TECHNIQUES_FORWARD_PROCESS_H_INCLUDED

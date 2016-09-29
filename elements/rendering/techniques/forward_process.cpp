@@ -22,8 +22,8 @@ IN THE SOFTWARE.
 */
 
 
-#include "process_forward.h"
-#include "model_warehouse.h"
+#include "forward_process.h"
+#include "rendering/models/model_warehouse.h"
 #include "rendering/state/state_macro.h"
 #include "rendering/utils/program_loader.h"
 #include "math/matrix.h"
@@ -31,6 +31,7 @@ IN THE SOFTWARE.
 
 namespace eps {
 namespace rendering {
+namespace techniques {
 
 enum class program_enum : short
 {
@@ -55,7 +56,7 @@ enum class program_enum : short
     u_light_range = 12
 };
 
-struct process_lights : public scene::visitor<process_lights, program&>
+struct lights_process : public scene::visitor<lights_process, program&>
 {
 public:
 
@@ -76,12 +77,12 @@ public:
     }
 };
 
-bool process_forward::initialize()
+bool forward_process::initialize()
 {
     return load_program("assets/shaders/techniques/forward.prog", program_);
 }
 
-void process_forward::visit(const model & sm, scene::scene & scene)
+void forward_process::visit(const model & sm, scene::scene & scene)
 {
     auto node = sm.get_node().lock();
     assert(node);
@@ -94,7 +95,7 @@ void process_forward::visit(const model & sm, scene::scene & scene)
 
     EPS_STATE_PROGRAM(program_.get_product());
 
-    process_lights process;
+    lights_process process;
     scene.process_lights(process, program_);
 
     program_.uniform_value(utils::to_int(program_enum::u_camera_pos),
@@ -154,5 +155,7 @@ void process_forward::visit(const model & sm, scene::scene & scene)
     }
 }
 
+
+} /* techniques */
 } /* rendering */
 } /* eps */

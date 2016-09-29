@@ -25,8 +25,8 @@ IN THE SOFTWARE.
 #define ELEMENTS_TECHNIQUES_FORWARD_H_INCLUDED
 
 #include "rendering/passes/pass_base.h"
-#include "rendering/models/process_forward.h"
 #include "scene/scene.h"
+#include "forward_process.h"
 
 namespace eps {
 namespace rendering {
@@ -47,7 +47,7 @@ public:
 
 private:
 
-    process_forward process_;
+    forward_process process_;
     utils::pointer<scene::scene> scene_;
 };
 
