@@ -40,19 +40,12 @@ public:
 
     using entity::entity;
 
-    void set_diffuse(const math::vec3 & diffuse) { diffuse_ = diffuse; }
-    void set_specular(const math::vec3 & specular) { specular_ = specular; }
-    void set_ambient(const math::vec3 & ambient) { ambient_ = ambient; }
-
-    const math::vec3 & get_diffuse() const { return diffuse_; }
-    const math::vec3 & get_specular() const { return specular_; }
-    const math::vec3 & get_ambient() const { return ambient_; }
+    void set_intensity(const math::vec3 & intensity) { intensity_ = intensity; }
+    const math::vec3 & get_intensity() const { return intensity_; }
 
 private:
 
-    math::vec3 diffuse_  = math::vec3(1.0f, 1.0f, 1.0f);
-    math::vec3 specular_ = math::vec3(1.0f, 1.0f, 1.0f);
-    math::vec3 ambient_  = math::vec3(0.5f, 0.5f, 0.5f);
+    math::vec3 intensity_  = math::vec3(1.0f, 1.0f, 1.0f);
 };
 
 class light_point : public light

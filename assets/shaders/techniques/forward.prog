@@ -49,9 +49,7 @@
             uniform sampler2D u_map_specular;
             uniform sampler2D u_map_normal;
 
-            uniform vec3 u_light_diffuse;
-            uniform vec3 u_light_specular;
-            uniform vec3 u_light_ambient;
+            uniform vec3 u_light_intensity;
             uniform float u_light_range;
 
             varying vec2 v_uv;
@@ -86,14 +84,12 @@
 
                 float attenuation = fn_attenuation(u_light_range, length(light - vertex));
 
-                vec4 diff_color = fn_diffuse_light(u_light_diffuse, normal, lightdir);
-                vec4 spec_color = fn_specular_light(u_light_specular, normal, lightdir, viewdir);
-                vec4 ambi_color = vec4(u_light_ambient, 1.0);
+                vec4 diff_color = fn_diffuse_light(u_light_intensity, normal, lightdir);
+                vec4 spec_color = fn_specular_light(u_light_intensity, normal, lightdir, viewdir);
                 vec4 color = texture2D(u_map_diffuse, v_uv);
 
-                return diff_color * color  * attenuation+
-                       spec_color * texture2D(u_map_specular, v_uv) * attenuation +
-                       ambi_color * color;
+                return diff_color * color  * attenuation +
+                       spec_color * texture2D(u_map_specular, v_uv) * attenuation;
             }
 
             void main()
@@ -122,10 +118,8 @@
         <location name="u_map_specular" index="6"/>
         <location name="u_map_normal" index="7"/>
         <location name="u_light_pos" index="8"/>
-        <location name="u_light_diffuse" index="9"/>
-        <location name="u_light_specular" index="10"/>
-        <location name="u_light_ambient" index="11"/>
-        <location name="u_light_range" index="12"/>
+        <location name="u_light_intensity" index="9"/>
+        <location name="u_light_range" index="10"/>
     </u_locations>
 
 </program>

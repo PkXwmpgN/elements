@@ -50,10 +50,8 @@ enum class program_enum : short
     u_map_specular = 6,
     u_map_normal = 7,
     u_light_pos = 8,
-    u_light_diffuse = 9,
-    u_light_specular = 10,
-    u_light_ambient = 11,
-    u_light_range = 12
+    u_light_intensity = 9,
+    u_light_range = 10
 };
 
 struct lights_process : public scene::visitor<lights_process, program&>
@@ -66,9 +64,7 @@ public:
 
     void visit(const scene::light_point & light, program & prog)
     {
-        prog.uniform_value(utils::to_int(program_enum::u_light_diffuse), light.get_diffuse());
-        prog.uniform_value(utils::to_int(program_enum::u_light_specular), light.get_specular());
-        prog.uniform_value(utils::to_int(program_enum::u_light_ambient), light.get_ambient());
+        prog.uniform_value(utils::to_int(program_enum::u_light_intensity), light.get_intensity());
         prog.uniform_value(utils::to_int(program_enum::u_light_range), light.get_range());
         prog.uniform_value(utils::to_int(program_enum::u_light_pos),
                            scene::get_position(light.get_node()));
