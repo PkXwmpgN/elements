@@ -43,7 +43,9 @@ class pass_target_placement
 public:
 
     void initialize(size_t place_count);
-    void construct(const math::uvec2 & size);
+    void construct(const math::uvec2 & size,
+                   const product_type & depth,
+                   const product_type & stencil);
 
     void register_target(size_t place, utils::unique<pass_target> target);
     void register_dependency(size_t place, size_t dependency,

@@ -30,6 +30,13 @@ IN THE SOFTWARE.
 namespace eps {
 namespace rendering {
 
+enum class construction_flag : uint8_t
+{
+    nothing,
+    depth,
+    depth_stencil
+};
+
 class pass_base;
 
 class pass_composition
@@ -37,6 +44,7 @@ class pass_composition
 public:
 
     pass_composition();
+    void initialize(size_t places_count);
 
     template<typename _Pass>
     utils::link<_Pass> add_pass()
@@ -75,8 +83,7 @@ public:
         add_dependency(target, dependency, input, pass_slot::slot_0);
     }
 
-    void initialize(size_t places_count);
-    void construct(const math::uvec2 & size);
+    void construct(const math::uvec2 & size, construction_flag flag = construction_flag::nothing);
     void process(float dt);
 
 private:

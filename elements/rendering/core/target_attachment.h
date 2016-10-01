@@ -31,6 +31,7 @@ enum class attachment
 {
     color0,
     depth,
+    stencil,
     MAX
 };
 

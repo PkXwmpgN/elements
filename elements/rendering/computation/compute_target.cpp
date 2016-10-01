@@ -60,5 +60,11 @@ void compute_target::swap()
     target_.swap();
 }
 
+void compute_target::attach_depth(texture)
+{}
+
+void compute_target::attach_stencil(texture)
+{}
+
 } /* rendering */
 } /* eps */

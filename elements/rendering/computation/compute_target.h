@@ -42,6 +42,9 @@ public:
 
     void swap() final;
 
+    void attach_depth(texture buffer) final;
+    void attach_stencil(texture buffer) final;
+
 private:
 
     target_buffered target_;

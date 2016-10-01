@@ -24,6 +24,7 @@ IN THE SOFTWARE.
 #include "pass_composition.h"
 #include "pass_base.h"
 #include "rendering/state/state_macro.h"
+#include "rendering/core/texture_policy.h"
 
 namespace eps {
 namespace rendering {
@@ -37,13 +38,30 @@ void pass_composition::initialize(size_t places_count)
     placement_->initialize(places_count);
 }
 
-void pass_composition::construct(const math::uvec2 & size)
+void pass_composition::construct(const math::uvec2 & size, construction_flag flag)
 {
     placement_->clear_targets();
 
+    product_type shared_depth;
+    product_type shared_stencil;
+
+    if(flag == construction_flag::depth)
+    {
+        auto maker = get_texture_maker<depth24_texture_policy>();
+        shared_depth = maker.construct(nullptr, size).release();
+    }
+    else if(flag == construction_flag::depth_stencil)
+    {
+        auto maker = get_texture_maker<depth24_stencil8_texture_policy>();
+        auto product = maker.construct(nullptr, size).release();
+        shared_depth = product;
+        shared_stencil = product;
+    }
+
     for(auto & pass : passes_)
         placement_->register_target(pass->get_place(), pass->construct(size));
-    placement_->construct(size);
+
+    placement_->construct(size, shared_depth, shared_stencil);
 }
 
 void pass_composition::process(float dt)

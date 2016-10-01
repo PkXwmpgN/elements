@@ -36,6 +36,8 @@ class texture
 public:
 
     explicit texture(const math::uvec2 & size);
+    texture(const product_type & product, const math::uvec2 & size);
+
     ~texture();
 
     texture() = default;
@@ -48,6 +50,7 @@ public:
     const math::uvec2 & get_size() const;
 
     bool valid() const;
+    product_type release();
 
 private:
 

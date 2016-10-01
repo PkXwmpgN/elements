@@ -32,6 +32,11 @@ texture::texture(const math::uvec2 & size)
     glGenTextures(1, utils::ptr_product(product_));
 }
 
+texture::texture(const product_type & product, const math::uvec2 & size)
+    : product_(product)
+    , size_(size)
+{}
+
 texture::~texture()
 {
     if(!product_.invalid())
@@ -51,6 +56,11 @@ const math::uvec2 & texture::get_size() const
 bool texture::valid() const
 {
     return !product_.invalid() && size_.x > 0 && size_.y > 0;
+}
+
+product_type texture::release()
+{
+    return std::move(product_);
 }
 
 } /* rendering */

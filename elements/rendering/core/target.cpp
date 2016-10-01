@@ -39,7 +39,12 @@ target::~target()
 
 bool target::attach(attachment id, texture data)
 {
-    static enum_type gl_attachments[] = { GL_COLOR_ATTACHMENT0, GL_DEPTH_ATTACHMENT };
+    static enum_type gl_attachments[] =
+    {
+        GL_COLOR_ATTACHMENT0,
+        GL_DEPTH_ATTACHMENT,
+        GL_STENCIL_ATTACHMENT
+    };
 
     attachments_[utils::to_int(id)] = std::move(data);
 

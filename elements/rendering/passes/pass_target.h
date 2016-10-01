@@ -39,7 +39,11 @@ public:
     virtual const product_type & get_product(const pass_slot & slot) const = 0;
     virtual const product_type & get_target() const = 0;
     virtual const math::uvec2 &  get_target_size() const = 0;
+
     virtual void swap() = 0;
+
+    virtual void attach_depth(texture buffer) = 0;
+    virtual void attach_stencil(texture buffer) = 0;
 
     virtual ~pass_target() {}
 };
@@ -55,6 +59,9 @@ public:
     const math::uvec2 &  get_target_size() const final;
 
     void swap() final;
+
+    void attach_depth(texture buffer) final;
+    void attach_stencil(texture buffer) final;
 
 private:
 

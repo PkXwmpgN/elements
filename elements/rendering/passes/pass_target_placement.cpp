@@ -57,7 +57,9 @@ void pass_target_placement::initialize(size_t count)
     }
 }
 
-void pass_target_placement::construct(const math::uvec2 & size)
+void pass_target_placement::construct(const math::uvec2 & size,
+                                      const product_type & depth,
+                                      const product_type & stencil)
 {
     auto queue = make_ttl_queue<ttl_target>([](const auto & l, const auto & r)
     {
@@ -92,6 +94,14 @@ void pass_target_placement::construct(const math::uvec2 & size)
                 links_[i] = link;
                 queue.push({std::distance(std::begin(dependencies_), it.base()), i});
             }
+        }
+
+        if(auto target = links_[i].lock())
+        {
+            if(!depth.invalid())
+                target->attach_depth(texture(depth, size));
+            if(!stencil.invalid())
+                target->attach_stencil(texture(stencil, size));
         }
     }
 }
