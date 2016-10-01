@@ -29,12 +29,14 @@ IN THE SOFTWARE.
 #include "scene/entity/materials.h"
 #include "scene/entity/mesh.h"
 #include "scene/graph/node.h"
+#include "utils/std/optional.h"
 
 #include <vector>
 #include <unordered_map>
 
 struct aiMesh;
 struct aiMaterial;
+struct aiLight;
 
 namespace eps {
 
@@ -79,6 +81,31 @@ public:
 
     using mmap = std::unordered_map<std::string, std::vector<material>>;
 
+    struct light
+    {
+        explicit light(const aiLight * light);
+
+        float get_attenuation_c() const { return attenuation_c_; }
+        float get_attenuation_l() const { return attenuation_l_; }
+        float get_attenuation_q() const { return attenuation_q_; }
+
+        const math::vec3 & get_intensity() const { return intensity_; }
+
+    private:
+
+        void load_light(const aiLight * light);
+
+    private:
+
+        float attenuation_c_ = 1.0f;
+        float attenuation_l_ = 0.0f;
+        float attenuation_q_ = 0.5f;
+
+        math::vec3 intensity_;
+    };
+
+    using lmap = std::unordered_map<std::string, light>;
+
 public:
 
     using asset::asset;
@@ -90,6 +117,7 @@ public:
 
     const std::vector<geometry> & get_node_geometry(const std::string & name) const;
     const std::vector<material> & get_node_material(const std::string & name) const;
+    utils::optional<light> get_node_light(const std::string & name) const;
 
 private:
 
@@ -97,6 +125,7 @@ private:
 
     gmap geometry_;
     mmap material_;
+    lmap lights_;
 };
 
 } /* eps */

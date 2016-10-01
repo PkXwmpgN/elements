@@ -32,9 +32,17 @@ IN THE SOFTWARE.
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
+#include <assimp/light.h>
 #include <assimp/postprocess.h>
 #include <assimp/IOStream.hpp>
 #include <assimp/IOSystem.hpp>
+
+#include <android/log.h>
+
+#define  LOG_TAG  "Elements"
+#define  LOGI(...) __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
+#define  LOGE(...) __android_log_print(ANDROID_LOG_ERROR,LOG_TAG,__VA_ARGS__)
+
 
 namespace eps {
 
@@ -229,6 +237,48 @@ private:
     std::string path_;
 };
 
+class light_loader
+{
+public:
+
+    explicit light_loader(const aiScene * scene)
+        : scene_(scene)
+    {}
+
+    asset_model::lmap load() const
+    {
+        asset_model::lmap lights;
+        load(scene_->mRootNode, lights);
+        return lights;
+    }
+
+private:
+
+    void load(const aiNode * source, asset_model::lmap & lights) const
+    {
+        if(const aiLight * light = find_light(source->mName.data))
+            lights.insert({source->mName.data, asset_model::light(light)});
+
+        for(size_t i = 0; i < source->mNumChildren; ++i)
+            load(source->mChildren[i], lights);
+    }
+
+    const aiLight * find_light(const std::string & name) const
+    {
+        for(size_t i = 0; i < scene_->mNumLights; ++i)
+        {
+            if(name == scene_->mLights[i]->mName.data)
+                return scene_->mLights[i];
+        }
+
+        return nullptr;
+    }
+
+private:
+
+    const aiScene * scene_;
+};
+
 asset_model::geometry::geometry(const aiMesh * mesh)
 {
     assert(mesh != nullptr);
@@ -328,6 +378,19 @@ void asset_model::material::load_material(const aiMaterial * material, const std
         material_.set_color(scene::material::type_color::ambient, math::vec3(color.r, color.g, color.b));
 }
 
+asset_model::light::light(const aiLight * light)
+{
+    load_light(light);
+}
+
+void asset_model::light::load_light(const aiLight * light)
+{
+    intensity_ = math::vec3(light->mColorDiffuse.r, light->mColorDiffuse.g, light->mColorDiffuse.b);
+    attenuation_c_ = light->mAttenuationConstant;
+    attenuation_l_ = light->mAttenuationLinear;
+    attenuation_q_ = light->mAttenuationQuadratic;
+}
+
 utils::pointer<scene::node> asset_model::get_hierarchy() const
 {
     return hierarchy_;
@@ -349,6 +412,12 @@ const std::vector<asset_model::material> &
 
     auto it = material_.find(name);
     return it != material_.end() ? it->second : empty;
+}
+
+utils::optional<asset_model::light> asset_model::get_node_light(const std::string & name) const
+{
+    auto it = lights_.find(name);
+    return it != lights_.end() ? utils::optional<light>(it->second) : utils::optional<light>();
 }
 
 bool asset_model::load(utils::link<io::system> fs, const std::string & resource)
@@ -374,6 +443,9 @@ bool asset_model::load(utils::link<io::system> fs, const std::string & resource)
 
     material_loader mloader(scene, io::parent_path(get_resource()));
     material_ = mloader.load();
+
+    light_loader lloader(scene);
+    lights_ = lloader.load();
 
     return true;
 }

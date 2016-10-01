@@ -24,6 +24,7 @@ IN THE SOFTWARE.
 #include "process_load_model.h"
 #include "model_warehouse.h"
 #include "model.h"
+#include "math/common.h"
 
 namespace eps {
 namespace rendering {
@@ -50,6 +51,34 @@ void process_load_model::operator()(scene::node & node, const asset_model & asse
         scene_->add_node_entity<model>(node.shared_from_this(),
                                        std::move(meshes),
                                        std::move(warehouse));
+    }
+
+    if(auto light = asset.get_node_light(node.get_name()))
+    {
+        if(auto pl = scene_->add_node_light<scene::light_point>(node.shared_from_this()).lock())
+        {
+            const float luminance_min = 0.05f;
+            const float luminance_max = 1.0f;
+
+            const float a = light->get_attenuation_q();
+            const float b = light->get_attenuation_l();
+            const float c = light->get_attenuation_c() - luminance_max / luminance_min;
+
+            float range = 1.0f;
+            if(math::equal(a, 0.0f))
+            {
+                if(!math::equal(b, 0.0f))
+                    range = -c / b;
+            }
+            else
+            {
+                const float d = b * b - 4 * a * c;
+                range = (d >= 0.0f) ? (-b + math::sqrt(d)) / (2.0f * a) : -b / (2.0f * a);
+            }
+
+            pl->set_intensity(light->get_intensity());
+            pl->set_range(range);
+        }
     }
 }
 
