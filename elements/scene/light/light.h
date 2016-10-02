@@ -41,11 +41,15 @@ public:
     using entity::entity;
 
     void set_intensity(const math::vec3 & intensity) { intensity_ = intensity; }
+    void set_enabled(bool enable) { enabled_ = enable; }
+
     const math::vec3 & get_intensity() const { return intensity_; }
+    bool get_enabled() const { return enabled_; }
 
 private:
 
-    math::vec3 intensity_  = math::vec3(1.0f, 1.0f, 1.0f);
+    math::vec3 intensity_ = math::vec3(1.0f, 1.0f, 1.0f);
+    bool enabled_ = true;
 };
 
 class light_point : public light
