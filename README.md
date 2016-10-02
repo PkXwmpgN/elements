@@ -3,6 +3,7 @@ OpenGL ES 2.0 and C++ experiments.
 
 ###Contents
 * [Experiments](#experiments)
+ * [Deferred Lighting](#deferred-lighting)
  * [Liquid Simulation](#liquid-simulation)
  * [Light Scattered](#light-scattered)
  * [Strange Attractors](#strange-attractors)
@@ -14,6 +15,12 @@ OpenGL ES 2.0 and C++ experiments.
 -----------------------
 
 ##Experiments
+
+###Deferred Lighting
+![Deferred Lighting](https://raw.githubusercontent.com/PkXwmpgN/elements/master/screenshots/Demo.jpeg)
+
+- Sources experiments/demo
+- Preview into [the YouTube](https://youtu.be/GXV0x_QblWg)
 
 ###Liquid Simulation 
 ![Liquid Simulation](https://raw.githubusercontent.com/PkXwmpgN/elements/master/screenshots/liquid.jpeg)
