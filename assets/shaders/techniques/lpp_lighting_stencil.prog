@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<program name="lpp_lighting_stencil">
+    <shaders>
+        <vertex><![CDATA[
+            attribute vec3 a_vertex_pos;
+            uniform mat4 u_matrix_mvp;
+
+            void main()
+            {
+                gl_Position = u_matrix_mvp * vec4(a_vertex_pos, 1.0);
+            }
+        ]]></vertex>
+
+        <fragment><![CDATA[
+            precision lowp float;
+
+            void main()
+            {
+
+            }
+
+        ]]></fragment>
+    </shaders>
+
+    <a_locations>
+        <location name="a_vertex_pos" index="0"/>
+    </a_locations>
+
+    <u_locations>
+        <location name="u_matrix_mvp" index="0"/>
+    </u_locations>
+
+</program>

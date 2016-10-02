@@ -38,6 +38,11 @@ struct state_sampler;
 struct state_vertices;
 struct state_indices;
 struct state_program;
+struct state_depth_mask;
+struct state_color_mask;
+struct state_cullface;
+template<GLenum _State>
+struct state_enable;
 
 template<>
 struct state_traits<state_viewport>
@@ -190,6 +195,86 @@ struct state_traits<state_program>
     static void set(const product_type & product)
     {
         glUseProgram(utils::raw_product(product));
+    }
+};
+
+template<>
+struct state_traits<state_depth_mask>
+{
+    using value_type = GLboolean;
+
+    static void init(value_type & result)
+    {
+        result = GL_TRUE;
+    }
+
+    static void restore(const value_type & value)
+    {
+        glDepthMask(value);
+    }
+
+    static void set()
+    {
+        glDepthMask(GL_FALSE);
+    }
+};
+
+template<>
+struct state_traits<state_color_mask>
+{
+    using value_type = GLboolean;
+
+    static void init(value_type & result)
+    {
+        result = GL_TRUE;
+    }
+
+    static void restore(const value_type & value)
+    {
+        glColorMask(value, value, value, value);
+    }
+
+    static void set()
+    {
+        glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+    }
+};
+
+template<>
+struct state_traits<state_cullface>
+{
+    using value_type = GLint;
+
+    static void init(value_type & result)
+    {
+        glGetIntegerv(GL_CULL_FACE_MODE, &result);
+    }
+
+    static void restore(const value_type & value)
+    {
+        glCullFace(value);
+    }
+
+    static void set(GLenum value)
+    {
+        glCullFace(value);
+    }
+};
+
+template<GLenum _State>
+struct state_traits<state_enable<_State>>
+{
+    using value_type = GLenum;
+
+    static void init(value_type &) {}
+    static void restore(const value_type &)
+    {
+        glDisable(_State);
+    }
+
+    static void set()
+    {
+        glEnable(_State);
     }
 };
 

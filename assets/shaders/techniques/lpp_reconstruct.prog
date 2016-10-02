@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<program name="reconstruct">
+    <shaders>
+        <vertex><![CDATA[
+            attribute vec3 a_vertex_pos;
+            attribute vec2 a_vertex_uv;
+
+            uniform mat4 u_matrix_mvp;
+
+            varying vec4 v_pos;
+            varying vec2 v_uv;
+
+            void main()
+            {
+                v_pos = u_matrix_mvp * vec4(a_vertex_pos, 1.0);
+                v_uv = a_vertex_uv;
+                gl_Position = v_pos;
+            }
+        ]]></vertex>
+
+        <fragment><![CDATA[
+            precision lowp float;
+
+            uniform sampler2D u_map_light;
+            uniform sampler2D u_map_diffuse;
+            uniform sampler2D u_map_specular;
+
+            uniform bool u_has_map_diffuse;
+            uniform bool u_has_map_specular;
+            uniform vec3 u_color_diffuse;
+            uniform vec3 u_color_specular;
+
+            varying vec4 v_pos;
+            varying vec2 v_uv;
+
+            vec2 fn_get_uv(vec4 pos)
+            {
+                return (pos.xy / pos.w) * 0.5 + 0.5;
+            }
+
+            vec4 fn_get_color_diff(vec2 uv)
+            {
+                vec4 result;
+                if(u_has_map_diffuse)
+                    result = texture2D(u_map_diffuse, v_uv);
+                else
+                    result = vec4(u_color_diffuse, 1.0);
+                return result;
+            }
+
+            vec4 fn_get_color_spec(vec2 uv)
+            {
+                vec4 result;
+                if(u_has_map_specular)
+                    result = texture2D(u_map_specular, v_uv);
+                else
+                    result = vec4(u_color_specular, 1.0);
+                return result;
+            }
+
+            void main()
+            {
+                vec4 color_diff = fn_get_color_diff(v_uv);
+                vec4 color_spec = fn_get_color_spec(v_uv);
+
+                vec4 color_light = texture2D(u_map_light, fn_get_uv(v_pos));
+
+                vec4 color = vec4(color_light.rgb, 1.0);
+                gl_FragColor = color_diff * color +
+                               color_spec * (color * color_light.a);
+            }
+
+        ]]></fragment>
+    </shaders>
+
+    <a_locations>
+        <location name="a_vertex_pos" index="0"/>
+        <location name="a_vertex_uv" index="1"/>
+    </a_locations>
+
+    <u_locations>
+        <location name="u_matrix_mvp" index="0"/>
+        <location name="u_map_light" index="1"/>
+        <location name="u_map_diffuse" index="2"/>
+        <location name="u_map_specular" index="3"/>
+        <location name="u_has_map_diffuse" index="4"/>
+        <location name="u_has_map_specular" index="5"/>
+        <location name="u_color_diffuse" index="6"/>
+        <location name="u_color_specular" index="7"/>
+    </u_locations>
+
+</program>

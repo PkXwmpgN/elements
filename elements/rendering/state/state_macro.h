@@ -47,6 +47,11 @@ IN THE SOFTWARE.
 #define EPS_STATE_VERTICES(...) __STATE_BASE__(eps::rendering::state_vertices, __VA_ARGS__);
 #define EPS_STATE_INDICES(...) __STATE_BASE__(eps::rendering::state_indices, __VA_ARGS__);
 #define EPS_STATE_PROGRAM(...) __STATE_BASE__(eps::rendering::state_program, __VA_ARGS__);
-
+#define EPS_STATE_DEPTH_TEST(...) __STATE_BASE__(eps::rendering::state_enable<GL_DEPTH_TEST>, __VA_ARGS__);
+#define EPS_STATE_DEPTH_READONLY(...) __STATE_BASE__(eps::rendering::state_depth_mask, __VA_ARGS__);
+#define EPS_STATE_COLOR_READONLY(...) __STATE_BASE__(eps::rendering::state_color_mask, __VA_ARGS__);
+#define EPS_STATE_STENCIL_TEST(...) __STATE_BASE__(eps::rendering::state_enable<GL_STENCIL_TEST>, __VA_ARGS__);
+#define EPS_STATE_CULLFACE(...) __STATE_BASE__(eps::rendering::state_enable<GL_CULL_FACE>, __VA_ARGS__);
+#define EPS_STATE_CULLFACE_MODE(...) __STATE_BASE__(eps::rendering::state_cullface, __VA_ARGS__);
 
 #endif // RENDERING_STATE_STATE_MACRO_H_INCLUDED

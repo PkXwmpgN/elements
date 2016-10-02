@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<program name="lpp_lighting">
+    <shaders>
+        <vertex><![CDATA[
+            attribute vec3 a_vertex_pos;
+
+            uniform mat4 u_matrix_mvp;
+
+            varying vec4 v_pos;
+
+            void main()
+            {
+                v_pos = u_matrix_mvp * vec4(a_vertex_pos, 1.0);
+                gl_Position = v_pos;
+            }
+        ]]></vertex>
+
+        <fragment><![CDATA[
+            precision highp float;
+
+            uniform float u_camera_near;
+            uniform float u_camera_far;
+            uniform vec2  u_camera_view_param;
+
+            uniform float u_light_inv_range_square;
+            uniform vec3  u_light_intensity;
+            uniform vec3  u_light_pos;
+
+            uniform sampler2D u_map_geometry;
+            uniform sampler2D u_map_depth;
+
+            varying vec4 v_pos;
+
+            const float shininess = 32.0;
+
+            float fn_get_attenuation(vec3 pos)
+            {
+                vec3 direction = u_light_pos - pos;
+                float value = dot(direction, direction) * u_light_inv_range_square;
+                return 1.0 - clamp(value, 0.0, 1.0);
+            }
+
+            float fn_get_linearize_depth(float depth)
+            {
+                return 2.0 * u_camera_near * u_camera_far /
+                       (u_camera_far + u_camera_near -
+                       (depth * 2.0 - 1.0) * (u_camera_far - u_camera_near));
+            }
+
+            vec2 fn_get_uv(vec4 pos)
+            {
+                return (pos.xy / pos.w) * 0.5 + 0.5;
+            }
+
+            vec3 fn_get_view_normal(vec2 uv)
+            {
+                return texture2D(u_map_geometry, uv).xyz * 2.0 - 1.0;
+            }
+
+            vec3 fn_get_view_pos(vec2 uv)
+            {
+                float depth = texture2D(u_map_depth, uv).x;
+                depth = fn_get_linearize_depth(depth);
+                return vec3(u_camera_view_param * (uv * 2.0 - 1.0) * depth, -depth);
+            }
+
+            void main()
+            {
+                vec2 uv = fn_get_uv(v_pos);
+                vec3 normal = fn_get_view_normal(uv);
+                vec3 pos = fn_get_view_pos(uv);
+                float attenuation = fn_get_attenuation(pos);
+
+                vec3 lightdir = normalize(u_light_pos - pos);
+                float diff = dot(lightdir, normal) * attenuation;
+
+                vec3 halfwaydir = normalize(lightdir - pos);
+                float spec = pow(max(dot(normal, halfwaydir), 0.0), shininess);
+
+                gl_FragColor = vec4(u_light_intensity * diff, spec * diff);
+            }
+
+        ]]></fragment>
+    </shaders>
+
+    <a_locations>
+        <location name="a_vertex_pos" index="0"/>
+    </a_locations>
+
+    <u_locations>
+        <location name="u_matrix_mvp" index="0"/>
+        <location name="u_camera_view_param" index="1"/>
+        <location name="u_camera_near" index="2"/>
+        <location name="u_camera_far" index="3"/>
+        <location name="u_map_geometry" index="4"/>
+        <location name="u_map_depth" index="5"/>
+        <location name="u_light_pos" index="6"/>
+        <location name="u_light_intensity" index="7"/>
+        <location name="u_light_inv_range_square" index="8"/>
+    </u_locations>
+
+</program>

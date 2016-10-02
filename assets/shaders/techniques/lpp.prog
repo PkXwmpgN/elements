@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<program name="deferred">
+    <shaders>
+        <vertex><![CDATA[
+            attribute vec3 a_vertex_pos;
+            attribute vec3 a_vertex_normal;
+            attribute vec3 a_vertex_tangent;
+            attribute vec2 a_vertex_uv;
+
+            uniform mat4 u_matrix_mvp;
+            uniform mat4 u_matrix_model_view;
+            uniform mat4 u_matrix_view;
+            uniform mat3 u_matrix_normal;
+
+            uniform vec3 u_light_pos;
+            uniform vec3 u_camera_pos;
+
+            varying vec2 v_uv;
+            varying vec3 v_light;
+            varying vec3 v_camera;
+            varying vec3 v_pos;
+
+            mat3 fn_tbn_matrix()
+            {
+                vec3 T = normalize(u_matrix_normal * a_vertex_tangent);
+                vec3 N = normalize(u_matrix_normal * a_vertex_normal);
+                T = normalize(T - dot(T, N) * N);
+                vec3 B = cross(T, N);
+                return mat3(T, B, N);
+            }
+
+            void main()
+            {
+                gl_Position = u_matrix_mvp * vec4(a_vertex_pos, 1.0);
+                v_uv = a_vertex_uv;
+
+                mat3 tbn = fn_tbn_matrix();
+
+                v_light = tbn * vec3(u_matrix_view * vec4(u_light_pos, 1.0));
+                v_camera = tbn * vec3(u_matrix_view * vec4(u_camera_pos, 1.0));
+                v_pos = tbn * vec3(u_matrix_model_view * vec4(a_vertex_pos, 1.0));
+            }
+        ]]></vertex>
+
+        <fragment><![CDATA[
+            precision lowp float;
+
+            uniform sampler2D u_map_diffuse;
+            uniform sampler2D u_map_specular;
+            uniform sampler2D u_map_normal;
+
+            uniform vec3 u_light_diffuse;
+            uniform vec3 u_light_specular;
+            uniform vec3 u_light_ambient;
+            uniform float u_light_range;
+
+            varying vec2 v_uv;
+            varying vec3 v_light;
+            varying vec3 v_camera;
+            varying vec3 v_pos;
+
+            const float shininess = 32.0;
+
+            float fn_attenuation(float range, float distance)
+            {
+                return 1.0 - smoothstep(range * 0.75, range, distance);
+            }
+
+            vec4 fn_diffuse_light(vec3 color, vec3 normal, vec3 lightdir)
+            {
+                float diff = max(dot(lightdir, normal), 0.0);
+                return vec4(color, 1.0) * diff;
+            }
+
+            vec4 fn_specular_light(vec3 color, vec3 normal, vec3 lightdir, vec3 viewdir)
+            {
+                vec3 halfwaydir = normalize(lightdir + viewdir);
+                float spec = pow(max(dot(normal, halfwaydir), 0.0), shininess);
+                return vec4(color, 1.0) * spec;
+            }
+
+            vec4 fn_point_light(vec3 normal, vec3 vertex, vec3 camera, vec3 light)
+            {
+                vec3 lightdir = normalize(light - vertex);
+                vec3 viewdir = normalize(camera - vertex);
+
+                float attenuation = fn_attenuation(u_light_range, length(light - vertex));
+
+                vec4 diff_color = fn_diffuse_light(u_light_diffuse, normal, lightdir);
+                vec4 spec_color = fn_specular_light(u_light_specular, normal, lightdir, viewdir);
+                vec4 ambi_color = vec4(u_light_ambient, 1.0);
+                vec4 color = texture2D(u_map_diffuse, v_uv);
+
+                return diff_color * color  * attenuation+
+                       spec_color * texture2D(u_map_specular, v_uv) * attenuation +
+                       ambi_color * color;
+            }
+
+            void main()
+            {
+                vec3 normal = normalize(texture2D(u_map_normal, v_uv).rgb * 2.0 - 1.0);
+                gl_FragColor = fn_point_light(normal, v_pos, v_camera, v_light);
+            }
+
+        ]]></fragment>
+    </shaders>
+
+    <a_locations>
+        <location name="a_vertex_pos" index="0"/>
+        <location name="a_vertex_normal" index="1"/>
+        <location name="a_vertex_tangent" index="2"/>
+        <location name="a_vertex_uv" index="3"/>
+    </a_locations>
+
+    <u_locations>
+        <location name="u_matrix_mvp" index="0"/>
+        <location name="u_matrix_model_view" index="1"/>
+        <location name="u_matrix_normal" index="2"/>
+        <location name="u_matrix_view" index="3"/>
+        <location name="u_camera_pos" index="4"/>
+        <location name="u_map_diffuse" index="5"/>
+        <location name="u_map_specular" index="6"/>
+        <location name="u_map_normal" index="7"/>
+        <location name="u_light_pos" index="8"/>
+        <location name="u_light_diffuse" index="9"/>
+        <location name="u_light_specular" index="10"/>
+        <location name="u_light_ambient" index="11"/>
+        <location name="u_light_range" index="12"/>
+    </u_locations>
+
+</program>
