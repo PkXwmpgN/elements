@@ -29,7 +29,9 @@ IN THE SOFTWARE.
 #include "entity/entity.h"
 #include "modifier/modifier.h"
 #include "light/light.h"
+#include <cassert>
 #include <list>
+#include <unordered_map>
 
 namespace eps {
 namespace scene {
@@ -68,17 +70,28 @@ public:
     void process_lights(_Visitor & visitor, _Args&&... args)
     {
         for(auto & entry : lights_)
-            visitor(*entry, std::forward<_Args>(args)...);
+            if(entry.second->get_enabled())
+                visitor(*entry.second, std::forward<_Args>(args)...);
+    }
+
+    template<typename _Visitor, typename... _Args>
+    void process_light(const std::string & name, _Visitor & visitor, _Args&&... args)
+    {
+        auto it = lights_.find(name);
+        if(it != lights_.end())
+            visitor(*it->second, std::forward<_Args>(args)...);
     }
 
     utils::link<camera> get_camera() const;
+
 
 private:
 
     std::list<utils::pointer<modifier>> modifiers_;
     std::list<utils::pointer<entity>> entities_;
-    std::list<utils::pointer<camera>> cameras_;
-    std::list<utils::pointer<light>> lights_;
+
+    std::unordered_map<std::string, utils::pointer<camera>> cameras_;
+    std::unordered_map<std::string, utils::pointer<light>> lights_;
 
     utils::pointer<node> root_;
 };
@@ -102,17 +115,25 @@ utils::link<_Modifier> scene::add_node_modifier(const utils::link<node> & sn, _A
 template<typename _Camera, typename... _Args>
 utils::link<_Camera> scene::add_node_camera(const utils::link<node> & sn, _Args&& ...args)
 {
+    auto pnode = sn.lock();
+    assert(pnode);
+
     auto sc = utils::make_shared<_Camera>(sn, std::forward<_Args>(args)...);
-    cameras_.push_back(sc);
+    cameras_[pnode->get_name()] = sc;
+
     return sc;
 }
 
 template<typename _Light, typename... _Args>
 utils::link<_Light> scene::add_node_light(const utils::link<node> & sn, _Args&& ...args)
 {
-    auto sc = utils::make_shared<_Light>(sn, std::forward<_Args>(args)...);
-    lights_.push_back(sc);
-    return sc;
+    auto pnode = sn.lock();
+    assert(pnode);
+
+    auto sl = utils::make_shared<_Light>(sn, std::forward<_Args>(args)...);
+    lights_[pnode->get_name()] = sl;
+
+    return sl;
 }
 
 } /* scene */

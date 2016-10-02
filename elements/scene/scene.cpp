@@ -36,7 +36,7 @@ utils::link<camera> scene::get_camera() const
     // default the first
 
     if(cameras_.size())
-        return cameras_.front();
+        return std::begin(cameras_)->second;
 
     return utils::link<camera>();
 }
@@ -50,8 +50,22 @@ void scene::update(float dt)
 
         modifiers_.remove_if(dead);
         entities_.remove_if(dead);
-        cameras_.remove_if(dead);
-        lights_.remove_if(dead);
+
+        for(auto it = begin(cameras_); it != end(cameras_);)
+        {
+            if(dead(it->second))
+                it = cameras_.erase(it);
+            else
+                ++it;
+        }
+
+        for(auto it = begin(lights_); it != end(lights_);)
+        {
+            if(dead(it->second))
+                it = lights_.erase(it);
+            else
+                ++it;
+        }
     }
 
     // 2. process local matrices
