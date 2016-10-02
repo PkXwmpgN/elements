@@ -21,44 +21,45 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef UI_CONTROLS_BUTTON_H_INCLUDED
-#define UI_CONTROLS_BUTTON_H_INCLUDED
+#include "check.h"
+#include "ui/system.h"
 
-#include <functional>
+namespace eps { namespace ui {
 
-#include "ui/control.h"
-#include "rendering/core/texture.h"
-#include "rendering/core/program.h"
-#include "rendering/primitives/square.h"
-
-namespace eps {
-namespace ui {
-
-class button : public control
+bool check::touch(int x, int y, touch_action action, touch_finger finger)
 {
-public:
+    system * sys = get_system();
 
-    explicit button(control * parent = nullptr);
+    math::vec2 pos = global_position();
 
-    void draw() override;
-    bool touch(int x, int y, touch_action action, touch_finger finger) override;
+    if((pos.x < x && x < pos.x + get_size().x &&
+       (pos.y < y && y < pos.y + get_size().y)))
+    {
+        if(action == touch_action::DOWN)
+        {
+            sys->capture(this, finger);
+            return true;
+        }
+        else if(action == touch_action::UP)
+        {
+            if(state_ == state::PRESSED)
+                state_ = state::NONE;
+            else if(state_ == state::NONE)
+                state_ = state::PRESSED;
 
-    bool set_asset(const char * asset);
-    void set_click(const std::function<void(state)> & handler);
+            if(click_)
+                click_(state_);
+        }
+    }
 
-protected:
-
-    std::function<void(state)> click_;
-
-    rendering::program program_face_;
-    rendering::texture texture_face_;
-
-    rendering::primitive::square square_;
-
-    state state_;
-};
+    if(sys->capture_test(this, finger))
+    {
+        if(action == touch_action::UP)
+            sys->capture_release(finger);
+        return true;
+    }
+    return false;
+}
 
 } /* ui */
 } /* eps */
-
-#endif // UI_BUTTON_H_INCLUDED

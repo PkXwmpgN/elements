@@ -57,6 +57,12 @@ enum class valignment : short
     BOTTOM
 };
 
+enum class state
+{
+    NONE = 0,
+    PRESSED
+};
+
 } /* ui */
 } /* eps */
 

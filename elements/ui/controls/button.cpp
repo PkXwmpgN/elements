@@ -69,7 +69,7 @@ bool button::set_asset(const char * asset)
     return false;
 }
 
-void button::set_click(const std::function<void()> & handler)
+void button::set_click(const std::function<void(state)> & handler)
 {
     click_ = handler;
 }
@@ -117,7 +117,7 @@ bool button::touch(int x, int y, touch_action action, touch_finger finger)
         else if(action == touch_action::UP)
         {
             if(click_)
-                click_();
+                click_(state_);
         }
     }
 

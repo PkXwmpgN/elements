@@ -21,12 +21,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef UI_CONTROLS_BUTTON_H_INCLUDED
-#define UI_CONTROLS_BUTTON_H_INCLUDED
+#ifndef UI_CONTROLS_CHECK_H_INCLUDED
+#define UI_CONTROLS_CHECK_H_INCLUDED
 
 #include <functional>
 
-#include "ui/control.h"
+#include "button.h"
 #include "rendering/core/texture.h"
 #include "rendering/core/program.h"
 #include "rendering/primitives/square.h"
@@ -34,31 +34,15 @@ IN THE SOFTWARE.
 namespace eps {
 namespace ui {
 
-class button : public control
+class check : public button
 {
 public:
 
-    explicit button(control * parent = nullptr);
-
-    void draw() override;
+    using button::button;
     bool touch(int x, int y, touch_action action, touch_finger finger) override;
-
-    bool set_asset(const char * asset);
-    void set_click(const std::function<void(state)> & handler);
-
-protected:
-
-    std::function<void(state)> click_;
-
-    rendering::program program_face_;
-    rendering::texture texture_face_;
-
-    rendering::primitive::square square_;
-
-    state state_;
 };
 
 } /* ui */
 } /* eps */
 
-#endif // UI_BUTTON_H_INCLUDED
+#endif // UI_CONTROLS_CHECK_H_INCLUDED
