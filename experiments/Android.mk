@@ -32,6 +32,10 @@ ifeq ($(BUILD_CHARACTER), true)
 	EXPERIMETNS_FILES += $(wildcard $(LOCAL_PATH)/character/*.cpp)
 endif
 
+ifeq ($(BUILD_DEMO), true)
+	EXPERIMETNS_FILES += $(wildcard $(LOCAL_PATH)/demo/*.cpp)
+endif
+
 LOCAL_SRC_FILES := $(EXPERIMETNS_FILES:$(LOCAL_PATH)/%=%)
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/..
 LOCAL_EXPORT_C_INCLUDES := $(LOCAL_C_INCLUDES)

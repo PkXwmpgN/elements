@@ -1,5 +1,6 @@
 include ':Elements'
 include ':Preferences'
+include ':Demo'
 include ':LiquidWallpaper'
 include ':FireWallpaper'
 include ':AirWallpaper'
