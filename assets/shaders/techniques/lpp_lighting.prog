@@ -72,12 +72,12 @@
                 float attenuation = fn_get_attenuation(pos);
 
                 vec3 lightdir = normalize(u_light_pos - pos);
-                float diff = dot(lightdir, normal) * attenuation;
+                float nl = dot(normal, lightdir) * attenuation;
 
-                vec3 halfwaydir = normalize(lightdir - pos);
-                float spec = pow(max(dot(normal, halfwaydir), 0.0), shininess);
+                vec3 reflectdir = reflect(lightdir, normal);
+                float spec = pow(clamp(dot(normalize(pos), reflectdir), 0.0, 1.0), shininess);
 
-                gl_FragColor = vec4(u_light_intensity * diff, spec * diff);
+                gl_FragColor = vec4(u_light_intensity * nl, spec * nl);
             }
 
         ]]></fragment>
