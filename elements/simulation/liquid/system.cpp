@@ -30,6 +30,7 @@ IN THE SOFTWARE.
 
 #include <random>
 #include <vector>
+#include <algorithm>
 
 namespace eps {
 namespace simulation {
