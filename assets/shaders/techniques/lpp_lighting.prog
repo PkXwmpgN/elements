@@ -54,7 +54,7 @@
 
             vec3 fn_get_view_normal(vec2 uv)
             {
-                return texture2D(u_map_geometry, uv).xyz * 2.0 - 1.0;
+                return normalize(texture2D(u_map_geometry, uv).xyz * 2.0 - 1.0);
             }
 
             vec3 fn_get_view_pos(vec2 uv)
@@ -75,7 +75,7 @@
                 float nl = dot(normal, lightdir) * attenuation;
 
                 vec3 reflectdir = reflect(lightdir, normal);
-                float spec = pow(clamp(dot(normalize(pos), reflectdir), 0.0, 1.0), shininess);
+                float spec = pow(max(dot(normalize(pos), reflectdir), 0.0), shininess);
 
                 gl_FragColor = vec4(u_light_intensity * nl, spec * nl);
             }
