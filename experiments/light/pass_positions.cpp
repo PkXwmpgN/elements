@@ -71,7 +71,7 @@ bool pass_positions::initialize()
 
     using namespace rendering;
 
-    auto maker = get_texture_maker<repeat_texture_policy>(asset->format());
+    auto maker = get_texture_maker<repeat_texture_policy>();
     displacement_ = maker.construct(asset->pixels(), asset->size());
 
     return load_program("assets/shaders/experiments/light/positions_product_reset.prog",

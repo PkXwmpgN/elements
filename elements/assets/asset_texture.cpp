@@ -23,7 +23,6 @@ IN THE SOFTWARE.
 
 #include "asset_texture.h"
 #include "io/utils/file_guard.h"
-#include <GLES2/gl2.h>
 #include <png.h>
 #include <stdlib.h>
 #include <cassert>
@@ -39,35 +38,13 @@ static void read_png_data_callback(png_structp png_ptr,
     stream->read(raw_data, 1, read_length);
 }
 
-static unsigned int png_color_to_gl_color(int color_format)
-{
-    assert(color_format == PNG_COLOR_TYPE_GRAY ||
-           color_format == PNG_COLOR_TYPE_RGB_ALPHA ||
-           color_format == PNG_COLOR_TYPE_GRAY_ALPHA);
-
-    switch(color_format)
-    {
-        case PNG_COLOR_TYPE_GRAY:
-            return GL_LUMINANCE;
-        case PNG_COLOR_TYPE_RGB_ALPHA:
-            return GL_RGBA;
-        case PNG_COLOR_TYPE_GRAY_ALPHA:
-            return GL_LUMINANCE_ALPHA;
-    }
-
-    return 0;
-}
-
-
 asset_texture::asset_texture()
     : data_(nullptr, ::free)
-    , format_(0)
 {}
 
 asset_texture::asset_texture(const std::string & resource)
     : asset(resource)
     , data_(nullptr, ::free)
-    , format_(0)
 {}
 
 bool asset_texture::load(utils::link<io::system> fs, const std::string & resource)
@@ -153,7 +130,6 @@ bool asset_texture::load(utils::link<io::system> fs, const std::string & resourc
     png_destroy_read_struct(&png_ptr, &info_ptr, nullptr);
 
     data_ = utils::unique<void, void(*)(void*)>(raw_image, ::free);
-    format_ = png_color_to_gl_color(color_type);
     size_.x = width;
     size_.y = height;
 

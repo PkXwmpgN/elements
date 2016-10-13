@@ -80,7 +80,7 @@ bool pass_raymarching::initialize()
 
     using namespace rendering;
 
-    auto maker = get_texture_maker<repeat_texture_policy>(asset->format());
+    auto maker = get_texture_maker<repeat_texture_policy>();
     noise_ = maker.construct(asset->pixels(), asset->size());
 
     return load_program("assets/shaders/experiments/fire/raymarching.prog", program_);

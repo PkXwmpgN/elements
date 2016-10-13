@@ -60,7 +60,7 @@ bool pass_particles::set_background(const std::string & asset_name)
     {
         using namespace rendering;
 
-        auto maker = get_texture_maker<default_texture_policy>(asset->format());
+        auto maker = get_texture_maker<default_texture_policy>();
         background_ = maker.construct(asset->pixels(), asset->size());
 
         return true;

@@ -57,7 +57,7 @@ void model_warehouse::add_material(const scene::material & data)
             {
                 if(auto asset = assets_storage::instance().read<asset_texture>(name.value()))
                 {
-                    auto maker = get_texture_maker<repeat_texture_policy>(asset->format());
+                    auto maker = get_texture_maker<repeat_texture_policy>();
                     texture = maker.construct(asset->pixels(), asset->size());
                 }
             }

@@ -61,7 +61,7 @@ bool button::set_asset(const char * asset)
     {
         using namespace rendering;
 
-        auto maker = get_texture_maker<default_texture_policy>(face->format());
+        auto maker = get_texture_maker<default_texture_policy>();
         texture_face_ = maker.construct(face->pixels(), face->size());
         return true;
     }

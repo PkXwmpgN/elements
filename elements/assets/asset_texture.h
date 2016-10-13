@@ -44,16 +44,13 @@ public:
 
     const void * pixels() const { return data_.get(); }
     const math::uvec2 & size() const { return size_; }
-    unsigned int format() const { return format_; }
 
     bool load(utils::link<io::system> fs, const std::string & resource) final;
 
 private:
 
     utils::unique<void, void(*)(void*)> data_;
-
     math::uvec2 size_;
-    size_t format_;
 };
 
 
