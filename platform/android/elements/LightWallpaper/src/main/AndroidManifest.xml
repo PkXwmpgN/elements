@@ -18,7 +18,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
-        android:icon="@mipmap/liquid_wallpaper"
+        android:icon="@mipmap/light_wallpaper"
         android:label="@string/application_name"
         android:theme="@style/application_theme">
 
@@ -44,7 +44,7 @@
 
         <activity
             android:name=".LightWallpaperActivity"
-            android:icon="@mipmap/liquid_wallpaper"
+            android:icon="@mipmap/light_wallpaper"
             android:label="@string/application_name"
             android:theme="@android:style/Theme.NoDisplay">
             <intent-filter>
