@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <wallpaper xmlns:android="http://schemas.android.com/apk/res/android"
-           android:thumbnail="@mipmap/liquid_wallpaper"
+           android:thumbnail="@mipmap/light_wallpaper"
            android:settingsActivity="com.yegorov.alexey.elements.light.LightWallpaperSettings"/>
