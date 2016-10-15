@@ -160,7 +160,7 @@ bool renderer::initialize_scene()
 
     auto hierarchy = asset->get_hierarchy();
     scene_->get_root().lock()->attach_node(hierarchy);
-    hierarchy->process(rendering::process_load_model(scene_), std::cref(asset.value()));
+    hierarchy->process(rendering::process_load_model(scene_), asset.value());
 
     init_light_process iprocess;
     scene_->process_lights(iprocess, lights_);

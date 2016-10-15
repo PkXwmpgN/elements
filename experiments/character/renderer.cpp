@@ -143,7 +143,7 @@ bool renderer::set_model(const std::string & model)
     scene_->get_root().lock()->attach_node(node);
 
     // load entities to rendering
-    node->process(rendering::process_load_model(scene_), std::cref(asset.value()));
+    node->process(rendering::process_load_model(scene_), asset.value());
 
     model_ = node;
     return true;
