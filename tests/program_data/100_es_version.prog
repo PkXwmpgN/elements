@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<program name="100_es_version">
+    <shaders version="100_es">
+        <vertex><![CDATA[
+            // 100_es vertex
+        ]]></vertex>
+
+        <fragment><![CDATA[
+            // 100_es fragment
+        ]]></fragment>
+    </shaders>
+
+    <a_locations>
+    </a_locations>
+
+    <u_locations>
+    </u_locations>
+
+</program>

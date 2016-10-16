@@ -24,65 +24,10 @@ IN THE SOFTWARE.
 #ifndef RENDERING_UTILS_SHADER_PROGRAM_LOADER_H_INCLUDED
 #define RENDERING_UTILS_SHADER_PROGRAM_LOADER_H_INCLUDED
 
-#include <string>
-#include <vector>
-#include "utils/std/iterator_range.h"
-#include "assets/asset_xml.h"
-
 namespace eps {
 namespace rendering {
 
 class program;
-
-class program_data : public asset_xml
-{
-public:
-
-    struct location
-    {
-        location(const char * n, short ind)
-            : name(n)
-            , index(ind)
-        {}
-
-        const char * name;
-        short index;
-    };
-
-    using locations = std::vector<location>;
-    using locations_range = utils::iterator_range<typename locations::const_iterator>;
-
-public:
-
-    using asset_xml::asset_xml;
-
-    const char * v_shader() const { return v_shader_.c_str(); }
-    const char * f_shader() const { return f_shader_.c_str(); }
-
-    locations_range a_locations() const
-    {
-        return utils::make_range(attribute_locations_.begin(),
-                                 attribute_locations_.end());
-    }
-
-    locations_range u_locations() const
-    {
-        return utils::make_range(uniform_locations_.begin(),
-                                 uniform_locations_.end());
-    }
-
-private:
-
-    bool read(const pugi::xml_document & doc) final;
-
-private:
-
-    locations attribute_locations_;
-    locations uniform_locations_;
-
-    std::string v_shader_;
-    std::string f_shader_;
-};
 
 bool load_program(const char * program_asset, program & result);
 

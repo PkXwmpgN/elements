@@ -22,69 +22,15 @@ IN THE SOFTWARE.
 */
 
 #include "program_loader.h"
+#include "program_data.h"
 
 #include "rendering/core/shader.h"
 #include "rendering/core/program.h"
 
 #include "assets/assets_storage.h"
 
-#include <unordered_map>
-
 namespace eps {
 namespace rendering {
-
-const std::unordered_map<std::string, std::string> versions_map =
-{
-    {"100_es", "#version 100\n"},
-    {"300_es", "#version 300 es\n"},
-    {"310_es", "#version 310 es\n"}
-};
-const char * default_version_key = "100_es";
-
-bool program_data::read(const pugi::xml_document & doc)
-{
-    pugi::xml_node root_node = doc.child("program");
-    if(root_node.empty())
-        return false;
-
-    pugi::xml_node vertex_node = root_node.child("shaders").child("vertex");
-    if(vertex_node.text().empty())
-        return false;
-    pugi::xml_node fragment_node = root_node.child("shaders").child("fragment");
-    if(fragment_node.text().empty())
-        return false;
-
-    v_shader_.clear();
-    f_shader_.clear();
-
-    auto shader_node = root_node.child("shaders");
-    const char * key = shader_node.attribute("version").as_string(default_version_key);
-    auto it = versions_map.find(key);
-    if(it == versions_map.end())
-        return false;
-
-    v_shader_ += it->second;
-    v_shader_ += vertex_node.text().get();
-
-    f_shader_ += it->second;
-    f_shader_ += fragment_node.text().get();
-
-    pugi::xml_node a_locations_node = root_node.child("a_locations");
-    for(const auto & value : a_locations_node.children("location"))
-    {
-        attribute_locations_.emplace_back(value.attribute("name").value(),
-                                          value.attribute("index").as_int());
-    }
-
-    pugi::xml_node u_locations_node = root_node.child("u_locations");
-    for(const auto & value : u_locations_node.children("location"))
-    {
-        uniform_locations_.emplace_back(value.attribute("name").value(),
-                                        value.attribute("index").as_int());
-    }
-
-    return true;
-}
 
 bool load_program(const char * asset_program, program & result)
 {

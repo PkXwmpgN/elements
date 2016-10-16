@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<program name="asdasda_version">
+    <shaders version="asdasda">
+        <vertex><![CDATA[
+            // asdasda_version vertex
+        ]]></vertex>
+
+        <fragment><![CDATA[
+            // asdasda_version fragment
+        ]]></fragment>
+    </shaders>
+
+    <a_locations>
+    </a_locations>
+
+    <u_locations>
+    </u_locations>
+
+</program>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<program name="default_version">
+    <shaders>
+        <vertex><![CDATA[
+            // default vertex
+        ]]></vertex>
+
+        <fragment><![CDATA[
+            // default fragment
+        ]]></fragment>
+    </shaders>
+
+    <a_locations>
+    </a_locations>
+
+    <u_locations>
+    </u_locations>
+
+</program>
