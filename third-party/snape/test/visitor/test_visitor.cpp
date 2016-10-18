@@ -8,7 +8,7 @@ struct entity : snape::visitable<entity>
 {
 public:
 
-    DESIGN_VISITABLE();
+    SNAPE_VISITABLE();
 
 public:
 
@@ -30,7 +30,7 @@ struct geometry : entity
 {
 public:
 
-    DESIGN_VISITABLE();
+    SNAPE_VISITABLE();
 
 public:
 
@@ -41,7 +41,7 @@ struct model : geometry
 {
 public:
 
-    DESIGN_VISITABLE();
+    SNAPE_VISITABLE();
 
 public:
 
@@ -55,7 +55,7 @@ struct test_process_1 : test_process<test_process_1>
 {
 public:
 
-    DESIGN_VISIT(entity);
+    SNAPE_VISIT(entity);
 
 public:
 
@@ -69,7 +69,7 @@ struct test_process_2 : test_process<test_process_2>
 {
 public:
 
-    DESIGN_VISIT(entity, geometry);
+    SNAPE_VISIT(entity, geometry);
 
 public:
 
@@ -88,7 +88,7 @@ struct test_process_3 : test_process<test_process_3>
 {
 public:
 
-    DESIGN_VISIT(entity, geometry, model);
+    SNAPE_VISIT(entity, geometry, model);
 
 public:
 
@@ -112,7 +112,7 @@ struct test_process_counter : test_process<test_process_counter>
 {
 public:
 
-    DESIGN_VISIT(entity, geometry, model);
+    SNAPE_VISIT(entity, geometry, model);
 
 public:
     void visit(const entity &)
@@ -139,7 +139,7 @@ struct test_process_counter_1 : test_process<test_process_counter_1>
 {
 public:
 
-    DESIGN_VISIT(entity, geometry, model);
+    SNAPE_VISIT(entity, geometry, model);
 
 public:
 
@@ -154,7 +154,7 @@ public:
 int main()
 {
     std::vector<std::unique_ptr<entity>> entities;
-    
+
     entities.emplace_back(new entity(0));
     entities.emplace_back(new model(1));
     entities.emplace_back(new entity(2));
