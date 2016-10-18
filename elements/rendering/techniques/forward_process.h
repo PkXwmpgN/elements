@@ -32,20 +32,24 @@ namespace eps {
 namespace rendering {
 namespace techniques {
 
-class forward_process : public scene::visitor<forward_process, scene::scene &>
+class forward_process : public scene::visitor<forward_process>
 {
 public:
 
-    EPS_DESIGN_VISIT(model);
+    SNAPE_VISIT(model);
 
 public:
 
+    void process();
     bool initialize();
-    void visit(const model & m, scene::scene & scene);
+    void visit(const model & m);
+
+    void set_scene(const utils::pointer<scene::scene> & scene);
 
 private:
 
     program program_;
+    utils::pointer<scene::scene> scene_;
 };
 
 } /* techniques */

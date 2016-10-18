@@ -34,7 +34,7 @@ class light : public entity
 {
 public:
 
-    EPS_DESIGN_VISITABLE();
+    SNAPE_VISITABLE();
 
 public:
 
@@ -56,7 +56,7 @@ class light_point : public light
 {
 public:
 
-    EPS_DESIGN_VISITABLE();
+    SNAPE_VISITABLE();
 
 public:
 

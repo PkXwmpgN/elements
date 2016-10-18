@@ -35,7 +35,7 @@ class geometry : public entity
 {
 public:
 
-    EPS_DESIGN_VISITABLE();
+    SNAPE_VISITABLE();
 
 public:
 

@@ -36,23 +36,20 @@ bool lpp_lighting_pass::initialize()
 
 void lpp_lighting_pass::set_scene(const utils::pointer<scene::scene> & scene)
 {
-    scene_ = scene;
+    process_.set_scene(scene);
 }
 
 void lpp_lighting_pass::process(float)
 {
-    if(scene_)
-    {
-        glClearColor(0.0, 0.0, 0.0, 0.0);
-        glClear(GL_COLOR_BUFFER_BIT);
+    glClearColor(0.0, 0.0, 0.0, 0.0);
+    glClear(GL_COLOR_BUFFER_BIT);
 
-        EPS_STATE_STENCIL_TEST();
-        EPS_STATE_DEPTH_READONLY();
+    EPS_STATE_STENCIL_TEST();
+    EPS_STATE_DEPTH_READONLY();
 
-        process_.set_map_geometry(get_inputs().get_slot(pass_slot::slot_0));
-        process_.set_map_depth(get_inputs().get_slot(pass_slot::slot_1));
-        scene_->process_lights(process_, *scene_);
-    }
+    process_.set_map_geometry(get_inputs().get_slot(pass_slot::slot_0));
+    process_.set_map_depth(get_inputs().get_slot(pass_slot::slot_1));
+    process_.process();
 }
 
 } /* techniques */

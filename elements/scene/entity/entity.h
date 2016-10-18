@@ -25,16 +25,16 @@ IN THE SOFTWARE.
 #define SCENE_ENTITY_H_INCLUDED
 
 #include "scene/graph/node.h"
-#include "design/visitor.h"
+#include <snape/visitor.h>
 
 namespace eps {
 namespace scene {
 
-class entity : public design::visitable<entity>
+class entity : public snape::visitable<entity>
 {
 public:
 
-    EPS_DESIGN_VISITABLE();
+    SNAPE_VISITABLE();
 
 public:
 
@@ -55,8 +55,8 @@ private:
     utils::link<node> node_;
 };
 
-template<typename _Visitor, typename... _Args>
-using visitor = design::visitor<_Visitor, entity, _Args...>;
+template<typename _Visitor>
+using visitor = snape::visitor<_Visitor, snape::visitor_traits<entity>>;
 
 } /* scene */
 } /* eps */

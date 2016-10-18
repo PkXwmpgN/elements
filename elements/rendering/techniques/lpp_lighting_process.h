@@ -31,21 +31,23 @@ IN THE SOFTWARE.
 namespace eps {
 namespace rendering {
 
-class lpp_lighting_process : public scene::visitor<lpp_lighting_process, scene::scene &>
+class lpp_lighting_process : public scene::visitor<lpp_lighting_process>
 {
 public:
 
-    EPS_DESIGN_VISIT(scene::light_point);
+    SNAPE_VISIT(scene::light_point);
 
 public:
 
     lpp_lighting_process();
 
+    void process();
     bool initialize();
-    void visit(const scene::light_point & light, scene::scene & scene);
+    void visit(const scene::light_point & light);
 
     void set_map_geometry(const product_type & map) { map_geometry_ = map; }
     void set_map_depth(const product_type & map) { map_depth_ = map; }
+    void set_scene(const utils::pointer<scene::scene> & scene) { scene_ = scene; }
 
 private:
 
@@ -60,6 +62,8 @@ private:
 
     product_type map_geometry_;
     product_type map_depth_;
+
+    utils::pointer<scene::scene> scene_;
 };
 
 } /* rendering */

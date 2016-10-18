@@ -39,35 +39,49 @@ namespace eps {
 namespace experiment {
 namespace demo {
 
-struct init_light_process : public scene::visitor<init_light_process, std::set<std::string> &>
+struct init_light_process : public scene::visitor<init_light_process>
 {
 public:
 
-    EPS_DESIGN_VISIT(scene::light_point);
+    SNAPE_VISIT(scene::light_point);
 
 public:
 
-    void visit(const scene::light_point & light, std::set<std::string> & result)
+    const std::set<std::string> & get_lights() const { return lights_; }
+
+    void visit(const scene::light_point & light)
     {
         if(auto node = light.get_node().lock())
         {
-            result.insert(node->get_name());
+            lights_.insert(node->get_name());
         }
     }
+
+private:
+
+    std::set<std::string> lights_;
 };
 
-struct activate_light_process : public scene::visitor<activate_light_process, bool>
+struct activate_light_process : public scene::visitor<activate_light_process>
 {
 public:
 
-    EPS_DESIGN_VISIT(scene::light_point);
+    SNAPE_VISIT(scene::light_point);
 
 public:
 
-    void visit(scene::light_point & light, bool active)
+    explicit activate_light_process(bool activate)
+        : activate_(activate)
+    {}
+
+    void visit(scene::light_point & light)
     {
-        light.set_enabled(active);
+        light.set_enabled(activate_);
     }
+
+private:
+
+    bool activate_;
 };
 
 void renderer::modifier_polar::process(float dt)
@@ -163,10 +177,11 @@ bool renderer::initialize_scene()
     hierarchy->process(rendering::process_load_model(scene_), asset.value());
 
     init_light_process iprocess;
-    scene_->process_lights(iprocess, lights_);
+    scene_->process_lights(iprocess);
+    lights_ = iprocess.get_lights();
 
-    activate_light_process aprocess;
-    scene_->process_lights(aprocess, false);
+    activate_light_process aprocess(false);
+    scene_->process_lights(aprocess);
 
     return true;
 }
@@ -211,8 +226,8 @@ void renderer::activate_light(const std::string & name, bool activate)
 {
     if(scene_)
     {
-        activate_light_process process;
-        scene_->process_light(name, process, activate);
+        activate_light_process process(activate);
+        scene_->process_light(name, process);
     }
 }
 

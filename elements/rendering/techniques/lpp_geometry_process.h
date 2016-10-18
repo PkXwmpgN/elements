@@ -31,20 +31,24 @@ IN THE SOFTWARE.
 namespace eps {
 namespace rendering {
 
-class lpp_geometry_process : public scene::visitor<lpp_geometry_process, scene::scene &>
+class lpp_geometry_process : public scene::visitor<lpp_geometry_process>
 {
 public:
 
-    EPS_DESIGN_VISIT(model);
+    SNAPE_VISIT(model);
 
 public:
 
+    void process();
     bool initialize();
-    void visit(const model & m, scene::scene & scene);
+    void visit(const model & m);
+
+    void set_scene(const utils::pointer<scene::scene> & scene) { scene_ = scene; }
 
 private:
 
     program program_;
+    utils::pointer<scene::scene> scene_;
 };
 
 } /* rendering */

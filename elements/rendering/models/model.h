@@ -35,7 +35,7 @@ class model : public scene::geometry
 {
 public:
 
-    EPS_DESIGN_VISITABLE();
+    SNAPE_VISITABLE();
 
 public:
 

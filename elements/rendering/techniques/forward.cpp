@@ -34,13 +34,12 @@ bool forward::initialize()
 
 void forward::set_scene(const utils::pointer<scene::scene> & scene)
 {
-    scene_ = scene;
+    process_.set_scene(scene);
 }
 
 void forward::process(float)
 {
-    if(scene_)
-        scene_->process_entities(process_, *scene_);
+    process_.process();
 }
 
 

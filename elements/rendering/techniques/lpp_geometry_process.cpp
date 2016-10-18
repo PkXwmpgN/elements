@@ -50,12 +50,20 @@ bool lpp_geometry_process::initialize()
     return load_program("assets/shaders/techniques/lpp_geometry.prog", program_);
 }
 
-void lpp_geometry_process::visit(const model & sm, scene::scene & scene)
+void lpp_geometry_process::process()
 {
+    if(scene_)
+        scene_->process_entities(*this);
+}
+
+void lpp_geometry_process::visit(const model & sm)
+{
+    assert(scene_);
+
     auto node = sm.get_node().lock();
     assert(node);
 
-    auto camera = scene.get_camera().lock();
+    auto camera = scene_->get_camera().lock();
     assert(camera);
 
     auto warehouse = sm.get_warehouse().lock();

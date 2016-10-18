@@ -31,23 +31,26 @@ IN THE SOFTWARE.
 namespace eps {
 namespace rendering {
 
-class lpp_reconstruct_process : public scene::visitor<lpp_reconstruct_process, scene::scene &>
+class lpp_reconstruct_process : public scene::visitor<lpp_reconstruct_process>
 {
 public:
 
-    EPS_DESIGN_VISIT(model);
+    SNAPE_VISIT(model);
 
 public:
 
+    void process();
     bool initialize();
-    void visit(const model & m, scene::scene & scene);
+    void visit(const model & m);
 
     void set_map_light(const product_type & map) { map_light_ = map; }
+    void set_scene(const utils::pointer<scene::scene> & scene) { scene_ = scene; }
 
 private:
 
     program program_;
     product_type map_light_;
+    utils::pointer<scene::scene> scene_;
 };
 
 } /* rendering */

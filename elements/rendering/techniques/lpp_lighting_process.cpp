@@ -65,6 +65,12 @@ bool lpp_lighting_process::initialize()
            load_program("assets/shaders/techniques/lpp_lighting_stencil.prog", program_stencil_);
 }
 
+void lpp_lighting_process::process()
+{
+    if(scene_)
+        scene_->process_lights(*this);
+}
+
 void lpp_lighting_process::stencil(const math::mat4 & mvp)
 {
     EPS_STATE_DEPTH_TEST();
@@ -84,12 +90,14 @@ void lpp_lighting_process::stencil(const math::mat4 & mvp)
     glStencilFunc(GL_NOTEQUAL, 0, 0xFF);
 }
 
-void lpp_lighting_process::visit(const scene::light_point & light, scene::scene & scene)
+void lpp_lighting_process::visit(const scene::light_point & light)
 {
+    assert(scene_);
+
     auto node = light.get_node().lock();
     assert(node);
 
-    auto camera = scene.get_camera().lock();
+    auto camera = scene_->get_camera().lock();
     assert(camera);
 
     math::mat4 transform = camera->get_projection() * camera->get_view() * node->get_world_matrix() *

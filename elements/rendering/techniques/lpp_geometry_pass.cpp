@@ -36,21 +36,18 @@ bool lpp_geometry_pass::initialize()
 
 void lpp_geometry_pass::set_scene(const utils::pointer<scene::scene> & scene)
 {
-    scene_ = scene;
+    process_.set_scene(scene);
 }
 
 void lpp_geometry_pass::process(float)
 {
-    if(scene_)
-    {
-        EPS_STATE_DEPTH_TEST();
-        EPS_STATE_CULLFACE();
+    EPS_STATE_DEPTH_TEST();
+    EPS_STATE_CULLFACE();
 
-        glClearColor(0.0, 0.0, 0.0, 0.0);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClearColor(0.0, 0.0, 0.0, 0.0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        scene_->process_entities(process_, *scene_);
-    }
+    process_.process();
 }
 
 } /* techniques */

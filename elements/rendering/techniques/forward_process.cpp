@@ -54,23 +54,31 @@ enum class program_enum : short
     u_light_range = 10
 };
 
-struct lights_process : public scene::visitor<lights_process, program&>
+struct lights_process : public scene::visitor<lights_process>
 {
 public:
 
-    EPS_DESIGN_VISIT(scene::light_point);
+    SNAPE_VISIT(scene::light_point);
+
+    explicit lights_process(program * prog)
+        : program_(prog)
+    {}
 
 public:
 
-    void visit(const scene::light_point & light, program & prog)
+    void visit(const scene::light_point & light)
     {
-        prog.uniform_value(utils::to_int(program_enum::u_light_intensity), light.get_intensity());
-        prog.uniform_value(utils::to_int(program_enum::u_light_range), light.get_range());
-        prog.uniform_value(utils::to_int(program_enum::u_light_pos),
-                           scene::get_position(light.get_node()));
+        program_->uniform_value(utils::to_int(program_enum::u_light_intensity), light.get_intensity());
+        program_->uniform_value(utils::to_int(program_enum::u_light_range), light.get_range());
+        program_->uniform_value(utils::to_int(program_enum::u_light_pos),
+                                scene::get_position(light.get_node()));
 
         // TODO: process all lights
     }
+
+private:
+
+    program * program_ = nullptr;
 };
 
 bool forward_process::initialize()
@@ -78,12 +86,25 @@ bool forward_process::initialize()
     return load_program("assets/shaders/techniques/forward.prog", program_);
 }
 
-void forward_process::visit(const model & sm, scene::scene & scene)
+void forward_process::set_scene(const utils::pointer<scene::scene> & scene)
 {
+    scene_ = scene;
+}
+
+void forward_process::process()
+{
+    if(scene_)
+        scene_->process_entities(*this);
+}
+
+void forward_process::visit(const model & sm)
+{
+    assert(scene_);
+
     auto node = sm.get_node().lock();
     assert(node);
 
-    auto camera = scene.get_camera().lock();
+    auto camera = scene_->get_camera().lock();
     assert(camera);
 
     auto warehouse = sm.get_warehouse().lock();
@@ -91,8 +112,8 @@ void forward_process::visit(const model & sm, scene::scene & scene)
 
     EPS_STATE_PROGRAM(program_.get_product());
 
-    lights_process process;
-    scene.process_lights(process, program_);
+    lights_process process(&program_);
+    scene_->process_lights(process);
 
     program_.uniform_value(utils::to_int(program_enum::u_camera_pos),
                            scene::get_position(camera->get_node()));

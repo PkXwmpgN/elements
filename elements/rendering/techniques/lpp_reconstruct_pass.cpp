@@ -36,19 +36,16 @@ bool lpp_reconstruct_pass::initialize()
 
 void lpp_reconstruct_pass::set_scene(const utils::pointer<scene::scene> & scene)
 {
-    scene_ = scene;
+    process_.set_scene(scene);
 }
 
 void lpp_reconstruct_pass::process(float)
 {
-    if(scene_)
-    {
-        EPS_STATE_DEPTH_TEST();
-        EPS_STATE_CULLFACE();
-        
-        process_.set_map_light(get_inputs().get_slot(pass_slot::slot_0));
-        scene_->process_entities(process_, *scene_);
-    }
+    EPS_STATE_DEPTH_TEST();
+    EPS_STATE_CULLFACE();
+
+    process_.set_map_light(get_inputs().get_slot(pass_slot::slot_0));
+    process_.process();
 }
 
 

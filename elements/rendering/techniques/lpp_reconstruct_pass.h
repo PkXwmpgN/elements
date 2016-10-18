@@ -48,7 +48,6 @@ public:
 private:
 
     lpp_reconstruct_process process_;
-    utils::pointer<scene::scene> scene_;
 };
 
 } /* techniques */
