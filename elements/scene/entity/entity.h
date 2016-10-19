@@ -34,7 +34,7 @@ class entity : public snape::visitable<entity>
 {
 public:
 
-    SNAPE_VISITABLE();
+    SNAPE_VISITABLE(entity);
 
 public:
 

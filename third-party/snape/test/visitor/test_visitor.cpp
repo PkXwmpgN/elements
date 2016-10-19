@@ -8,7 +8,7 @@ struct entity : snape::visitable<entity>
 {
 public:
 
-    SNAPE_VISITABLE();
+    SNAPE_VISITABLE(entity);
 
 public:
 
@@ -30,7 +30,7 @@ struct geometry : entity
 {
 public:
 
-    SNAPE_VISITABLE();
+    SNAPE_VISITABLE(geometry);
 
 public:
 
@@ -41,7 +41,7 @@ struct model : geometry
 {
 public:
 
-    SNAPE_VISITABLE();
+    SNAPE_VISITABLE(model);
 
 public:
 

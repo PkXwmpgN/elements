@@ -16,7 +16,7 @@ struct entity : snape::visitable<entity>
 {
 public:
 
-    SNAPE_VISITABLE();
+    SNAPE_VISITABLE(entity);
 
     // something
 };
@@ -25,7 +25,7 @@ struct geometry : entity
 {
 public:
 
-    SNAPE_VISITABLE();
+    SNAPE_VISITABLE(geometry);
 
     // something      
 };
@@ -34,7 +34,7 @@ struct model : entity
 {
 public:
 
-    SNAPE_VISITABLE();
+    SNAPE_VISITABLE(model);
 
     // something      
 };
@@ -92,7 +92,7 @@ Iterate of three million items
 | :--- | :--- |
 | Cyclic visitor | 11.3 |
 | Acyclic visitor(RTTI) | 220.4 |
-| Snape's acyclic visitor | 18.2 |
+| Snape's acyclic visitor | 23.2 |
 
 -----------------
 ###Author

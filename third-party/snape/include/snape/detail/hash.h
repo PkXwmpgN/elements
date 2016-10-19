@@ -21,36 +21,29 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef RENDERING_MODELS_MODEL_H_INCLUDED
-#define RENDERING_MODELS_MODEL_H_INCLUDED
+#ifndef SNAPE_VISITOR_DETAIL_HASH_H_INCLUDED
+#define SNAPE_VISITOR_DETAIL_HASH_H_INCLUDED
 
-#include "scene/entity/geometry.h"
+#include <cstdint>
+#include <ctti/type_id.hpp>
 
-namespace eps {
-namespace rendering {
+namespace snape {
+namespace detail {
 
-class model_warehouse;
+    using hash_type = std::uint64_t;
 
-class model : public scene::geometry
-{
-public:
+    template<typename _Base, typename _Specific>
+    struct tag {};
 
-    SNAPE_VISITABLE(model);
+    template<typename _Base, typename _Specific>
+    inline constexpr hash_type get_hash()
+    {
+        using tag_type = tag<typename std::remove_cv<_Base>::type,
+                             typename std::remove_cv<_Specific>::type>;
+        return ctti::unnamed_type_id<tag_type>().hash();
+    }
 
-public:
+} /* detail */
+} /* snape */
 
-    model(const utils::link<scene::node> & parent,
-          const std::vector<scene::mesh> & meshes,
-          const utils::pointer<model_warehouse> & warehouse);
-
-    utils::link<model_warehouse> get_warehouse() const;
-
-private:
-
-    utils::pointer<model_warehouse> warehouse_;
-};
-
-} /* rendering */
-} /* eps */
-
-#endif // RENDERING_MODELS_MODEL_H_INCLUDED
+#endif // SNAPE_VISITOR_DETAIL_HASH_H_INCLUDED

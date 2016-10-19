@@ -34,7 +34,7 @@ class light : public entity
 {
 public:
 
-    SNAPE_VISITABLE();
+    SNAPE_VISITABLE(light);
 
 public:
 
@@ -56,7 +56,7 @@ class light_point : public light
 {
 public:
 
-    SNAPE_VISITABLE();
+    SNAPE_VISITABLE(light_point);
 
 public:
 

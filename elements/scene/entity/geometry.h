@@ -35,7 +35,7 @@ class geometry : public entity
 {
 public:
 
-    SNAPE_VISITABLE();
+    SNAPE_VISITABLE(geometry);
 
 public:
 
