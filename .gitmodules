@@ -1,0 +1,3 @@
+[submodule "third-party/snape"]
+	path = third-party/snape
+	url = git://github.com/PkXwmpgN/snape
