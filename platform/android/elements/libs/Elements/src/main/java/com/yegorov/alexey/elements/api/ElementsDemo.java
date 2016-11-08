@@ -4,7 +4,7 @@ public class ElementsDemo
 {
     static
     {
-        System.loadLibrary("elements");
+        System.loadLibrary("experiments");
     }
 
     public static native int create();

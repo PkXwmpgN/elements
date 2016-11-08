@@ -1,5 +1,3 @@
-import org.apache.tools.ant.taskdefs.condition.Os
-
 apply plugin: 'com.android.library'
 
 android {
@@ -11,12 +9,29 @@ android {
         targetSdkVersion 24
         versionCode 1
         versionName "2.0"
+
+        externalNativeBuild {
+            cmake {
+                arguments '-DANDROID_TOOLCHAIN=clang',
+                          '-DANDROID_STL=c++_static',
+                          '-DPLATFORM_ANDROID=TRUE',
+                          '-DEXPERIMENTS_DEMO=TRUE',
+                          '-DEXPERIMENTS_LIQUID=TRUE',
+                          '-DEXPERIMENTS_FIRE=TRUE',
+                          '-DEXPERIMENTS_LIGHT=TRUE',
+                          '-DEXPERIMENTS_AIR=TRUE',
+                          '-DEXPERIMENTS_CHARACTER=TRUE',
+                          '-DEXPERIMENTS_STRANGE=TRUE'
+            }
+        }
+        ndk {
+            abiFilters 'armeabi', 'armeabi-v7a', 'x86', 'x86_64'
+        }
     }
 
     sourceSets.main {
         jniLibs.srcDir 'src/main/libs'
-        jni.srcDirs = []
-        assets.srcDirs = ['src/main/assets', 'src/../../../../../../assets']
+        assets.srcDirs = ['src/main/assets', '../../../../../assets']
     }
 
     buildTypes {
@@ -25,36 +40,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-}
 
-tasks.withType(JavaCompile) {
-    compileTask -> compileTask.dependsOn nativeBuild
-}
-
-clean.dependsOn 'nativeClean'
-
-task nativeBuild(type: Exec) {
-    Properties properties = new Properties()
-    properties.load(project.rootProject.file('local.properties').newDataInputStream())
-    def ndkbuild = properties.getProperty('ndk.dir', null) + File.separator + "ndk-build"
-    if(Os.isFamily(Os.FAMILY_WINDOWS)) {
-        ndkbuild += ".cmd"
+    externalNativeBuild {
+        cmake {
+            path '../../../../../CMakeLists.txt'
+        }
     }
-    commandLine ndkbuild,
-            '-C', file('src/main/jni').absolutePath,
-            '-j', Runtime.runtime.availableProcessors()
-}
-
-task nativeClean(type: Exec) {
-    Properties properties = new Properties()
-    properties.load(project.rootProject.file('local.properties').newDataInputStream())
-    def ndkbuild = properties.getProperty('ndk.dir', null) + File.separator + "ndk-build"
-    if(Os.isFamily(Os.FAMILY_WINDOWS)) {
-        ndkbuild += ".cmd"
-    }
-    commandLine ndkbuild,
-            '-C', file('src/main/jni').absolutePath,
-            'clean'
 }
 
 dependencies {

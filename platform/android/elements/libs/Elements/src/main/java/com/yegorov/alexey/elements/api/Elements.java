@@ -8,7 +8,7 @@ public class Elements
 {
     static
     {
-        System.loadLibrary("elements");
+        System.loadLibrary("experiments");
     }
 
     public static native void initializeAssets(AssetManager manager);
