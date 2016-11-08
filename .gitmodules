@@ -11,3 +11,6 @@
 [submodule "third-party/pugixml"]
 	path = third-party/pugixml
 	url = git://github.com/PkXwmpgN/pugixml
+[submodule "third-party/freetype2"]
+	path = third-party/freetype2
+	url = git://git.sv.nongnu.org/freetype/freetype2.git

@@ -28,7 +28,7 @@ include $(BUILD_STATIC_LIBRARY)
 #-------------------------------------
 include $(CLEAR_VARS)
 
-FREETYPE_PATH := ../third-party/freetype-2.6.2
+FREETYPE_PATH := ../third-party/freetype2
 LOCAL_MODULE := freetype
 LOCAL_CFLAGS := -O3 -s -DNDEBUG -ffast-math -DFT2_BUILD_LIBRARY
 LOCAL_SRC_FILES := $(FREETYPE_PATH)/src/autofit/autofit.c \
