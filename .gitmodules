@@ -8,3 +8,6 @@
 	path = third-party/libpng
 	url = git://github.com/PkXwmpgN/libpng
 	branch = 1.6.26-gitignore
+[submodule "third-party/pugixml"]
+	path = third-party/pugixml
+	url = git://github.com/PkXwmpgN/pugixml
