@@ -1,3 +1,6 @@
 [submodule "third-party/snape"]
 	path = third-party/snape
 	url = git://github.com/PkXwmpgN/snape
+[submodule "third-party/assimp"]
+	path = third-party/assimp
+	url = git://github.com/PkXwmpgN/assimp

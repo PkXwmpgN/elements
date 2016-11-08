@@ -82,7 +82,7 @@ include $(BUILD_STATIC_LIBRARY)
 
 include $(CLEAR_VARS)
 
-ASSIMP_PATH := ../third-party/assimp-3.2
+ASSIMP_PATH := ../third-party/assimp
 LOCAL_MODULE := assimp
 LOCAL_CPP_FEATURES := exceptions rtti
 
@@ -90,7 +90,7 @@ ASSIMP_SRC_DIR := code
 
 FILE_LIST := $(wildcard $(LOCAL_PATH)/$(ASSIMP_PATH)/$(ASSIMP_SRC_DIR)/*.cpp)
 FILE_LIST += $(wildcard $(LOCAL_PATH)/$(ASSIMP_PATH)/contrib/openddlparser/code/*.cpp)
-#FILE_LIST += $(wildcard $(LOCAL_PATH)/$(ASSIMP_PATH)/contrib/unzip/*.c)
+FILE_LIST += $(wildcard $(LOCAL_PATH)/$(ASSIMP_PATH)/contrib/unzip/*.c)
 FILE_LIST += $(wildcard $(LOCAL_PATH)/$(ASSIMP_PATH)/contrib/poly2tri/poly2tri/*/*.cc)
 #FILE_LIST += $(LOCAL_PATH)/$(ASSIMP_PATH)/contrib/clipper/clipper.cpp
 FILE_LIST += $(LOCAL_PATH)/$(ASSIMP_PATH)/contrib/ConvertUTF/ConvertUTF.c
@@ -182,7 +182,8 @@ LOCAL_CFLAGS += $(ASSIMP_FLAGS_3_1) \
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/$(ASSIMP_PATH) \
 	$(LOCAL_PATH)/$(ASSIMP_PATH)/include \
     $(LOCAL_PATH)/$(ASSIMP_PATH)/$(ASSIMP_SRC_DIR)/BoostWorkaround \
-    $(LOCAL_PATH)/$(ASSIMP_PATH)/contrib/openddlparser/include
+    $(LOCAL_PATH)/$(ASSIMP_PATH)/contrib/openddlparser/include \
+	$(LOCAL_PATH)/$(ASSIMP_PATH)/contrib/rapidjson/include
 LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)/$(ASSIMP_PATH)/include \
     $(LOCAL_PATH)/$(ASSIMP_PATH)/$(ASSIMP_SRC_DIR)/BoostWorkaround
 
