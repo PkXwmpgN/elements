@@ -14,3 +14,6 @@
 [submodule "third-party/freetype2"]
 	path = third-party/freetype2
 	url = git://git.sv.nongnu.org/freetype/freetype2.git
+[submodule "third-party/glm"]
+	path = third-party/glm
+	url = git://github.com/PkXwmpgN/glm
