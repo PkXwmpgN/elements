@@ -554,9 +554,9 @@ if(EXPERIMENTS_SOURCE_FILES)
         target_link_libraries(experiments ${NDK_LIBRARY_ANDROID} elements atomic
             ${EXTERNAL_LIBRARIES} ${NDK_LIBRARY_GLSE2} ${NDK_LIBRARY_LOG})
         target_include_directories(experiments PRIVATE ${JNI_PATH})
-        target_compile_options(elements PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-std=c++14>)
-        target_compile_options(elements PUBLIC $<$<CONFIG:DEBUG>:-Wall -Wextra -Werror>)
-        target_compile_options(elements PUBLIC $<$<CONFIG:RELEASE>:-O3 -ffast-math -Wall -Wextra -Werror>)
+        target_compile_options(experiments PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-std=c++14>)
+        target_compile_options(experiments PUBLIC $<$<CONFIG:DEBUG>:-Wall -Wextra -Werror>)
+        target_compile_options(experiments PUBLIC $<$<CONFIG:RELEASE>:-O3 -ffast-math -Wall -Wextra -Werror>)
 
     endif()
 endif()
