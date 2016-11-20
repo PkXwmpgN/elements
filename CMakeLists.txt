@@ -527,7 +527,7 @@ if(EXPERIMENTS_SOURCE_FILES)
             list(APPEND EXPERIMENTS_SOURCE_FILES ${SOURCE_FILES})
         endif()
 
-        if(EXPERIMENTS_LIGHT)
+        if(EXPERIMENTS_DEMO)
             set(SOURCE_FILES
                 ${JNI_PATH}/demo/demo_jni.cpp
                 ${JNI_PATH}/demo/demo_renderer.h
