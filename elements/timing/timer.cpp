@@ -27,6 +27,10 @@ IN THE SOFTWARE.
 namespace eps {
 namespace timing {
 
+timer::timer(std::uint64_t reset)
+    : reset_(reset)
+{}
+
 void timer::start()
 {
     start_ = 0;
@@ -36,10 +40,10 @@ float timer::update()
 {
     using namespace std::chrono;
     const auto now = steady_clock::now().time_since_epoch();
-    if(start_ == 0)
-        start_ = duration_cast<milliseconds>(now).count();
 
-    unsigned long long current = duration_cast<milliseconds>(now).count();
+    std::uint64_t current = duration_cast<milliseconds>(now).count();
+    if(reset_ < current - start_)
+        start_ = duration_cast<milliseconds>(now).count();
 
     return (float)(current - start_) / 1000.0f;
 }

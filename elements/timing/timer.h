@@ -24,6 +24,8 @@ IN THE SOFTWARE.
 #ifndef TIMING_TIMER_H_INCLUDED
 #define TIMING_TIMER_H_INCLUDED
 
+#include <cstdint>
+
 namespace eps {
 namespace timing {
 
@@ -31,12 +33,15 @@ class timer
 {
 public:
 
+    explicit timer(std::uint64_t reset);
+
     void start();
     float update();
 
 private:
 
-    unsigned long long start_ = 0;
+    std::uint64_t start_ = 0;
+    std::uint64_t reset_ = 0;
 };
 
 } /* timing */

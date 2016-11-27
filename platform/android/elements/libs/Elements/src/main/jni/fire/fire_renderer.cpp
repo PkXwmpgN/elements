@@ -48,6 +48,7 @@ static eps::ui::touch_action ui_touch_action(int action)
 
 fire_renderer::fire_renderer(bool preview)
     : rate_(60)
+    , timer_(3600000)
     , preview_(preview)
 {}
 
