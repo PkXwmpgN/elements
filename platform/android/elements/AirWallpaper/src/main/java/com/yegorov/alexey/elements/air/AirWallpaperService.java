@@ -75,7 +75,7 @@ public class AirWallpaperService extends ElementsWallpaperService
             super.onDestroy();
         }
 
-        class AirRenderer implements GLSurfaceView.Renderer
+        class AirRenderer extends ElementsRenderer
         {
             private Air air;
 
@@ -85,13 +85,9 @@ public class AirWallpaperService extends ElementsWallpaperService
             }
 
             @Override
-            public void onSurfaceCreated(GL10 gl, EGLConfig config)
-            {
-            }
-
-            @Override
             public void onSurfaceChanged(GL10 gl, int w, int h)
             {
+                super.onSurfaceChanged(gl, w, h);
                 air.startup(w, h, quantity());
                 loadColors();
             }

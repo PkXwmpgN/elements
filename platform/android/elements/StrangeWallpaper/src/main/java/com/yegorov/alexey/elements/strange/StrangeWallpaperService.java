@@ -72,7 +72,7 @@ public class StrangeWallpaperService extends ElementsWallpaperService
             super.onDestroy();
         }
 
-        class StrangeRenderer implements GLSurfaceView.Renderer
+        class StrangeRenderer extends ElementsRenderer
         {
             private Strange strange;
 
@@ -82,13 +82,9 @@ public class StrangeWallpaperService extends ElementsWallpaperService
             }
 
             @Override
-            public void onSurfaceCreated(GL10 gl, EGLConfig config)
-            {
-            }
-
-            @Override
             public void onSurfaceChanged(GL10 gl, int w, int h)
             {
+                super.onSurfaceChanged(gl, w, h);
                 strange.startup(w, h, quantity());
                 loadColors();
             }

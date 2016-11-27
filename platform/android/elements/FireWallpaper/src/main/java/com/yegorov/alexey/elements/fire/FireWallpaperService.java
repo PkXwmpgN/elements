@@ -80,7 +80,7 @@ public class FireWallpaperService extends ElementsWallpaperService
             super.onDestroy();
         }
 
-        class FireRenderer implements GLSurfaceView.Renderer
+        class FireRenderer extends ElementsRenderer
         {
             private Fire fire;
 
@@ -90,13 +90,9 @@ public class FireWallpaperService extends ElementsWallpaperService
             }
 
             @Override
-            public void onSurfaceCreated(GL10 gl, EGLConfig config)
-            {
-            }
-
-            @Override
             public void onSurfaceChanged(GL10 gl, int w, int h)
             {
+                super.onSurfaceChanged(gl, w, h);
                 fire.startup(w, h, quality());
 
                 loadBackground();

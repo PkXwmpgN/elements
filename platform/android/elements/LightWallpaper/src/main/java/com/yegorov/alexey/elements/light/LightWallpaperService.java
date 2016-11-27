@@ -84,7 +84,7 @@ public class LightWallpaperService extends ElementsWallpaperService
             super.onDestroy();
         }
 
-        class LightRenderer implements GLSurfaceView.Renderer
+        class LightRenderer extends ElementsRenderer
         {
             private Light light;
 
@@ -94,13 +94,9 @@ public class LightWallpaperService extends ElementsWallpaperService
             }
 
             @Override
-            public void onSurfaceCreated(GL10 gl, EGLConfig config)
-            {
-            }
-
-            @Override
             public void onSurfaceChanged(GL10 gl, int w, int h)
             {
+                super.onSurfaceChanged(gl, w, h);
                 light.startup(w, h, quantity());
 
                 loadSurfaceBackground();

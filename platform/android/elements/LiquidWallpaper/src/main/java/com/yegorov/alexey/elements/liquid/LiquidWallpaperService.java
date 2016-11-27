@@ -116,7 +116,7 @@ public class LiquidWallpaperService extends ElementsWallpaperService
             super.onDestroy();
         }
 
-        class LiquidRenderer implements GLSurfaceView.Renderer
+        class LiquidRenderer extends ElementsRenderer
         {
             private Liquid liquid;
 
@@ -126,13 +126,10 @@ public class LiquidWallpaperService extends ElementsWallpaperService
             }
 
             @Override
-            public void onSurfaceCreated(GL10 gl, EGLConfig config)
-            {
-            }
-
-            @Override
             public void onSurfaceChanged(GL10 gl, int w, int h)
             {
+                super.onSurfaceChanged(gl, w, h);
+
                 liquid.startup(w, h, quality());
 
                 loadBackground();

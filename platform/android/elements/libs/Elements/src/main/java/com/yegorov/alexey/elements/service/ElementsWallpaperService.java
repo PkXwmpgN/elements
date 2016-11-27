@@ -10,10 +10,14 @@ import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLSurfaceView.Renderer;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.WindowManager;
 import com.yegorov.alexey.elements.api.Elements;
+
+import javax.microedition.khronos.egl.EGLConfig;
+import javax.microedition.khronos.opengles.GL10;
 
 public abstract class ElementsWallpaperService extends WallpaperService
 {
@@ -54,6 +58,20 @@ public abstract class ElementsWallpaperService extends WallpaperService
             public void onDestroy()
             {
                 onDetachedFromWindow();
+            }
+        }
+
+        public abstract class ElementsRenderer implements GLSurfaceView.Renderer
+        {
+            @Override
+            public void onSurfaceCreated(GL10 gl, EGLConfig config)
+            {
+            }
+
+            @Override
+            public void onSurfaceChanged(GL10 gl, int w, int h)
+            {
+                gl.glViewport(0, 0, w, h);
             }
         }
 

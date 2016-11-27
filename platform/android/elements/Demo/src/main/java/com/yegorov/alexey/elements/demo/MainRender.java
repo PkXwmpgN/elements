@@ -22,6 +22,7 @@ public class MainRender implements Renderer
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height)
     {
+        gl.glViewport(0, 0, width, height);
         demo.startup(width, height);
     }
 
