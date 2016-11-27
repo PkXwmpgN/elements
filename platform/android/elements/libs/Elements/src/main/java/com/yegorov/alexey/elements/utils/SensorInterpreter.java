@@ -3,6 +3,7 @@ package com.yegorov.alexey.elements.utils;
 import android.content.Context;
 import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
+import android.view.Display;
 import android.view.Surface;
 import android.view.WindowManager;
 
@@ -22,8 +23,15 @@ public class SensorInterpreter
 
     private float[] valuesTruncated;
 
+    private Context context;
+    private int rotation = Surface.ROTATION_0;
 
-    public float[] rotation(Context context, SensorEvent event)
+    public SensorInterpreter(Context context)
+    {
+        this.context = context;
+    }
+
+    public float[] rotation(SensorEvent event)
     {
         if(event == null)
             return null;
@@ -38,12 +46,6 @@ public class SensorInterpreter
         }
 
         SensorManager.getRotationMatrixFromVector(rotationMatrix, values);
-
-        final int rotation = ((WindowManager) context
-                .getSystemService(Context.WINDOW_SERVICE))
-                .getDefaultDisplay()
-                .getRotation();
-
         if(rotation == Surface.ROTATION_0)
         {
             SensorManager.getAngleChange(tiltVector, rotationMatrix, rotationMatrixTarget);
@@ -74,17 +76,12 @@ public class SensorInterpreter
         return tiltVector;
     }
 
-    public float[] accelerometer(Context context, SensorEvent event)
+    public float[] accelerometer(SensorEvent event)
     {
         if(event == null)
             return null;
 
         float[] values = getSensorEventValues(event);
-
-        final int rotation = ((WindowManager) context
-                .getSystemService(Context.WINDOW_SERVICE))
-                .getDefaultDisplay()
-                .getRotation();
 
         if(rotation == Surface.ROTATION_0)
         {
@@ -126,5 +123,8 @@ public class SensorInterpreter
     public void reset()
     {
         rotationMatrixTarget = null;
+        rotation = ((WindowManager) context
+                .getSystemService(Context.WINDOW_SERVICE))
+                .getDefaultDisplay().getRotation();
     }
 }

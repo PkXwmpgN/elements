@@ -39,7 +39,7 @@ public class OffsetInterpreter
 
     }
 
-    public float[] accelerometer(Context context)
+    public float[] accelerometer()
     {
         if(activated.get())
         {

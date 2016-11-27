@@ -31,8 +31,12 @@ public class CharacterWallpaperService extends ElementsWallpaperService
     class CharacterEngine extends ElementsEngine
     {
         private Character character;
-        private SensorInterpreter sensorInterpreter = new SensorInterpreter();
+        private SensorInterpreter sensorInterpreter;
 
+        CharacterEngine()
+        {
+            sensorInterpreter = new SensorInterpreter(getApplicationContext());
+        }
         @Override
         protected int getDepth()
         {
@@ -57,7 +61,7 @@ public class CharacterWallpaperService extends ElementsWallpaperService
 
             if(event.sensor.getType() == Sensor.TYPE_GAME_ROTATION_VECTOR)
             {
-                float [] delta = sensorInterpreter.rotation(getApplicationContext(), event);
+                float [] delta = sensorInterpreter.rotation(event);
                 if(delta != null)
                 {
                     character.rotation(delta[0], delta[1], delta[2]);
