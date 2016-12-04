@@ -48,20 +48,21 @@ bool framerate::update()
     elapsed_ += last_ ? current - last_ : 0;
     last_ = current;
 
-    if(current - frame_ > 1000)
-    {
-        fps_ = frame_ ? counter_ / (float(current - frame_) / 1000.0f) : 0.0f;
-        counter_ = 0;
-        frame_ = current;
-    }
-    ++counter_;
-
     if(elapsed_ > desired_fps)
     {
         elapsed_ -= desired_fps;
+
+        if(current - frame_ > 1000)
+        {
+            fps_ = frame_ ? counter_ / (float(current - frame_) / 1000.0f) : 0.0f;
+            counter_ = 0;
+            frame_ = current;
+        }
+        ++counter_;
+
         return true;
     }
-
+    
     return false;
 }
 
