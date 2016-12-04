@@ -259,6 +259,10 @@ set(ELEMENTS_SOURCE_RENDERING
     ${ELEMENTS_SOURCE_RENDERING_PATH}/techniques/lpp_reconstruct_process.h
     ${ELEMENTS_SOURCE_RENDERING_PATH}/techniques/lpp.cpp
     ${ELEMENTS_SOURCE_RENDERING_PATH}/techniques/lpp.h
+    ${ELEMENTS_SOURCE_RENDERING_PATH}/techniques/projector.h
+    ${ELEMENTS_SOURCE_RENDERING_PATH}/techniques/projector.cpp
+    ${ELEMENTS_SOURCE_RENDERING_PATH}/techniques/projector_process.h
+    ${ELEMENTS_SOURCE_RENDERING_PATH}/techniques/projector_process.cpp
     ${ELEMENTS_SOURCE_RENDERING_PATH}/utils/program_data.cpp
     ${ELEMENTS_SOURCE_RENDERING_PATH}/utils/program_data.h
     ${ELEMENTS_SOURCE_RENDERING_PATH}/utils/program_loader.cpp

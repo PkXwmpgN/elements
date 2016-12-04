@@ -41,6 +41,12 @@ utils::link<camera> scene::get_camera() const
     return utils::link<camera>();
 }
 
+utils::link<camera> scene::get_camera(const std::string & name) const
+{
+    auto it = cameras_.find(name);
+    return it != std::end(cameras_) ? it->second : utils::link<camera>();
+}
+
 void scene::update(float dt)
 {
     // 1. clean dead nodes

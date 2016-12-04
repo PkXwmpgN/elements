@@ -83,7 +83,7 @@ public:
     }
 
     utils::link<camera> get_camera() const;
-
+    utils::link<camera> get_camera(const std::string & name) const;
 
 private:
 
