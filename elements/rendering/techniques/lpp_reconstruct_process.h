@@ -21,11 +21,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef RENDERING_MODELS_LPP_RECONSTRUCT_PROCESS_H_INCLUDED
-#define RENDERING_MODELS_LPP_RECONSTRUCT_PROCESS_H_INCLUDED
+#ifndef RENDERING_LPP_RECONSTRUCT_PROCESS_H_INCLUDED
+#define RENDERING_LPP_RECONSTRUCT_PROCESS_H_INCLUDED
 
 #include "rendering/core/program.h"
-#include "rendering/models/model.h"
+#include "rendering/mesh/mesh.h"
 #include "scene/scene.h"
 
 namespace eps {
@@ -35,13 +35,13 @@ class lpp_reconstruct_process : public scene::visitor<lpp_reconstruct_process>
 {
 public:
 
-    SNAPE_VISIT(model);
+    SNAPE_VISIT(mesh);
 
 public:
 
     void process();
     bool initialize();
-    void visit(const model & m);
+    void visit(const mesh & m);
 
     void set_map_light(const product_type & map) { map_light_ = map; }
     void set_scene(const utils::pointer<scene::scene> & scene) { scene_ = scene; }
@@ -56,4 +56,4 @@ private:
 } /* rendering */
 } /* eps */
 
-#endif // RENDERING_MODELS_LPP_RECONSTRUCT_PROCESS_H_INCLUDED
+#endif // RENDERING_LPP_RECONSTRUCT_PROCESS_H_INCLUDED

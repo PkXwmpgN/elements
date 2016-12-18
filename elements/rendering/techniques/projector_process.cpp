@@ -26,7 +26,7 @@ IN THE SOFTWARE.
 #include "rendering/core/texture_policy.h"
 #include "rendering/state/state_macro.h"
 #include "rendering/utils/program_loader.h"
-#include "rendering/models/model_warehouse.h"
+#include "rendering/mesh/mesh_storage.h"
 #include "assets/assets_storage.h"
 #include "assets/asset_texture.h"
 
@@ -78,7 +78,7 @@ void projector_process::set_projective_camera(const std::string & camera)
     camera_projective_ = camera;
 }
 
-void projector_process::visit(const model & sm)
+void projector_process::visit(const mesh & sm)
 {
     assert(scene_);
 
@@ -91,35 +91,31 @@ void projector_process::visit(const model & sm)
     auto camera_projective = scene_->get_camera(camera_projective_).lock();
     assert(camera_projective);
 
-    auto warehouse = sm.get_warehouse().lock();
-    assert(warehouse);
+    auto storage = sm.get_storage().lock();
+    assert(storage);
 
     EPS_STATE_PROGRAM(program_.get_product());
 
     EPS_STATE_SAMPLER_0(texture_projective_.get_product());
     program_.uniform_value(utils::to_int(program_enum::u_map_projective), 0);
 
-    for(const auto & mesh : sm)
-    {
-        const auto & geometry = warehouse->get_geometry(mesh.get_feature(scene::mesh::feature::geometry));
-        EPS_STATE_VERTICES(geometry.get_vertices());
+    const auto & geometry = storage->get_geometry(sm.get_storage_branch(mesh::branch::geometry));
+    EPS_STATE_VERTICES(geometry.get_vertices());
 
-        program_.attribute_array_enable(utils::to_int(program_enum::a_vertex_pos));
-        program_.attribute_array(utils::to_int(program_enum::a_vertex_pos),
-                                 offsetof(scene::vertex, position), 3, sizeof(scene::vertex));
+    program_.attribute_array_enable(utils::to_int(program_enum::a_vertex_pos));
+    program_.attribute_array(utils::to_int(program_enum::a_vertex_pos),
+                             offsetof(scene::vertex, position), 3, sizeof(scene::vertex));
 
+    const math::mat4 & vp = camera->get_view_projection();
+    const math::mat4 & pvp = camera_projective->get_view_projection();
+    const math::mat4 & m  = node->get_world_matrix();
 
-        const math::mat4 & vp = camera->get_view_projection();
-        const math::mat4 & pvp = camera_projective->get_view_projection();
-        const math::mat4 & m  = node->get_world_matrix();
+    program_.uniform_value(utils::to_int(program_enum::u_matrix_mvp), vp * m);
+    program_.uniform_value(utils::to_int(program_enum::u_matrix_model), m);
+    program_.uniform_value(utils::to_int(program_enum::u_matrix_pvp), pvp);
 
-        program_.uniform_value(utils::to_int(program_enum::u_matrix_mvp), vp * m);
-        program_.uniform_value(utils::to_int(program_enum::u_matrix_model), m);
-        program_.uniform_value(utils::to_int(program_enum::u_matrix_pvp), pvp);
-
-        EPS_STATE_INDICES(geometry.get_indices());
-        glDrawElements(GL_TRIANGLES, geometry.get_indices_count(), GL_UNSIGNED_SHORT, 0);
-    }
+    EPS_STATE_INDICES(geometry.get_indices());
+    glDrawElements(GL_TRIANGLES, geometry.get_indices_count(), GL_UNSIGNED_SHORT, 0);
 }
 
 } /* techniques */

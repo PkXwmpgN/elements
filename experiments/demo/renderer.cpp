@@ -22,16 +22,17 @@ IN THE SOFTWARE.
 */
 
 #include "renderer.h"
-#include <elements/rendering/models/process_load_model.h>
+#include <elements/rendering/mesh/mesh_load_process.h>
 #include <elements/rendering/effects/clear.h>
 #include <elements/rendering/techniques/lpp.h>
 #include <elements/rendering/techniques/forward.h>
+#include <elements/scene/camera/camera_load_process.h>
 #include <elements/math/trigonometry.h>
 #include <elements/math/transform.h>
 #include <elements/math/quaternion.h>
 #include <elements/math/common.h>
 #include <elements/assets/assets_storage.h>
-#include <elements/assets/asset_model.h>
+#include <elements/assets/asset_scene.h>
 #include <elements/metrics/metrics.h>
 #include <elements/ui/controls/check.h>
 
@@ -168,13 +169,14 @@ bool renderer::initialize_camera()
 
 bool renderer::initialize_scene()
 {
-    auto asset = assets_storage::instance().read<asset_model>("assets/space.dae");
+    auto asset = assets_storage::instance().read<asset_scene>("assets/space.dae");
     if(!asset)
         return false;
 
     auto hierarchy = asset->get_hierarchy();
     scene_->get_root().lock()->attach_node(hierarchy);
-    hierarchy->process(rendering::process_load_model(scene_), asset.value());
+    hierarchy->process(rendering::mesh_load_process(scene_), asset.value());
+    hierarchy->process(scene::camera_load_process(scene_), asset.value());
 
     init_light_process iprocess;
     scene_->process_lights(iprocess);

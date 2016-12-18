@@ -21,36 +21,26 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef RENDERING_MODELS_MODEL_H_INCLUDED
-#define RENDERING_MODELS_MODEL_H_INCLUDED
+#ifndef SCENE_CAMERA_LOAD_PROCESS_H_INCLUDED
+#define SCENE_CAMERA_LOAD_PROCESS_H_INCLUDED
 
-#include "scene/entity/geometry.h"
+#include "scene/scene.h"
+#include "assets/asset_scene.h"
 
 namespace eps {
-namespace rendering {
+namespace scene {
 
-class model_warehouse;
-
-class model : public scene::geometry
+struct camera_load_process
 {
-public:
-
-    SNAPE_VISITABLE(model);
-
-public:
-
-    model(const utils::link<scene::node> & parent,
-          const std::vector<scene::mesh> & meshes,
-          const utils::pointer<model_warehouse> & warehouse);
-
-    utils::link<model_warehouse> get_warehouse() const;
+    explicit camera_load_process(utils::pointer<scene> scene);
+    void operator()(node & n, const asset_scene & asset);
 
 private:
 
-    utils::pointer<model_warehouse> warehouse_;
+    utils::pointer<scene> scene_;
 };
 
-} /* rendering */
+} /* scene */
 } /* eps */
 
-#endif // RENDERING_MODELS_MODEL_H_INCLUDED
+#endif // SCENE_CAMERA_LOAD_PROCESS_H_INCLUDED

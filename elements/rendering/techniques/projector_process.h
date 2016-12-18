@@ -26,7 +26,7 @@ IN THE SOFTWARE.
 
 #include "rendering/core/program.h"
 #include "rendering/core/texture.h"
-#include "rendering/models/model.h"
+#include "rendering/mesh/mesh.h"
 #include "scene/scene.h"
 
 namespace eps {
@@ -37,13 +37,13 @@ class projector_process : public scene::visitor<projector_process>
 {
 public:
 
-    SNAPE_VISIT(model);
+    SNAPE_VISIT(mesh);
 
 public:
 
     void process();
     bool initialize();
-    void visit(const model & m);
+    void visit(const mesh & m);
 
     void set_scene(const utils::pointer<scene::scene> & scene);
 

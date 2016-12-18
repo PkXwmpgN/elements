@@ -23,7 +23,7 @@ IN THE SOFTWARE.
 
 
 #include "forward_process.h"
-#include "rendering/models/model_warehouse.h"
+#include "rendering/mesh/mesh_storage.h"
 #include "rendering/state/state_macro.h"
 #include "rendering/utils/program_loader.h"
 #include "math/matrix.h"
@@ -97,7 +97,7 @@ void forward_process::process()
         scene_->process_entities(*this);
 }
 
-void forward_process::visit(const model & sm)
+void forward_process::visit(const mesh & sm)
 {
     assert(scene_);
 
@@ -107,8 +107,8 @@ void forward_process::visit(const model & sm)
     auto camera = scene_->get_camera().lock();
     assert(camera);
 
-    auto warehouse = sm.get_warehouse().lock();
-    assert(warehouse);
+    auto storage = sm.get_storage().lock();
+    assert(storage);
 
     EPS_STATE_PROGRAM(program_.get_product());
 
@@ -118,58 +118,56 @@ void forward_process::visit(const model & sm)
     program_.uniform_value(utils::to_int(program_enum::u_camera_pos),
                            scene::get_position(camera->get_node()));
 
-    for(const auto & mesh : sm)
+    const auto & geometry = storage->get_geometry(sm.get_storage_branch(mesh::branch::geometry));
+
+    EPS_STATE_VERTICES(geometry.get_vertices());
+
+    program_.attribute_array_enable(utils::to_int(program_enum::a_vertex_pos));
+    program_.attribute_array(utils::to_int(program_enum::a_vertex_pos),
+                             offsetof(scene::vertex, position), 3, sizeof(scene::vertex));
+
+    program_.attribute_array_enable(utils::to_int(program_enum::a_vertex_normal));
+    program_.attribute_array(utils::to_int(program_enum::a_vertex_normal),
+                             offsetof(scene::vertex, normal), 3, sizeof(scene::vertex));
+
+    program_.attribute_array_enable(utils::to_int(program_enum::a_vertex_tangent));
+    program_.attribute_array(utils::to_int(program_enum::a_vertex_tangent),
+                             offsetof(scene::vertex, tangent), 3, sizeof(scene::vertex));
+
+    program_.attribute_array_enable(utils::to_int(program_enum::a_vertex_uv));
+    program_.attribute_array(utils::to_int(program_enum::a_vertex_uv),
+                             offsetof(scene::vertex, tex), 2, sizeof(scene::vertex));
+
+    const auto & maps = storage->get_maps(sm.get_storage_branch(mesh::branch::maps));
+
+    if(const auto & map = maps.get_diffuse())
     {
-        const auto & geometry = warehouse->get_geometry(mesh.get_feature(scene::mesh::feature::geometry));
-        const auto & material = warehouse->get_material(mesh.get_feature(scene::mesh::feature::material));
-
-        EPS_STATE_VERTICES(geometry.get_vertices());
-
-        program_.attribute_array_enable(utils::to_int(program_enum::a_vertex_pos));
-        program_.attribute_array(utils::to_int(program_enum::a_vertex_pos),
-                                 offsetof(scene::vertex, position), 3, sizeof(scene::vertex));
-
-        program_.attribute_array_enable(utils::to_int(program_enum::a_vertex_normal));
-        program_.attribute_array(utils::to_int(program_enum::a_vertex_normal),
-                                 offsetof(scene::vertex, normal), 3, sizeof(scene::vertex));
-
-        program_.attribute_array_enable(utils::to_int(program_enum::a_vertex_tangent));
-        program_.attribute_array(utils::to_int(program_enum::a_vertex_tangent),
-                                 offsetof(scene::vertex, tangent), 3, sizeof(scene::vertex));
-
-        program_.attribute_array_enable(utils::to_int(program_enum::a_vertex_uv));
-        program_.attribute_array(utils::to_int(program_enum::a_vertex_uv),
-                                 offsetof(scene::vertex, tex), 2, sizeof(scene::vertex));
-
-        if(const auto & texture = material.get_texture(scene::material::type_texture::diffuse))
-        {
-            EPS_STATE_SAMPLER_0(texture.value());
-            program_.uniform_value(utils::to_int(program_enum::u_map_diffuse), 0);
-        }
-
-        if(const auto & texture = material.get_texture(scene::material::type_texture::specular))
-        {
-            EPS_STATE_SAMPLER_1(texture.value());
-            program_.uniform_value(utils::to_int(program_enum::u_map_specular), 1);
-        }
-
-        if(const auto & texture = material.get_texture(scene::material::type_texture::normals))
-        {
-            EPS_STATE_SAMPLER_2(texture.value());
-            program_.uniform_value(utils::to_int(program_enum::u_map_normal), 2);
-        }
-
-        const math::mat4 & mv = camera->get_view() * node->get_world_matrix();
-        const math::mat4 & projection = camera->get_projection();
-        program_.uniform_value(utils::to_int(program_enum::u_matrix_mvp), projection * mv);
-        program_.uniform_value(utils::to_int(program_enum::u_matrix_model_view), mv);
-        program_.uniform_value(utils::to_int(program_enum::u_matrix_view), camera->get_view());
-        program_.uniform_value(utils::to_int(program_enum::u_matrix_normal),
-                               math::transpose(math::inverse(math::mat3(mv))));
-
-        EPS_STATE_INDICES(geometry.get_indices());
-        glDrawElements(GL_TRIANGLES, geometry.get_indices_count(), GL_UNSIGNED_SHORT, 0);
+        EPS_STATE_SAMPLER_0(map.value());
+        program_.uniform_value(utils::to_int(program_enum::u_map_diffuse), 0);
     }
+
+    if(const auto & map = maps.get_specular())
+    {
+        EPS_STATE_SAMPLER_1(map.value());
+        program_.uniform_value(utils::to_int(program_enum::u_map_specular), 1);
+    }
+
+    if(const auto & map = maps.get_normal())
+    {
+        EPS_STATE_SAMPLER_2(map.value());
+        program_.uniform_value(utils::to_int(program_enum::u_map_normal), 2);
+    }
+    
+    const math::mat4 & mv = camera->get_view() * node->get_world_matrix();
+    const math::mat4 & projection = camera->get_projection();
+    program_.uniform_value(utils::to_int(program_enum::u_matrix_mvp), projection * mv);
+    program_.uniform_value(utils::to_int(program_enum::u_matrix_model_view), mv);
+    program_.uniform_value(utils::to_int(program_enum::u_matrix_view), camera->get_view());
+    program_.uniform_value(utils::to_int(program_enum::u_matrix_normal),
+                           math::transpose(math::inverse(math::mat3(mv))));
+
+    EPS_STATE_INDICES(geometry.get_indices());
+    glDrawElements(GL_TRIANGLES, geometry.get_indices_count(), GL_UNSIGNED_SHORT, 0);
 }
 
 

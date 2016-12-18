@@ -21,75 +21,61 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef SCENE_ENTITY_MATERIALS_H_INCLUDED
-#define SCENE_ENTITY_MATERIALS_H_INCLUDED
+#ifndef RENDERING_MESH_H_INCLUDED
+#define RENDERING_MESH_H_INCLUDED
 
-#include "utils/std/enum.h"
-#include "utils/std/optional.h"
-#include <string>
 #include <array>
 
-namespace eps {
-namespace scene {
+#include "scene/entity/entity.h"
+#include "utils/std/enum.h"
 
-class material
+namespace eps {
+namespace rendering {
+
+class mesh_storage;
+class mesh : public scene::entity
 {
 public:
 
-    enum class type_texture : short
+    SNAPE_VISITABLE(mesh);
+
+public:
+
+    enum class branch : short
     {
-        diffuse,
-        specular,
-        normals,
+        geometry,
+        maps,
+        colors,
         COUNT
     };
 
-    enum class type_color : short
-    {
-        diffuse,
-        specular,
-        ambient,
-        COUNT
-    };
+    mesh(const utils::link<scene::node> & parent,
+         const utils::pointer<mesh_storage> & storage);
 
-    void set_texture(type_texture id, const std::string & path)
+    utils::link<mesh_storage> get_storage() const;
+
+    void set_storage_branch(branch id, size_t index)
     {
-        textures_[utils::to_int(id)] = path;
+        storage_branches_[utils::to_int(id)] = index;
     }
 
-    void set_color(type_color id, const math::vec3 & color)
+    size_t get_storage_branch(branch id) const
     {
-        color_[utils::to_int(id)] = color;
-    }
-
-    const utils::optional<std::string> & get_texture(type_texture id) const
-    {
-        return textures_[utils::to_int(id)];
-    }
-
-    const math::vec3 & get_color(type_color id) const
-    {
-        return color_[utils::to_int(id)];
+        return storage_branches_[utils::to_int(id)];
     }
 
 private:
 
     std::array
     <
-        utils::optional<std::string>,
-        utils::to_int(type_texture::COUNT)
+        size_t,
+        utils::to_int(branch::COUNT)
     >
-    textures_;
-
-    std::array
-    <
-        math::vec3,
-        utils::to_int(type_color::COUNT)
-    >
-    color_;
+    storage_branches_;
+    utils::pointer<mesh_storage> storage_;
 };
 
-} /* scene */
+} /* rendering */
 } /* eps */
 
-#endif // SCENE_ENTITY_MATERIALS_H_INCLUDED
+#endif // RENDERING_MESH_H_INCLUDED

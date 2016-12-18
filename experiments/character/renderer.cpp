@@ -22,13 +22,13 @@ IN THE SOFTWARE.
 */
 
 #include "renderer.h"
-#include <elements/rendering/models/process_load_model.h>
+#include <elements/rendering/mesh/mesh_load_process.h>
 #include <elements/rendering/effects/clear.h>
 #include <elements/rendering/techniques/forward.h>
 #include <elements/math/trigonometry.h>
 #include <elements/math/transform.h>
 #include <elements/assets/assets_storage.h>
-#include <elements/assets/asset_model.h>
+#include <elements/assets/asset_scene.h>
 
 namespace eps {
 namespace experiment {
@@ -134,7 +134,7 @@ bool renderer::set_model(const std::string & model)
         m->set_state(scene::node::state::dead);
 
     // load an asset
-    auto asset = assets_storage::instance().read<asset_model>(model);
+    auto asset = assets_storage::instance().read<asset_scene>(model);
     if(!asset)
         return false;
 
@@ -143,7 +143,7 @@ bool renderer::set_model(const std::string & model)
     scene_->get_root().lock()->attach_node(node);
 
     // load entities to rendering
-    node->process(rendering::process_load_model(scene_), asset.value());
+    node->process(rendering::mesh_load_process(scene_), asset.value());
 
     model_ = node;
     return true;

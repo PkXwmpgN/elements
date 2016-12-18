@@ -133,8 +133,8 @@ set(ELEMENTS_SOURCE_ASSETS_PATH ${ELEMENTS_PATH}/assets)
 set(ELEMENTS_SOURCE_ASSETS
     ${ELEMENTS_SOURCE_ASSETS_PATH}/asset_blob.cpp
     ${ELEMENTS_SOURCE_ASSETS_PATH}/asset_blob.h
-    ${ELEMENTS_SOURCE_ASSETS_PATH}/asset_model.cpp
-    ${ELEMENTS_SOURCE_ASSETS_PATH}/asset_model.h
+    ${ELEMENTS_SOURCE_ASSETS_PATH}/asset_scene.cpp
+    ${ELEMENTS_SOURCE_ASSETS_PATH}/asset_scene.h
     ${ELEMENTS_SOURCE_ASSETS_PATH}/asset_texture.cpp
     ${ELEMENTS_SOURCE_ASSETS_PATH}/asset_texture.h
     ${ELEMENTS_SOURCE_ASSETS_PATH}/asset_xml.cpp
@@ -180,6 +180,10 @@ set(ELEMENTS_SOURCE_PREFERENCES
     ${ELEMENTS_SOURCE_PREFERENCES_PATH}/preferences.cpp
     ${ELEMENTS_SOURCE_PREFERENCES_PATH}/preferences.h)
 
+set(ELEMENTS_SOURCE_GAMEPLAY_PATH ${ELEMENTS_PATH}/gameplay)
+set(ELEMENTS_SOURCE_PREFERENCES
+    ${ELEMENTS_SOURCE_GAMEPLAY_PATH}/actor.h)
+
 set(ELEMENTS_SOURCE_RENDERING_PATH ${ELEMENTS_PATH}/rendering)
 set(ELEMENTS_SOURCE_RENDERING
     ${ELEMENTS_SOURCE_RENDERING_PATH}/computation/compute_product_index.cpp
@@ -216,12 +220,12 @@ set(ELEMENTS_SOURCE_RENDERING
     ${ELEMENTS_SOURCE_RENDERING_PATH}/effects/light_scattered.h
     ${ELEMENTS_SOURCE_RENDERING_PATH}/effects/tone.cpp
     ${ELEMENTS_SOURCE_RENDERING_PATH}/effects/tone.h
-    ${ELEMENTS_SOURCE_RENDERING_PATH}/models/model_warehouse.cpp
-    ${ELEMENTS_SOURCE_RENDERING_PATH}/models/model_warehouse.h
-    ${ELEMENTS_SOURCE_RENDERING_PATH}/models/model.cpp
-    ${ELEMENTS_SOURCE_RENDERING_PATH}/models/model.h
-    ${ELEMENTS_SOURCE_RENDERING_PATH}/models/process_load_model.cpp
-    ${ELEMENTS_SOURCE_RENDERING_PATH}/models/process_load_model.h
+    ${ELEMENTS_SOURCE_RENDERING_PATH}/mesh/mesh_storage.cpp
+    ${ELEMENTS_SOURCE_RENDERING_PATH}/mesh/mesh_storage.h
+    ${ELEMENTS_SOURCE_RENDERING_PATH}/mesh/mesh.cpp
+    ${ELEMENTS_SOURCE_RENDERING_PATH}/mesh/mesh.h
+    ${ELEMENTS_SOURCE_RENDERING_PATH}/mesh/mesh_load_process.cpp
+    ${ELEMENTS_SOURCE_RENDERING_PATH}/mesh/mesh_load_process.h
     ${ELEMENTS_SOURCE_RENDERING_PATH}/passes/pass_base.h
     ${ELEMENTS_SOURCE_RENDERING_PATH}/passes/pass_composition.cpp
     ${ELEMENTS_SOURCE_RENDERING_PATH}/passes/pass_composition.h
@@ -272,10 +276,9 @@ set(ELEMENTS_SOURCE_SCENE_PATH ${ELEMENTS_PATH}/scene)
 set(ELEMENTS_SOURCE_SCENE
     ${ELEMENTS_SOURCE_SCENE_PATH}/camera/camera.cpp
     ${ELEMENTS_SOURCE_SCENE_PATH}/camera/camera.h
+    ${ELEMENTS_SOURCE_SCENE_PATH}/camera/camera_load_process.h
+    ${ELEMENTS_SOURCE_SCENE_PATH}/camera/camera_load_process.cpp
     ${ELEMENTS_SOURCE_SCENE_PATH}/entity/entity.h
-    ${ELEMENTS_SOURCE_SCENE_PATH}/entity/geometry.h
-    ${ELEMENTS_SOURCE_SCENE_PATH}/entity/materials.h
-    ${ELEMENTS_SOURCE_SCENE_PATH}/entity/mesh.h
     ${ELEMENTS_SOURCE_SCENE_PATH}/entity/vertices.h
     ${ELEMENTS_SOURCE_SCENE_PATH}/graph/node.cpp
     ${ELEMENTS_SOURCE_SCENE_PATH}/graph/node.h

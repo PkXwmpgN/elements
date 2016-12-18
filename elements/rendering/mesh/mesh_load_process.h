@@ -21,30 +21,29 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef RENDERING_MODELS_PROCESS_LOAD_MODEL_H_INCLUDED
-#define RENDERING_MODELS_PROCESS_LOAD_MODEL_H_INCLUDED
+#ifndef RENDERING_MESH_LOAD_PROCESS_H_INCLUDED
+#define RENDERING_MESH_LOAD_PROCESS_H_INCLUDED
 
 #include "scene/scene.h"
-#include "assets/asset_model.h"
+#include "assets/asset_scene.h"
 
 namespace eps {
 namespace rendering {
 
-struct process_load_model
-{
-    explicit process_load_model(utils::pointer<scene::scene> scene)
-        : scene_(scene)
-    {}
+class mesh_storage;
 
-    void operator()(scene::node & node, const asset_model & asset);
+struct mesh_load_process
+{
+    explicit mesh_load_process(utils::pointer<scene::scene> scene);
+    void operator()(scene::node & node, const asset_scene & asset);
 
 private:
 
     utils::pointer<scene::scene> scene_;
-
+    utils::pointer<mesh_storage> storage_;
 };
 
 } /* rendering */
 } /* eps */
 
-#endif // RENDERING_MODELS_PROCESS_LOAD_MODEL_H_INCLUDED
+#endif // RENDERING_MESH_LOAD_PROCESS_H_INCLUDED

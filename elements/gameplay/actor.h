@@ -21,40 +21,26 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef SCENE_ENTITY_GEOMETRY_H_INCLUDED
-#define SCENE_ENTITY_GEOMETRY_H_INCLUDED
+#ifndef GAMEPLAY_ACTOR_H_INCLUDED
+#define GAMEPLAY_ACTOR_H_INCLUDED
 
-#include "entity.h"
-#include "mesh.h"
-#include <vector>
+#include "scene/entity.h"
 
 namespace eps {
-namespace scene {
+namespace gameplay {
 
-class geometry : public entity
+class actor : public scene::entity
 {
 public:
 
-    SNAPE_VISITABLE(geometry);
+    SNAPE_VISITABLE(actor);
 
 public:
 
-    geometry(const utils::link<node> & parent,
-             const std::vector<mesh> & meshes)
-        : entity(parent)
-        , meshes_(meshes)
-    {}
-
-    auto begin() const { return meshes_.begin(); }
-    auto end() const { return meshes_.end(); }
-
-private:
-
-    std::vector<mesh> meshes_;
+    using scene::entity::entity;
 };
 
-} /* scene */
+} /* gameplay */
 } /* eps */
 
-
-#endif // SCENE_ENTITY_GEOMETRY_H_INCLUDED
+#endif // GAMEPLAY_ACTOR_H_INCLUDED

@@ -21,13 +21,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#ifndef ASSETS_ASSET_MODEL_H_INCLUDED
-#define ASSETS_ASSET_MODEL_H_INCLUDED
+#ifndef ASSETS_ASSET_SCENE_H_INCLUDED
+#define ASSETS_ASSET_SCENE_H_INCLUDED
 
 #include "assets.h"
 #include "scene/entity/vertices.h"
-#include "scene/entity/materials.h"
-#include "scene/entity/mesh.h"
 #include "scene/graph/node.h"
 #include "utils/std/optional.h"
 
@@ -40,7 +38,7 @@ struct aiLight;
 
 namespace eps {
 
-struct asset_model : public asset
+struct asset_scene : public asset
 {
 public:
 
@@ -62,24 +60,50 @@ public:
         std::vector<scene::face> faces_;
     };
 
-    using gmap = std::unordered_map<std::string, std::vector<geometry>>;
+    using gmap = std::unordered_map<std::string, geometry>;
 
-    struct material
+    struct maps
     {
-        material(const aiMaterial * material, const std::string & path);
-        const auto & get_material() const { return material_; }
+        maps(const aiMaterial * material, const std::string & path);
+
+        const auto & get_diffuse() const { return map_diffuse_; }
+        const auto & get_specular() const { return map_specular_; }
+        const auto & get_normal() const { return map_normal_; }
 
     private:
 
-        void load_material(const aiMaterial * material,
-                           const std::string & path);
+        void load_maps(const aiMaterial * material,
+                       const std::string & path);
 
     private:
 
-        scene::material material_;
+        utils::optional<std::string> map_diffuse_;
+        utils::optional<std::string> map_specular_;
+        utils::optional<std::string> map_normal_;
     };
 
-    using mmap = std::unordered_map<std::string, std::vector<material>>;
+    using mmap = std::unordered_map<std::string, maps>;
+
+    struct colors
+    {
+        explicit colors(const aiMaterial * material);
+
+        const auto & get_diffuse() const { return color_diffuse_; }
+        const auto & get_specular() const { return color_specular_; }
+        const auto & get_ambient() const { return color_ambient_; }
+
+    private:
+
+        void load_colors(const aiMaterial * material);
+
+    private:
+
+        utils::optional<math::vec3> color_diffuse_;
+        utils::optional<math::vec3> color_specular_;
+        utils::optional<math::vec3> color_ambient_;
+    };
+
+    using cmap = std::unordered_map<std::string, colors>;
 
     struct light
     {
@@ -115,19 +139,21 @@ public:
 
     utils::pointer<scene::node> get_hierarchy() const;
 
-    const std::vector<geometry> & get_node_geometry(const std::string & name) const;
-    const std::vector<material> & get_node_material(const std::string & name) const;
-    utils::optional<light> get_node_light(const std::string & name) const;
+    const geometry * get_node_geometry(const std::string & name) const;
+    const maps * get_node_maps(const std::string & name) const;
+    const colors * get_node_colors(const std::string & name) const;
+    const light * get_node_light(const std::string & name) const;
 
 private:
 
     utils::pointer<scene::node> hierarchy_;
 
     gmap geometry_;
-    mmap material_;
+    mmap maps_;
+    cmap colors_;
     lmap lights_;
 };
 
 } /* eps */
 
-#endif // ASSETS_ASSET_MODEL_H_INCLUDED
+#endif // ASSETS_ASSET_SCENE_H_INCLUDED

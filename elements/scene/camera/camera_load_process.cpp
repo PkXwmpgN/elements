@@ -21,41 +21,22 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 */
 
-#include "process_load_model.h"
-#include "model_warehouse.h"
-#include "model.h"
+#include "camera_load_process.h"
+#include "camera.h"
 #include "math/common.h"
 
 namespace eps {
-namespace rendering {
+namespace scene {
 
-void process_load_model::operator()(scene::node & node, const asset_model & asset)
+camera_load_process::camera_load_process(utils::pointer<scene> scene)
+    : scene_(scene)
+{}
+
+void camera_load_process::operator()(node & n, const asset_scene & asset)
 {
-    const auto & geometry = asset.get_node_geometry(node.get_name());
-    const auto & material = asset.get_node_material(node.get_name());
-
-    if(!geometry.empty())
+    if(const auto * light = asset.get_node_light(n.get_name()))
     {
-        auto warehouse = utils::make_shared<model_warehouse>();
-
-        std::vector<scene::mesh> meshes(geometry.size());
-        for(size_t i = 0, end = meshes.size(); i < end; ++i)
-        {
-            meshes[i].set_feature(scene::mesh::feature::geometry, i);
-            meshes[i].set_feature(scene::mesh::feature::material, i);
-
-            warehouse->add_geometry(geometry[i].get_vertices(), geometry[i].get_faces());
-            warehouse->add_material(material[i].get_material());
-        }
-
-        scene_->add_node_entity<model>(node.shared_from_this(),
-                                       std::move(meshes),
-                                       std::move(warehouse));
-    }
-
-    if(auto light = asset.get_node_light(node.get_name()))
-    {
-        if(auto pl = scene_->add_node_light<scene::light_point>(node.shared_from_this()).lock())
+        if(auto pl = scene_->add_node_light<light_point>(n.shared_from_this()).lock())
         {
             const float luminance_min = 0.05f;
             const float luminance_max = 1.0f;
