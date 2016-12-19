@@ -36,12 +36,6 @@ IN THE SOFTWARE.
 #include <assimp/IOStream.hpp>
 #include <assimp/IOSystem.hpp>
 
-#include <android/log.h>
-
-#define  LOG_TAG  "Elements"
-#define  LOGI(...) __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
-#define  LOGE(...) __android_log_print(ANDROID_LOG_ERROR,LOG_TAG,__VA_ARGS__)
-
 namespace eps {
 
 struct assimp_io_stream : public Assimp::IOStream
