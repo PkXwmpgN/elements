@@ -67,7 +67,7 @@ void lpp_geometry_process::visit(const mesh & sm)
     assert(camera);
 
     auto storage = sm.get_storage().lock();
-    assert(warehouse);
+    assert(storage);
 
     EPS_STATE_PROGRAM(program_.get_product());
 
